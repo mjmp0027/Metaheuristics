@@ -1,12 +1,12 @@
 package algorithms;
-//Pedro
+
 public class RotatedHypeEllipsoid {
-    static public double evaluateR(double[] genotype){
+    static public double evaluateRot(double[] genotype) {
         double sum = 0.0;
-        double d = 2;
+        double d = genotype.length;
         for (int i = 0; i < d; i++) {
             for (int j = 0; j < i; j++) {
-                sum += Math.pow(2, genotype[j]);
+                sum += Math.pow(genotype[j], 2);
             }
         }
         return sum;

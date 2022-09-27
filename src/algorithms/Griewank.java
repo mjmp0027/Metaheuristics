@@ -1,14 +1,14 @@
 package algorithms;
 
 public class Griewank {
-    static public double fitnessFunc( double[] chromosome) {
+    static public double fitnessFunc(double[] genotype) {
         double part1 = 0;
         double part2 = 1;
-        for (int i = 0; i < chromosome.length; i++) {
-            part1 += chromosome[i] * 2 * 2;
+        for (int i = 0; i < genotype.length; i++) {
+            part1 += genotype[i] * 2 * 2;
 
-            for (int j = 0; j < chromosome.length; j++) {
-                part2 *= Math.cos((chromosome[i]) / Math.sqrt(i + 1));
+            for (int j = 0; j < genotype.length; j++) {
+                part2 *= Math.cos((genotype[i]) / Math.sqrt(i + 1));
 
             }
         }
