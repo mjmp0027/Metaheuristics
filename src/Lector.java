@@ -6,9 +6,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Lector {
-    private final List<String> funciones = new ArrayList<>();
-    private double[] genotype;
+    private int tamSem;
+    private long[] semillas;
     private int D;
+    private final List<String> algoritmos = new ArrayList<>();
+    private int k;
+    private String funcion;
+    private double rangoInf;
+    private double rangoSup;
+
 
     public Lector(String rutaArchConfig) throws IOException {
         String linea;
@@ -18,27 +24,54 @@ public class Lector {
         while ((linea = b.readLine()) != null) {
             String[] separador = linea.split("=");
             switch (separador[0]) {
-                case "D" -> D = Integer.parseInt(separador[1]);
-                case "Genotype" -> {
+                case "tamSem" -> tamSem = Integer.parseInt(separador[1]);
+                case "semillas" -> {
                     String[] paramArch = separador[1].split(" ");
-                    genotype = new double[D];
+                    semillas = new long[tamSem];
                     for (int i = 0; i < paramArch.length; i++) {
-                        genotype[i] = Double.parseDouble(paramArch[i]);
+                        semillas[i] = Long.parseLong(paramArch[i]);
                     }
                 }
-                case "Algoritmos" -> {
+                case "D" -> D = Integer.parseInt(separador[1]);
+
+                case "algoritmos" -> {
                     String[] paramArch = separador[1].split(" ");
-                    funciones.addAll(Arrays.asList(paramArch));
+                    algoritmos.addAll(Arrays.asList(paramArch));
                 }
+                case "k" -> k = Integer.parseInt(separador[1]);
+                case "funcion" -> funcion = separador[1];
+                case "rangoInf" -> rangoInf = Double.parseDouble(separador[1]);
+                case "rangoSup" -> rangoSup = Double.parseDouble(separador[1]);
             }
         }
     }
 
-    public List<String> getFunciones() {
-        return funciones;
+    public List<String> getAlgoritmos() {
+        return algoritmos;
     }
 
-    public double[] getGenotype() {
-        return genotype;
+    public long[] getSemillas() {
+        return semillas;
     }
+
+    public int getD() {
+        return D;
+    }
+
+    public int getK() {
+        return k;
+    }
+
+    public String getFuncion() {
+        return funcion;
+    }
+
+    public double getRangoInf() {
+        return rangoInf;
+    }
+
+    public double getRangoSup() {
+        return rangoSup;
+    }
+
 }
