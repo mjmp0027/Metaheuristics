@@ -1,4 +1,4 @@
-package algoritmos;
+package funciones;
 
 public class Trid {
     public static double evaluateT(double[] genotype) {

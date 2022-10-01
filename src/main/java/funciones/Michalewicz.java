@@ -1,4 +1,4 @@
-package algoritmos;
+package funciones;
 
 public class Michalewicz {
     public static double evaluateM(double[] genotype) {

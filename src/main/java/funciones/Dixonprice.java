@@ -1,4 +1,4 @@
-package algoritmos;
+package funciones;
 
 public class Dixonprice {
     public static double evaluateD(double[] genotype) {

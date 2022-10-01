@@ -1,3 +1,7 @@
+package utils;
+
+import lombok.Getter;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -5,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Getter
 public class Lector {
     private int tamSem;
     private long[] semillas;
@@ -34,7 +39,7 @@ public class Lector {
                 }
                 case "D" -> D = Integer.parseInt(separador[1]);
 
-                case "algoritmos" -> {
+                case "funciones" -> {
                     String[] paramArch = separador[1].split(" ");
                     algoritmos.addAll(Arrays.asList(paramArch));
                 }
@@ -45,33 +50,4 @@ public class Lector {
             }
         }
     }
-
-    public List<String> getAlgoritmos() {
-        return algoritmos;
-    }
-
-    public long[] getSemillas() {
-        return semillas;
-    }
-
-    public int getD() {
-        return D;
-    }
-
-    public int getK() {
-        return k;
-    }
-
-    public String getFuncion() {
-        return funcion;
-    }
-
-    public double getRangoInf() {
-        return rangoInf;
-    }
-
-    public double getRangoSup() {
-        return rangoSup;
-    }
-
 }

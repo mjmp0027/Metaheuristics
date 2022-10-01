@@ -1,4 +1,4 @@
-package algoritmos;
+package funciones;
 
 public class RotatedHypeEllipsoid {
     static public double evaluateRot(double[] genotype) {

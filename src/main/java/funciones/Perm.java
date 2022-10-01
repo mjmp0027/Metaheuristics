@@ -1,4 +1,4 @@
-package algoritmos;
+package funciones;
 
 public class Perm {
     static public double evaluateP(double[] genotype) {

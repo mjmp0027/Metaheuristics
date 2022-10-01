@@ -1,4 +1,4 @@
-package algoritmos;
+package funciones;
 
 public class Ackley {
     static public double evaluateA(double[] genotype) {

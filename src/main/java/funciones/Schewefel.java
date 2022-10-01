@@ -1,4 +1,4 @@
-package algoritmos;
+package funciones;
 
 public class Schewefel {
     static public double evaluateS(double[] genotype) {

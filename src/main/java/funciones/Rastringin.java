@@ -1,4 +1,4 @@
-package algoritmos;
+package funciones;
 
 public class Rastringin {
     static public double evaluateR(double[] genotype) {

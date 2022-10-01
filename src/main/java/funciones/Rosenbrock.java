@@ -1,4 +1,4 @@
-package algoritmos;
+package funciones;
 
 public class Rosenbrock {
     public static double evaluateRosen(double[] genotype) {

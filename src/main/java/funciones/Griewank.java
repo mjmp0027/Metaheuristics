@@ -1,4 +1,4 @@
-package algoritmos;
+package funciones;
 
 public class Griewank {
     static public double fitnessFunc(double[] genotype) {
