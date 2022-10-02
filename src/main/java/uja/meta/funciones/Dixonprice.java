@@ -1,4 +1,4 @@
-package funciones;
+package uja.meta.funciones;
 
 public class Dixonprice {
     public static double evaluateD(double[] genotype) {

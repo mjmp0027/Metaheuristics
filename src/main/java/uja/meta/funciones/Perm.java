@@ -1,4 +1,4 @@
-package funciones;
+package uja.meta.funciones;
 
 public class Perm {
     static public double evaluateP(double[] genotype) {

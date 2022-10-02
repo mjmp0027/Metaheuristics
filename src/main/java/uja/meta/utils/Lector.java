@@ -1,4 +1,4 @@
-package utils;
+package uja.meta.utils;
 
 import lombok.Getter;
 
@@ -11,15 +11,14 @@ import java.util.List;
 
 @Getter
 public class Lector {
+    private final List<String> algoritmos = new ArrayList<>();
     private int tamSem;
     private long[] semillas;
     private int D;
-    private final List<String> algoritmos = new ArrayList<>();
     private int k;
     private String funcion;
     private double rangoInf;
     private double rangoSup;
-
 
     public Lector(String rutaArchConfig) throws IOException {
         String linea;
@@ -39,14 +38,20 @@ public class Lector {
                 }
                 case "D" -> D = Integer.parseInt(separador[1]);
 
-                case "funciones" -> {
+                case "algoritmos" -> {
                     String[] paramArch = separador[1].split(" ");
                     algoritmos.addAll(Arrays.asList(paramArch));
                 }
                 case "k" -> k = Integer.parseInt(separador[1]);
                 case "funcion" -> funcion = separador[1];
                 case "rangoInf" -> rangoInf = Double.parseDouble(separador[1]);
-                case "rangoSup" -> rangoSup = Double.parseDouble(separador[1]);
+                case "rangoSup" -> {
+                    if (separador[1].equals("2PI")) {
+                        rangoSup = 2 * Math.PI;
+                    } else {
+                        rangoSup = Double.parseDouble(separador[1]);
+                    }
+                }
             }
         }
     }

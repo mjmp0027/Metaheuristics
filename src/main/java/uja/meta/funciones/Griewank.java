@@ -1,7 +1,7 @@
-package funciones;
+package uja.meta.funciones;
 
 public class Griewank {
-    static public double fitnessFunc(double[] genotype) {
+    static public double evaluateG(double[] genotype) {
         double part1 = 0;
         double part2 = 1;
         for (int i = 0; i < genotype.length; i++) {

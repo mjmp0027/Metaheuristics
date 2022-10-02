@@ -1,8 +1,8 @@
 tamSem=5
 semillas=53916079 95391607 79539160 07953916 60795391
 D=10
-funciones=bl3 blk ma
+algoritmos=bl3 blk ma
 k=3
-funcion=dixonprice
-rangoInf=-100
-rangoSup=100
+funcion=rosenbrock
+rangoInf=-5
+rangoSup=10

@@ -1,4 +1,4 @@
-package funciones;
+package uja.meta.funciones;
 
 public class Michalewicz {
     public static double evaluateM(double[] genotype) {

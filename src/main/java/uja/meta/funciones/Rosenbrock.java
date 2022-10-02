@@ -1,4 +1,4 @@
-package funciones;
+package uja.meta.funciones;
 
 public class Rosenbrock {
     public static double evaluateRosen(double[] genotype) {

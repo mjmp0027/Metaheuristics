@@ -1,4 +1,4 @@
-package funciones;
+package uja.meta.funciones;
 
 public class Rastringin {
     static public double evaluateR(double[] genotype) {

@@ -1,12 +1,13 @@
-package funciones;
+package uja.meta.funciones;
 
 public class Ackley {
-    static public double evaluateA(double[] genotype) {
+
+    public static double evaluateA(double[] vector) {
         double score;
         double sum1 = 0.0;
         double sum2 = 0.0;
-        double d = genotype.length;
-        for (double v : genotype) {
+        double d = vector.length;
+        for (double v : vector) {
             sum1 += Math.pow(v, 2);
             sum2 += Math.cos(2 * Math.PI * v);
         }

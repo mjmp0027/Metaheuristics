@@ -1,4 +1,4 @@
-package funciones;
+package uja.meta.funciones;
 
 public class Schewefel {
     static public double evaluateS(double[] genotype) {
