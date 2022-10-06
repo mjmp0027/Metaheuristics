@@ -39,13 +39,13 @@ public class Practica1 {
                     switch (algoritmo) {
                         case "bl3" -> {
                             AlgBLk_ClaseXX_GrupoXX bl =
-                                    new AlgBLk_ClaseXX_GrupoXX(vector, vSolucion, funcion,
+                                    new AlgBL3_ClaseXX_GrupoXX(d, vSolucion, funcion,
                                     funcion + ".BL3" + "." + semilla, semilla);
                             executor.execute(bl);
                         }
                         case "blk" -> {
                             AlgBL3_ClaseXX_GrupoXX prueba =
-                                    new AlgBL3_ClaseXX_GrupoXX(funcion + ".BLk" + "." + semilla);
+                                    new AlgBLk_ClaseXX_GrupoXX(funcion + ".BLk" + "." + semilla);
                             executor.execute(prueba);
                         }
                         case "ma" -> {
