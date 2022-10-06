@@ -5,6 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static uja.meta.funciones.Ackley.evaluateA;
+import static uja.meta.funciones.Dixonprice.evaluateD;
+import static uja.meta.funciones.Griewank.evaluateG;
+import static uja.meta.funciones.Michalewicz.evaluateM;
+import static uja.meta.funciones.Perm.evaluateP;
+import static uja.meta.funciones.Rastringin.evaluateR;
+import static uja.meta.funciones.Rosenbrock.evaluateRosen;
+import static uja.meta.funciones.RotatedHypeEllipsoid.evaluateRot;
+import static uja.meta.funciones.Schewefel.evaluateS;
+import static uja.meta.funciones.Trid.evaluateT;
+
 public class FuncionesAuxiliares {
     public static List<String> getFiles(final File folder) {
         List<String> fileName = new ArrayList<>();
@@ -28,13 +39,13 @@ public class FuncionesAuxiliares {
         return vector;
     }
 
-    public static String visualizaVectorLog(int[] vSolucion) {
+    public static String visualizaVectorLog(double[] vSolucion) {
         StringBuilder vector = new StringBuilder();
         vector.append("[");
-        for (int i = 0; i < vSolucion.length-1; i++) {
+        for (int i = 0; i < vSolucion.length - 1; i++) {
             vector.append(i).append(", ");
         }
-        vector.append(vSolucion[vSolucion.length-1]).append("]");
+        vector.append(vSolucion[vSolucion.length - 1]).append("]");
         return vector.toString();
     }
 
@@ -42,5 +53,43 @@ public class FuncionesAuxiliares {
         double aux = vSolucion[i];
         vSolucion[i] = vSolucion[j];
         vSolucion[j] = aux;
+    }
+
+    public static double calculaCoste(double[] vSolucion, String funcion) {
+        switch (funcion) {
+            case "dixonprice" -> {
+                return evaluateD(vSolucion);
+            }
+            case "ackley" -> {
+                return evaluateA(vSolucion);
+            }
+            case "rosenbrock" -> {
+                return evaluateRosen(vSolucion);
+            }
+            case "griewank" -> {
+                return evaluateG(vSolucion);
+            }
+            case "rotatedHypeEllipsoid" -> {
+                return evaluateRot(vSolucion);
+            }
+            case "perm" -> {
+                return evaluateP(vSolucion);
+            }
+            case "trid" -> {
+                return evaluateT(vSolucion);
+            }
+            case "schewefel" -> {
+                return evaluateS(vSolucion);
+            }
+            case "rastringin" -> {
+                return evaluateR(vSolucion);
+            }
+            case "michalewicz" -> {
+                return evaluateM(vSolucion);
+            }
+            default -> {
+                return 0;
+            }
+        }
     }
 }

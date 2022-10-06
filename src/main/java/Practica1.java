@@ -1,7 +1,5 @@
-import uja.meta.algoritmos.AlgBLk_ClaseXX_GrupoXX;
-import uja.meta.algoritmos.AlgBL3_ClaseXX_GrupoXX;
-import uja.meta.algoritmos.AlgMA_ClaseXX_GrupoXX;
 import org.apache.log4j.BasicConfigurator;
+import uja.meta.algoritmos.AlgBL3_ClaseXX_GrupoXX;
 import uja.meta.utils.Lector;
 
 import java.io.File;
@@ -34,24 +32,24 @@ public class Practica1 {
             double rangoSup = lector.getRangoSup();
             for (String algoritmo : algoritmos) {
                 for (long semilla : semillas) {
-                    double[] vector = generador(rangoInf, rangoSup, semilla, D);
-                    double[] vSolucion = new double[D];
+                    System.out.println(funcion + ".BL3" + "." + semilla);
+                    double[] vSolucion = generador(rangoInf, rangoSup, semilla, D);
                     switch (algoritmo) {
                         case "bl3" -> {
-                            AlgBLk_ClaseXX_GrupoXX bl =
-                                    new AlgBL3_ClaseXX_GrupoXX(d, vSolucion, funcion,
-                                    funcion + ".BL3" + "." + semilla, semilla);
+                            AlgBL3_ClaseXX_GrupoXX bl =
+                                    new AlgBL3_ClaseXX_GrupoXX(D, 1000, vSolucion, rangoInf,
+                                            rangoSup, funcion, funcion + ".BL3" + "." + semilla);
                             executor.execute(bl);
                         }
                         case "blk" -> {
-                            AlgBL3_ClaseXX_GrupoXX prueba =
+                            /*AlgBLk_ClaseXX_GrupoXX prueba =
                                     new AlgBLk_ClaseXX_GrupoXX(funcion + ".BLk" + "." + semilla);
-                            executor.execute(prueba);
+                            executor.execute(prueba);*/
                         }
                         case "ma" -> {
-                            AlgMA_ClaseXX_GrupoXX prueba =
+                            /*AlgMA_ClaseXX_GrupoXX prueba =
                                     new AlgMA_ClaseXX_GrupoXX(funcion + ".MA" + "." + semilla);
-                            executor.execute(prueba);
+                            executor.execute(prueba);*/
                         }
                     }
                 }

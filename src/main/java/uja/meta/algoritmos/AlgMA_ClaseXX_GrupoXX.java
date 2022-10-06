@@ -1,9 +1,10 @@
 package uja.meta.algoritmos;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AlgMA_ClaseXX_GrupoXX implements Runnable{
     private final String className;
     @Override

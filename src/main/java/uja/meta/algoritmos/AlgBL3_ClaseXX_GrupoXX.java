@@ -1,60 +1,66 @@
 package uja.meta.algoritmos;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+
 import org.apache.log4j.Logger;
 
-import java.util.Arrays;
 import java.util.Random;
-import java.util.ArrayList;
 
-@RequiredArgsConstructor
+import static uja.meta.utils.FuncionesAuxiliares.calculaCoste;
+import static uja.meta.utils.FuncionesAuxiliares.visualizaVectorLog;
+
+@AllArgsConstructor
 public class AlgBL3_ClaseXX_GrupoXX implements Runnable {
-    public double SoluBLocal3(int tam, long evaluaciones, Double[] solActual, double rMin, double rMax,
-                       int selector) {
+    private final int D;
+    private final long iteraciones;
+    private double[] vSolucion;
+    private final double rangoInf;
+    private final double rangoSup;
+    private final String funcion;
+    private final String className;
 
+    @Override
+    public void run() {
+        Logger log = Logger.getLogger(className);
+        double tiempoInicial = System.nanoTime();
+        Random random = new Random();
 
-        for (int i = 0; i < tam; i++) {
-            solActual[i] = Math.random() * (rMin - rMax) + rMax;
-        }
-        for (int i = 0; i < solActual.length; i++) {
-            System.out.println(", " + solActual[i]);
-        }
-
-        Double[] vecino = new Double[tam];
-        Double[] mejorVecino;
-        mejorVecino = solActual;
+        double[] vecino = new double[D];
+        double[] mejorVecino;
+        mejorVecino = vSolucion;
         double mejorCosteVecino;
-        double mejorCoste = CalculaCoste(solActual, selector);
+        double mejorCoste = calculaCoste(vSolucion, funcion);
+
         int iter = 0;
         boolean mejora = true;
 
-        while (mejora && iter < evaluaciones) {
+        while (mejora && iter < iteraciones) {
             mejora = false;
-            mejorCosteVecino = 999999999;
+            mejorCosteVecino = Double.MAX_VALUE;
             for (int j = 1; j <= 3; j++) {
-                for (int k = 0; k < tam; k++) {    //	Para k = 1 hasta d
-                    double uniforme = Math.random() * (0 - 1.0001) + 1.0001;//Aleatorio [0,1]
+                for (int k = 0; k < D; k++) {    //	Para k = 1 hasta d
+                    double uniforme = random.nextDouble(1.0001 - 0) + 1.0001;//Aleatorio [0,1]
                     if (uniforme <= 0.3) { //0.3 probabilidad de cambio
                         double inf, sup;
-                        inf = solActual[k] * 0.9;
-                        sup = solActual[k] * 1.1;
-                        if (inf < rMin)
-                            inf = rMin;
-                        if (sup > rMax)
-                            sup = rMax;
+                        inf = vSolucion[k] * 0.9;
+                        sup = vSolucion[k] * 1.1;
+                        if (inf < rangoInf)
+                            inf = rangoInf;
+                        if (sup > rangoSup)
+                            sup = rangoSup;
 
-                        vecino[k] = Math.random() * (inf - sup) + sup;
+                        vecino[k] = random.nextDouble(sup - inf) + sup;
                     } else
-                        vecino[k] = solActual[k];
+                        vecino[k] = vSolucion[k];
                 }
-                double costeVecino = CalculaCoste(vecino, selector);  //GriewankEvaluate(vecino);
+                double costeVecino = calculaCoste(vecino, funcion);
                 if (costeVecino < mejorCosteVecino) {
                     mejorVecino = vecino;
                     mejorCosteVecino = costeVecino;
                 }
             }
             if (mejorCosteVecino < mejorCoste) {
-                solActual = mejorVecino;
+                vSolucion = mejorVecino;
                 mejorCoste = mejorCosteVecino;
                 mejora = true;
                 iter++;
@@ -64,46 +70,48 @@ public class AlgBL3_ClaseXX_GrupoXX implements Runnable {
 //            cout << "Paso = " << iter << endl;
 //            cout << endl << "Coste BL3: " << mejorCoste << endl;
 //            cout << "Vector Solucion:" << endl;
-//            for (int i = 0; i <tam; i++) {
+//            for (int i = 0; i <D; i++) {
 //                cout << solActual[i] << " ";
 //            }
 //            cout << endl;
             //  }
         }
-
-        System.out.println("Iteraciones: " + iter);
-        return mejorCoste;
+        log.info("vector: " + visualizaVectorLog(vSolucion));
+        log.info("Coste: " + mejorCoste);
+        log.info("Iteraciones: " + iter);
+        double tiempoFinal = System.nanoTime();
+        log.info("Tiempo transcurrido: " + (tiempoFinal - tiempoInicial) / 1000000 + "ms");
     }
 
 //    int tipo;
 //    //Calculamos el coste de la Solucion inicial
-//    long CosteActual=Coste (SolActual,tam);
+//    long CosteActual=Coste (SolActual,D);
 //
 //        vector<int> dlb;
-//        dlb.resize(tam);
-//        for (int i=0; i<tam; i++){
+//        dlb.resize(D);
+//        for (int i=0; i<D; i++){
 //                dlb[i]=0;
 //        }
 //        int iter=0;
 //        bool mejora=true;
 //        int pos=0;      //PARA ANOTAR LA ULTIMA POSICIÓN DE INTERCAMBIO ANTERIOR
-//        while (mejora && iter<evaluaciones) {
+//        while (mejora && iter<iteraciones) {
 //            mejora=false;
 //            if (selector==0)
 //                tipo=pos;     //SI NO HAY CARGA ALEATORIA ESTA OPCION DA EL MISMO RESULTADO AUN CAMBIANDO SEMILLA
 //            else
-//                tipo=Randint(0,tam-1);   //PRIMERA UNIDAD DE INTERCAMBIO ALEATORIA
+//                tipo=Randint(0,D-1);   //PRIMERA UNIDAD DE INTERCAMBIO ALEATORIA
 //
 //            //comenzar por el principio y llegar hasta el punto de partida
-//            for (int i=tipo, cont=0; cont<tam && !mejora; i++, cont++){
-//                if (i==tam) i=0;  //para que cicle
+//            for (int i=tipo, cont=0; cont<D && !mejora; i++, cont++){
+//                if (i==D) i=0;  //para que cicle
 //                if (dlb[i]==0) {
 //                    bool improve_flag = false;
 //
-//                    for (int j=i+1, cont1=0; cont1<tam && !mejora; j++, cont1++){
+//                    for (int j=i+1, cont1=0; cont1<D && !mejora; j++, cont1++){
 //                        //checkMove(i,j)
-//                        if (j==tam) j=0;  //para que cicleiter++;
-//                        int C = FactCoste2Opt (SolActual, flu,loc, tam, CosteActual, i,j);
+//                        if (j==D) j=0;  //para que cicleiter++;
+//                        int C = FactCoste2Opt (SolActual, flu,loc, D, CosteActual, i,j);
 //                        if (C<CosteActual){
 //                            iter++;
 //                            CosteActual=C;

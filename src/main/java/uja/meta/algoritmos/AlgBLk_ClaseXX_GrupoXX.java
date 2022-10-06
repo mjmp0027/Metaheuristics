@@ -90,7 +90,7 @@ public class AlgBLk_ClaseXX_GrupoXX implements Runnable {
                 }
             }
         }
-        log.info("vector: " + visualizaVectorLog(vDLB));
+        log.info("vector: " + visualizaVectorLog(vSolucion));
         log.info("Iteraciones totales: " + iteraciones);
         log.info("Coste: " + costeMejor);
         double tiempoFinal = System.nanoTime();
