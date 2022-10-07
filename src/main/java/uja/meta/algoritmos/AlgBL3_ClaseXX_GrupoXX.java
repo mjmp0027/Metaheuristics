@@ -29,7 +29,7 @@ public class AlgBL3_ClaseXX_GrupoXX implements Runnable {
         double[] mejorVecino;
         mejorVecino = vSolucion;
         double mejorCosteVecino;
-        double mejorCoste = calculaCoste(vSolucion, funcion);
+        double costeMejor = calculaCoste(vSolucion, funcion);
 
         int iter = 0;
         boolean mejora = true;
@@ -59,25 +59,16 @@ public class AlgBL3_ClaseXX_GrupoXX implements Runnable {
                     mejorCosteVecino = costeVecino;
                 }
             }
-            if (mejorCosteVecino < mejorCoste) {
+            if (mejorCosteVecino < costeMejor) {
                 vSolucion = mejorVecino;
-                mejorCoste = mejorCosteVecino;
+                costeMejor = mejorCosteVecino;
                 mejora = true;
                 iter++;
             }
-            //  if (iter % kPaso == 0) {
 
-//            cout << "Paso = " << iter << endl;
-//            cout << endl << "Coste BL3: " << mejorCoste << endl;
-//            cout << "Vector Solucion:" << endl;
-//            for (int i = 0; i <D; i++) {
-//                cout << solActual[i] << " ";
-//            }
-//            cout << endl;
-            //  }
         }
         log.info("vector: " + visualizaVectorLog(vSolucion));
-        log.info("Coste: " + mejorCoste);
+        log.info("Coste: " + costeMejor);
         log.info("Iteraciones: " + iter);
         double tiempoFinal = System.nanoTime();
         log.info("Tiempo transcurrido: " + (tiempoFinal - tiempoInicial) / 1000000 + "ms");

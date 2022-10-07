@@ -1,5 +1,6 @@
 import org.apache.log4j.BasicConfigurator;
 import uja.meta.algoritmos.AlgBL3_ClaseXX_GrupoXX;
+import uja.meta.algoritmos.AlgBLk_ClaseXX_GrupoXX;
 import uja.meta.utils.Lector;
 
 import java.io.File;
@@ -42,9 +43,10 @@ public class Practica1 {
                             executor.execute(bl);
                         }
                         case "blk" -> {
-                            /*AlgBLk_ClaseXX_GrupoXX prueba =
-                                    new AlgBLk_ClaseXX_GrupoXX(funcion + ".BLk" + "." + semilla);
-                            executor.execute(prueba);*/
+                            AlgBLk_ClaseXX_GrupoXX prueba =
+                                    new AlgBLk_ClaseXX_GrupoXX(D, 1000, vSolucion, rangoInf, rangoSup, funcion,
+                                            funcion + ".BLk" + "." + semilla);
+                            executor.execute(prueba);
                         }
                         case "ma" -> {
                             /*AlgMA_ClaseXX_GrupoXX prueba =
