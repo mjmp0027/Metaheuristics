@@ -6,8 +6,7 @@ import org.apache.log4j.Logger;
 
 import java.util.Random;
 
-import static uja.meta.utils.FuncionesAuxiliares.calculaCoste;
-import static uja.meta.utils.FuncionesAuxiliares.visualizaVectorLog;
+import static uja.meta.utils.FuncionesAuxiliares.*;
 
 @AllArgsConstructor
 public class AlgBL3_ClaseXX_GrupoXX implements Runnable {
@@ -68,10 +67,10 @@ public class AlgBL3_ClaseXX_GrupoXX implements Runnable {
 
         }
         log.info("vector: " + visualizaVectorLog(vSolucion));
-        log.info("Coste: " + costeMejor);
+        log.info("Coste: " + formato(costeMejor));
         log.info("Iteraciones: " + iter);
         double tiempoFinal = System.nanoTime();
-        log.info("Tiempo transcurrido: " + (tiempoFinal - tiempoInicial) / 1000000 + "ms");
+        log.info("Tiempo transcurrido: " + calcularTiempo(tiempoInicial, tiempoFinal) + " ms");
     }
 
 //    int tipo;

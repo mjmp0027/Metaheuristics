@@ -92,4 +92,13 @@ public class FuncionesAuxiliares {
             }
         }
     }
+
+    public static String calcularTiempo(double tiempoInicial, double tiempoFinal) {
+        double totalTiempo = (tiempoFinal - tiempoInicial) / 1000000;
+        return formato(totalTiempo);
+    }
+
+    public static String formato(double variable) {
+        return String.format("%.3f", variable);
+    }
 }

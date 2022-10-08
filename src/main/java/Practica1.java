@@ -10,12 +10,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import static uja.meta.utils.FuncionesAuxiliares.generador;
-import static uja.meta.utils.FuncionesAuxiliares.getFiles;
+import static uja.meta.utils.FuncionesAuxiliares.*;
 
 public class Practica1 {
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        double tiempoInicial = System.nanoTime();
         BasicConfigurator.configure();
         String ruta = "src/main/resources/configFiles/";
         ExecutorService executor = Executors.newCachedThreadPool();
@@ -59,5 +59,7 @@ public class Practica1 {
         }
         executor.shutdown();
         executor.awaitTermination(1, TimeUnit.MINUTES);
+        double tiempoFinal = System.nanoTime();
+        System.out.println("Tiempo total PRÁCTICA 1: " + calcularTiempo(tiempoInicial, tiempoFinal) + " ms");
     }
 }

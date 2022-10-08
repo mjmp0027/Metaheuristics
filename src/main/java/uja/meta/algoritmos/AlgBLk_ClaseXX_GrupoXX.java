@@ -6,8 +6,7 @@ import org.apache.log4j.Logger;
 
 import java.util.Random;
 
-import static uja.meta.utils.FuncionesAuxiliares.calculaCoste;
-import static uja.meta.utils.FuncionesAuxiliares.visualizaVectorLog;
+import static uja.meta.utils.FuncionesAuxiliares.*;
 
 @AllArgsConstructor
 public class AlgBLk_ClaseXX_GrupoXX implements Runnable {
@@ -59,17 +58,17 @@ public class AlgBLk_ClaseXX_GrupoXX implements Runnable {
                     mejorCosteVecino = costeVecino;
                 }
             }
-            if(mejorCosteVecino<costeMejor){
-                vSolucion=mejorVecino;
-                costeMejor=mejorCosteVecino;
-                mejora=true;
+            if (mejorCosteVecino < costeMejor) {
+                vSolucion = mejorVecino;
+                costeMejor = mejorCosteVecino;
+                mejora = true;
                 iter++;
             }
         }
         log.info("vector: " + visualizaVectorLog(vSolucion));
         log.info("Iteraciones totales: " + iteraciones);
-        log.info("Coste: " + costeMejor);
+        log.info("Coste: " + formato(costeMejor));
         double tiempoFinal = System.nanoTime();
-        log.info("Tiempo transcurrido: " + (tiempoFinal - tiempoInicial) / 1000000 + "ms");
+        log.info("Tiempo transcurrido: " + calcularTiempo(tiempoInicial, tiempoFinal) + " ms");
     }
 }
