@@ -1,9 +1,15 @@
 package uja.meta.utils;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import static uja.meta.funciones.Ackley.evaluateA;
 import static uja.meta.funciones.Dixonprice.evaluateD;
@@ -19,7 +25,7 @@ import static uja.meta.funciones.Trid.evaluateT;
 public class FuncionesAuxiliares {
     public static List<String> getFiles(final File folder) {
         List<String> fileName = new ArrayList<>();
-        for (final File fileEntry : folder.listFiles()) {
+        for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
             if (fileEntry.isDirectory()) {
                 getFiles(fileEntry);
             } else {
@@ -43,16 +49,21 @@ public class FuncionesAuxiliares {
         StringBuilder vector = new StringBuilder();
         vector.append("[");
         for (int i = 0; i < vSolucion.length - 1; i++) {
-            vector.append(i).append(", ");
+            vector.append(vSolucion[i]).append(", ");
         }
         vector.append(vSolucion[vSolucion.length - 1]).append("]");
         return vector.toString();
     }
 
-    public static void intercambiaPos(double[] vSolucion, int i, int j) {
-        double aux = vSolucion[i];
-        vSolucion[i] = vSolucion[j];
-        vSolucion[j] = aux;
+    public static void cambio(double[] vSolucion, double[] vecino, int j, double rangoInf, double rangoSup) {
+        double inf, sup; // FIXME cambiar nombre metodo
+        inf = vSolucion[j] * 0.9;
+        sup = vSolucion[j] * 1.1;
+        if (inf < rangoInf)
+            inf = rangoInf;
+        if (sup > rangoSup)
+            sup = rangoSup;
+        vecino[j] = (Math.random() * (sup - inf)) + inf;
     }
 
     public static double calculaCoste(double[] vSolucion, String funcion) {
@@ -101,4 +112,65 @@ public class FuncionesAuxiliares {
     public static String formato(double variable) {
         return String.format("%.3f", variable);
     }
+
+    public static void exportCSV(List<Future<Solucion>> soluciones, String name)
+            throws IOException, ExecutionException, InterruptedException {
+
+        List<Solucion> resultado1 = new ArrayList<>();
+        List<Solucion> resultado2 = new ArrayList<>();
+        List<Solucion> resultado3 = new ArrayList<>();
+        List<Solucion> resultado4 = new ArrayList<>();
+        List<Solucion> resultado5 = new ArrayList<>();
+
+        for (Future<Solucion> solucion : soluciones) {
+            Solucion s = solucion.get();
+            if (s.getSemilla() == 53916079) {
+                resultado1.add(s);
+            } else if (s.getSemilla() == 95391607) {
+                resultado2.add(s);
+            } else if (s.getSemilla() == 79539160) {
+                resultado3.add(s);
+            } else if (s.getSemilla() == 7953916) {
+                resultado4.add(s);
+            } else if (s.getSemilla() == 60795391) {
+                resultado5.add(s);
+            }
+        }
+
+        FileOutputStream csvFile = new FileOutputStream(name + ".csv");
+        try (PrintWriter pw = new PrintWriter(csvFile)) {
+            resultado1.stream()
+                    .map(FuncionesAuxiliares::convertToCSV)
+                    .forEach(pw::print);
+
+            pw.println();
+
+            resultado2.stream()
+                    .map(FuncionesAuxiliares::convertToCSV)
+                    .forEach(pw::print);
+
+            pw.println();
+
+            resultado3.stream()
+                    .map(FuncionesAuxiliares::convertToCSV)
+                    .forEach(pw::print);
+
+            pw.println();
+
+            resultado4.stream()
+                    .map(FuncionesAuxiliares::convertToCSV)
+                    .forEach(pw::print);
+
+            pw.println();
+
+            resultado5.stream()
+                    .map(FuncionesAuxiliares::convertToCSV)
+                    .forEach(pw::write);
+        }
+    }
+
+    private static String convertToCSV(Solucion solucion) {
+        return solucion.toString();
+    }
+
 }
