@@ -40,7 +40,7 @@ public class AlgBLk_ClaseXX_GrupoXX implements Callable<Solucion> {
             for (int i = 0; i <= x; i++) {
                 for (int j = 0; j < D; j++) {
                     if (random.nextDouble() <= 0.3) {
-                        cambio(vSolucion, vecino, j, rangoInf, rangoSup);
+                        nuevaSolucion(vSolucion, vecino, j, rangoInf, rangoSup);
                     } else
                         vecino[j] = vSolucion[j];
                 }

@@ -55,8 +55,8 @@ public class FuncionesAuxiliares {
         return vector.toString();
     }
 
-    public static void cambio(double[] vSolucion, double[] vecino, int j, double rangoInf, double rangoSup) {
-        double inf, sup; // FIXME cambiar nombre metodo
+    public static void nuevaSolucion(double[] vSolucion, double[] vecino, int j, double rangoInf, double rangoSup) {
+        double inf, sup;
         inf = vSolucion[j] * 0.9;
         sup = vSolucion[j] * 1.1;
         if (inf < rangoInf)
