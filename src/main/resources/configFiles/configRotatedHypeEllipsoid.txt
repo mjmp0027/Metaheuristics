@@ -7,3 +7,4 @@ k=3
 funcion=rotatedHypeEllipsoid
 rangoInf=-65536
 rangoSup=65536
+probabilidad=0.3

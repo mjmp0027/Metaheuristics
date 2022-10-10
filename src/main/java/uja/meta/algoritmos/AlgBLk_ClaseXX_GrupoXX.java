@@ -14,6 +14,7 @@ public class AlgBLk_ClaseXX_GrupoXX implements Callable<Solucion> {
     private final int D;
     private final long semilla;
     private final long iteraciones;
+    private final double probabilidad;
     private final double rangoInf;
     private final double rangoSup;
     private final String funcion;
@@ -39,7 +40,7 @@ public class AlgBLk_ClaseXX_GrupoXX implements Callable<Solucion> {
 
             for (int i = 0; i <= x; i++) {
                 for (int j = 0; j < D; j++) {
-                    if (random.nextDouble() <= 0.3) {
+                    if (random.nextDouble() <= probabilidad) {
                         nuevaSolucion(vSolucion, vecino, j, rangoInf, rangoSup);
                     } else
                         vecino[j] = vSolucion[j];
