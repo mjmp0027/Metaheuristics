@@ -7,4 +7,4 @@ k=3
 funcion=trid
 rangoInf=-1000
 rangoSup=1000
-probabilidad=0.3
+oscilacion=0.3

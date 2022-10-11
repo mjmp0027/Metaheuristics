@@ -7,4 +7,4 @@ k=3
 funcion=rastringin
 rangoInf=-52.12
 rangoSup=52.12
-probabilidad=0.3
+oscilacion=0.3

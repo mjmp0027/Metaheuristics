@@ -20,7 +20,7 @@ public class Lector { // TODO agregar: oscilacion, iteraciones,
     private double rangoInf;
     private double rangoSup;
     private long iteraciones;
-    private double probabilidad;
+    private double oscilacion;
 
     public Lector(String rutaArchConfig) throws IOException {
         String linea;
@@ -40,7 +40,7 @@ public class Lector { // TODO agregar: oscilacion, iteraciones,
                 }
                 case "D" -> D = Integer.parseInt(separador[1]);
                 case "iteraciones" -> iteraciones = Long.parseLong(separador[1]);
-                case "probabilidad" -> probabilidad = Double.parseDouble(separador[1]);
+                case "oscilacion" -> oscilacion = Double.parseDouble(separador[1]);
                 case "algoritmos" -> {
                     String[] paramArch = separador[1].split(" ");
                     algoritmos.addAll(Arrays.asList(paramArch));
