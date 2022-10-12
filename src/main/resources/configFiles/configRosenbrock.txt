@@ -7,4 +7,4 @@ k=3
 funcion=rosenbrock
 rangoInf=-5
 rangoSup=10
-probabilidad=0.3
+oscilacion=0.3

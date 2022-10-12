@@ -7,4 +7,4 @@ k=3
 funcion=schewefel
 rangoInf=-5000
 rangoSup=5000
-probabilidad=0.3
+oscilacion=0.3
