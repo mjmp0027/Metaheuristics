@@ -73,6 +73,5 @@ public class Practica1 {
 
         double tiempoFinal = System.nanoTime();
         System.out.println("Tiempo total PRÁCTICA 1: " + calcularTiempo(tiempoInicial, tiempoFinal) + " ms");
-
     }
 }

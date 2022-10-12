@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
-public class Lector { // TODO agregar: oscilacion, iteraciones,
+public class Lector {
     private final List<String> algoritmos = new ArrayList<>();
     private int tamSem;
     private long[] semillas;
