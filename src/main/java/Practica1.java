@@ -35,20 +35,20 @@ public class Practica1 {
             double rangoInf = lector.getRangoInf();
             double rangoSup = lector.getRangoSup();
             long iteraciones = lector.getIteraciones();
-            double probabilidad = lector.getProbabilidad();
+            double oscilacion = lector.getOscilacion();
             for (String algoritmo : algoritmos) {
                 for (long semilla : semillas) {
                     double[] vSolucion = generador(rangoInf, rangoSup, semilla, D);
                     switch (algoritmo) {
                         case "bl3" -> {
                             AlgBL3_ClaseXX_GrupoXX bl =
-                                    new AlgBL3_ClaseXX_GrupoXX(D, k, semilla, iteraciones, probabilidad, rangoInf, rangoSup,
+                                    new AlgBL3_ClaseXX_GrupoXX(D, k, semilla, iteraciones, oscilacion, rangoInf, rangoSup,
                                             funcion, funcion + ".BL3" + "." + semilla, vSolucion);
                             resultadoBL3.add(executor.submit(bl));
                         }
                         case "blk" -> {
                             AlgBLk_ClaseXX_GrupoXX prueba =
-                                    new AlgBLk_ClaseXX_GrupoXX(D, semilla, iteraciones, probabilidad, rangoInf, rangoSup, funcion,
+                                    new AlgBLk_ClaseXX_GrupoXX(D, semilla, iteraciones, oscilacion, rangoInf, rangoSup, funcion,
                                             funcion + ".BLk" + "." + semilla, vSolucion);
                             resultadoBLk.add(executor.submit(prueba));
                         }

@@ -7,4 +7,4 @@ k=3
 funcion=michalewicz
 rangoInf=0
 rangoSup=2PI
-probabilidad=0.3
+oscilacion=0.3
