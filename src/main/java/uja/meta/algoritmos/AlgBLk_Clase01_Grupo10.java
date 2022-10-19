@@ -10,7 +10,7 @@ import java.util.concurrent.Callable;
 import static uja.meta.utils.FuncionesAuxiliares.*;
 
 @AllArgsConstructor
-public class AlgBLk_ClaseXX_GrupoXX implements Callable<Solucion> {
+public class AlgBLk_Clase01_Grupo10 implements Callable<Solucion> {
     private final int D;
     private final long semilla;
     private final long iteraciones;

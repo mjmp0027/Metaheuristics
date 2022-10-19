@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
 import static uja.meta.utils.FuncionesAuxiliares.*;
 
 @AllArgsConstructor
-public class AlgBL3_ClaseXX_GrupoXX implements Callable<Solucion> {
+public class AlgBL3_Clase01_Grupo10 implements Callable<Solucion> {
     private final int D;
     private final int k;
     private final long semilla;

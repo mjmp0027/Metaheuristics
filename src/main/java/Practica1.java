@@ -1,7 +1,7 @@
 import org.apache.log4j.BasicConfigurator;
-import uja.meta.algoritmos.AlgBL3_ClaseXX_GrupoXX;
-import uja.meta.algoritmos.AlgBLk_ClaseXX_GrupoXX;
-import uja.meta.algoritmos.AlgMA_ClaseXX_GrupoXX;
+import uja.meta.algoritmos.AlgBL3_Clase01_Grupo10;
+import uja.meta.algoritmos.AlgBLk_Clase01_Grupo10;
+import uja.meta.algoritmos.AlgMA_Clase01_Grupo10;
 import uja.meta.utils.Lector;
 import uja.meta.utils.Solucion;
 
@@ -22,6 +22,7 @@ public class Practica1 {
         ExecutorService executor = Executors.newCachedThreadPool();
         List<Future<Solucion>> resultadoBL3 = new ArrayList<>();
         List<Future<Solucion>> resultadoBLk = new ArrayList<>();
+        List<Future<Solucion>> resultadoMA = new ArrayList<>();
         final File folder = new File(ruta);
         List<String> archivosConfig = getFiles(folder);
 
@@ -41,21 +42,22 @@ public class Practica1 {
                     double[] vSolucion = generador(rangoInf, rangoSup, semilla, D);
                     switch (algoritmo) {
                         case "bl3" -> {
-                            AlgBL3_ClaseXX_GrupoXX bl =
-                                    new AlgBL3_ClaseXX_GrupoXX(D, k, semilla, iteraciones, oscilacion, rangoInf, rangoSup,
+                            AlgBL3_Clase01_Grupo10 bl3 =
+                                    new AlgBL3_Clase01_Grupo10(D, k, semilla, iteraciones, oscilacion, rangoInf, rangoSup,
                                             funcion, funcion + ".BL3" + "." + semilla, vSolucion);
-                            resultadoBL3.add(executor.submit(bl));
+                            resultadoBL3.add(executor.submit(bl3));
                         }
                         case "blk" -> {
-                            AlgBLk_ClaseXX_GrupoXX prueba =
-                                    new AlgBLk_ClaseXX_GrupoXX(D, semilla, iteraciones, oscilacion, rangoInf, rangoSup, funcion,
+                            AlgBLk_Clase01_Grupo10 blk =
+                                    new AlgBLk_Clase01_Grupo10(D, semilla, iteraciones, oscilacion, rangoInf, rangoSup, funcion,
                                             funcion + ".BLk" + "." + semilla, vSolucion);
-                            resultadoBLk.add(executor.submit(prueba));
+                            resultadoBLk.add(executor.submit(blk));
                         }
-                        case "ma" -> { // TODO
-                            AlgMA_ClaseXX_GrupoXX prueba =
-                                    new AlgMA_ClaseXX_GrupoXX(funcion + ".MA" + "." + semilla);
-                            executor.execute(prueba);
+                        case "ma" -> {
+                            AlgMA_Clase01_Grupo10 ma =
+                                    new AlgMA_Clase01_Grupo10(D, iteraciones, vSolucion, rangoInf, rangoSup,
+                                            funcion, 1, funcion + ".MA" + "." + semilla, semilla);
+                            resultadoMA.add(executor.submit(ma));
                         }
                     }
                 }
@@ -70,6 +72,7 @@ public class Practica1 {
         // NOTA: no hace falta ordenar porque sigue siempre el orden del directorio 'configFiles'
         exportCSV(resultadoBL3, "BL3");
         exportCSV(resultadoBLk, "BLk");
+        //exportCSV(resultadoMA, "MA");
 
         double tiempoFinal = System.nanoTime();
         System.out.println("Tiempo total PRÁCTICA 1: " + calcularTiempo(tiempoInicial, tiempoFinal) + " ms");
