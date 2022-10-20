@@ -41,7 +41,7 @@ public class Practica1 {
                 for (long semilla : semillas) {
                     double[] vSolucion = generador(rangoInf, rangoSup, semilla, D);
                     switch (algoritmo) {
-                        case "bl3" -> {
+                        /*case "bl3" -> {
                             AlgBL3_Clase01_Grupo10 bl3 =
                                     new AlgBL3_Clase01_Grupo10(D, k, semilla, iteraciones, oscilacion, rangoInf, rangoSup,
                                             funcion, funcion + ".BL3" + "." + semilla, vSolucion);
@@ -52,11 +52,11 @@ public class Practica1 {
                                     new AlgBLk_Clase01_Grupo10(D, semilla, iteraciones, oscilacion, rangoInf, rangoSup, funcion,
                                             funcion + ".BLk" + "." + semilla, vSolucion);
                             resultadoBLk.add(executor.submit(blk));
-                        }
+                        }*/
                         case "ma" -> {
                             AlgMA_Clase01_Grupo10 ma =
                                     new AlgMA_Clase01_Grupo10(D, iteraciones, vSolucion, rangoInf, rangoSup,
-                                            funcion, 1, funcion + ".MA" + "." + semilla, semilla);
+                                            funcion, 1, funcion + ".MA" + "." + semilla, semilla, oscilacion);
                             resultadoMA.add(executor.submit(ma));
                         }
                     }

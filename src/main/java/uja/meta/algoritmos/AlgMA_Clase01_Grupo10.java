@@ -23,17 +23,17 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
     private int tenenciaTabu;
     private final String className;
     private final long semilla;
+    private double oscilacion;
 
     void menosVisitados(long mat[][], double[] nuevaSol, double rmin, double rmax) {
         int tam = nuevaSol.length;
-        double menor;
+        double menor = Double.MAX_VALUE;
         int pc = 0;
         int columnas[] = new int[3];
         Random random = new Random();
 
         for (int i = 0; i < tam; i++) {
             for (int k = 0; k < 3; k++) {
-                menor = 999999999;
                 for (int j = 0; j < 10; j++) {
                     if (mat[i][j] <= menor) {
                         menor = mat[i][j];
@@ -41,14 +41,14 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                     }
                 }
                 columnas[k] = pc;
-                mat[i][pc] = 999999999;
+                mat[i][pc] = Integer.MAX_VALUE;
             }
             int aleatorio = random.nextInt(2);
             int col = columnas[aleatorio];
             double ancho = (rmax - rmin + 1) / 10;
             double ini = rmin + (col * ancho);
             double fin = ini + ancho;
-            nuevaSol[i] = random.nextDouble(fin - ini) - ini;
+            nuevaSol[i] = random.nextDouble(fin - ini) + ini;
         }
     }
 
@@ -76,75 +76,80 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
             double ancho = (rmax - rmin + 1) / 10;
             double ini = rmin + (col * ancho);
             double fin = ini + ancho;
-            nuevaSol[i] = random.nextDouble(fin - ini) - ini;
+            nuevaSol[i] = random.nextDouble(fin - ini) + ini;
         }
     }
 
     @Override
     public Solucion call() {
         Logger log = Logger.getLogger(className);
-        log.info("Vector inicial: " + visualizaVectorLog(vSolucion));
+        //log.info("Vector inicial: " + visualizaVectorLog(vSolucion));
         Random random = new Random();
         double inf, sup;
-        int contador;
+        int contador = 0;
 
         visualizaVectorLog(vSolucion);
 
         double tiempoInicial = System.nanoTime();
         double costeActual = calculaCoste(vSolucion, funcion);
-        double CosteMejorPeor, CGlobal = costeActual, CosteMejorMomento = 999999999e+100;
+        double costeMejorPeor, costeMejorMomento = Double.MAX_VALUE;
+        double CGlobal = costeActual;
         int osc = 0;
         long memFrec[][] = new long[10][10];
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
+                memFrec[i][j]=0;
+
 
         List<double[]> lTabu = new ArrayList<>();
         List<List<Integer>> lTabuMov = new ArrayList<>();
         List<Integer> cambiosVecino = new ArrayList<>();
         List<Integer> cambiosMejorVecino = new ArrayList<>();
-
+        Integer[] vecianso = new Integer[100];
         lTabu.add(vSolucion);
 
         double[] vecino = new double[100];
         double[] mejorVecino = new double[100];
         double[] mejorPeores = new double[100],
-                SolGlobal = vSolucion,
-                nuevaSol = new double[0];
-        int iter;
+                solGlobal = vSolucion,
+                nuevaSol = new double[100];
+        int iter = 0;
 
         boolean mejora;
-        double mejorCosteVecino = 999999999e+100;
+        double mejorCosteVecino = Double.MAX_VALUE;
         int contNoTabu;
         int multiarranque = 1;
-        iter = 0;
-        contador = 0;
 
         while (iter < iteraciones) {
             iter++;
             mejora = false;
-            CosteMejorPeor = 999999999e+100;
+            costeMejorPeor = Double.MAX_VALUE;
             contNoTabu = 0;
             int x = random.nextInt(10, 4) - 4;
             for (int j = 1; j <= x; j++) {
-
                 for (int k = 0; k < D; k++) {
                     float uniforme = random.nextFloat();
-                    if (uniforme <= 0.3) {
+                    if (uniforme <= oscilacion) {
                         cambiosVecino.set(k, 1);
                         if (multiarranque == 1) {
                             inf = vSolucion[k] * 0.9;
                             sup = vSolucion[k] * 1.1;
 
-                            if (vSolucion[k] < 0)
+                            if (vSolucion[k] < 0) {
+                                double aux;
+                                aux = inf;
                                 inf = sup;
-                            sup = inf;
+                                sup = aux;
+                            }
 
                             if (inf < rmin)
                                 inf = rmin;
                             if (sup > rmax)
                                 sup = rmax;
-                            vecino[k] = random.nextDouble(inf, sup);
+                            vecino[k] = random.nextDouble(sup - inf) + inf;
                         } else {
                             if (multiarranque == 2) {
-                                vecino[k] = random.nextDouble(rmin, rmax);
+                                vecino[k] = random.nextDouble(rmax - rmin) + rmin;
                             } else {
                                 vecino[k] = vSolucion[k] * -1;
                             }
@@ -163,9 +168,11 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                         double valor = lTabu.get(i)[p];
                         inf = valor * 0.99;
                         sup = valor * 1.01;
-                        if (valor < 0)
+                        if (valor < 0) {
+                            double aux = inf;
                             inf = sup;
-                        sup = inf;
+                            sup = aux;
+                        }
 
                         if (vecino[p] < inf || vecino[p] > sup) {
                             cont++;
@@ -181,6 +188,7 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                 if (!tabu) {
                     for (int i = 0; i < lTabuMov.size(); i++) {
                         if (cambiosVecino == (lTabuMov.get(i))) {
+                            tabu=true;
                             break;
                         }
                     }
@@ -212,7 +220,6 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                                 memFrec[i][posCol]++;
                                 break;
                             }
-
                         posCol++;
                     }
                 }
@@ -230,14 +237,14 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                     costeActual = mejorCosteVecino;
                     mejora = true;
                 } else {
-                    if (mejorCosteVecino < CosteMejorPeor) {
-                        CosteMejorPeor = mejorCosteVecino;
+                    if (mejorCosteVecino < costeMejorPeor) {
+                        costeMejorPeor = mejorCosteVecino;
                         mejorPeores = vSolucion;
                     }
                 }
                 if (!mejora) {
 
-                    costeActual = CosteMejorPeor;
+                    costeActual = costeMejorPeor;
                     vSolucion = mejorPeores;
                     contador++;
 
@@ -249,19 +256,19 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                     contador = 0;
                     if (costeActual < CGlobal) {
                         CGlobal = costeActual;
-                        SolGlobal = vSolucion;
+                        solGlobal = vSolucion;
 
                     }
                 }
 
                 if (contador == 50) {
                     if (osc == 0) {
-                        if (CosteMejorMomento > costeActual) {
-                            CosteMejorMomento = costeActual;
+                        if (costeMejorMomento > costeActual) {
+                            costeMejorMomento = costeActual;
                         }
                     } else {
-                        if (CosteMejorMomento > costeActual) {
-                            CosteMejorMomento = costeActual;
+                        if (costeMejorMomento > costeActual) {
+                            costeMejorMomento = costeActual;
                         }
                     }
 
@@ -282,7 +289,7 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
 
                     if (costeActual < CGlobal) {
                         CGlobal = costeActual;
-                        SolGlobal = vSolucion;
+                        solGlobal = vSolucion;
                     }
 
                     for (int i = 0; i < D; i++)
@@ -292,10 +299,11 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                 }
             }
         }
-
+        log.info("CGGlobal: " + CGlobal);
         log.info("Vector solucion: " + visualizaVectorLog(vSolucion));
         String costeFormat = formato(costeActual);
         log.info("Coste: " + costeFormat);
+        log.info("Solución global: " + solGlobal);
         log.info("Iteraciones: " + iter);
         double tiempoFinal = System.nanoTime();
         String tiempoTotal = calcularTiempo(tiempoInicial, tiempoFinal);
