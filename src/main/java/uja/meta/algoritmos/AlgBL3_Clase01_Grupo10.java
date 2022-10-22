@@ -60,14 +60,14 @@ public class AlgBL3_Clase01_Grupo10 implements Callable<Solucion> {
                 iter++;
             }
         }
-
+        double tiempoFinal = System.nanoTime();
+        String tiempoTotal = calcularTiempo(tiempoInicial, tiempoFinal);
+        log.info("Tiempo transcurrido: " + tiempoTotal + " ms");
         log.info("Vector solucion: " + visualizaVectorLog(vSolucion));
         String costeFormat = formato(costeMejor);
         log.info("Coste: " + costeFormat);
         log.info("Iteraciones: " + iter);
-        double tiempoFinal = System.nanoTime();
-        String tiempoTotal = calcularTiempo(tiempoInicial, tiempoFinal);
-        log.info("Tiempo transcurrido: " + tiempoTotal + " ms");
+
         return new Solucion(costeFormat, tiempoTotal, semilla);
     }
 }
