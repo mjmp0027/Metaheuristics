@@ -55,8 +55,9 @@ public class Practica1 {
                         }
                         case "ma" -> {
                             AlgMA_Clase01_Grupo10 ma =
-                                    new AlgMA_Clase01_Grupo10(D, iteraciones, vSolucion, rangoInf, rangoSup,
-                                            funcion, 1, funcion + ".MA" + "." + semilla, semilla, oscilacion);
+                                    new AlgMA_Clase01_Grupo10(funcion + ".MA" + "." + semilla, semilla, D,
+                                            iteraciones, vSolucion, rangoInf, rangoSup, funcion, 1,
+                                            oscilacion);
                             resultadoMA.add(executor.submit(ma));
                         }
                     }

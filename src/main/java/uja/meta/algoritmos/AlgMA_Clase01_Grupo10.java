@@ -14,6 +14,8 @@ import static uja.meta.utils.FuncionesAuxiliares.calcularTiempo;
 
 @AllArgsConstructor
 public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
+    private final String className;
+    private final long semilla;
     private int D;
     private long iteraciones;
     private double[] vSolucion;
@@ -21,8 +23,6 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
     private double rmax;
     private String funcion;
     private int tenenciaTabu;
-    private final String className;
-    private final long semilla;
     private double oscilacion;
 
     void menosVisitados(long[][] mat, double[] nuevaSol, double rmin, double rmax) {
@@ -88,6 +88,7 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
         double inf, sup;
         int contador = 0;
 
+        double[] solucionInicial = vSolucion;
         visualizaVectorLog(vSolucion);
 
         double tiempoInicial = System.nanoTime();
@@ -302,13 +303,16 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
         double tiempoFinal = System.nanoTime();
         String tiempoTotal = calcularTiempo(tiempoInicial, tiempoFinal);
         log.info("Tiempo transcurrido: " + tiempoTotal + " ms");
-        log.info("CGGlobal: " + CGlobal);
+        log.info("CGGlobal: " + formato(CGlobal));
         log.info("Vector solucion: " + visualizaVectorLog(vSolucion));
         String costeFormat = formato(costeActual);
         log.info("Coste: " + costeFormat);
         log.info("Solución global: " + visualizaVectorLog(solGlobal));
         log.info("Iteraciones: " + iter);
-
+        double MAPE = MAPE(solucionInicial, vSolucion);
+        double RMSE = RMSE(solucionInicial, vSolucion);
+        log.info("MAPE :  " + MAPE);
+        log.info("RMSE: " + RMSE);
         return new Solucion(costeFormat, tiempoTotal, semilla);
     }
 }

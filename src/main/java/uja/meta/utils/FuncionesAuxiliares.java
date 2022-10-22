@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +24,33 @@ import static uja.meta.funciones.Schewefel.evaluateS;
 import static uja.meta.funciones.Trid.evaluateT;
 
 public class FuncionesAuxiliares {
+
+    public static double MAPE(double[] real, double[] estimation) {
+        int N = real.length;
+        double score;
+        double sum = 0.0;
+        double num = 0.0;
+        for (int i = 0; i < N; i++) {
+            if (real[i] != 0) {
+                sum += Math.abs((real[i] - estimation[i]) / Math.abs(real[i]));
+                num++;
+            }
+        }
+        score = sum / num;
+        return score;
+    }
+
+    public static double RMSE(double[] real, double[] estimation) {
+        int N = real.length;
+        double score;
+        double sum = 0;
+        for (int i = 0; i < N; i++) {
+            sum += Math.pow(real[i] - estimation[i], 2);
+        }
+        score = Math.sqrt(1.0 / N * sum);
+        return score;
+    }
+
     public static List<String> getFiles(final File folder) {
         List<String> fileName = new ArrayList<>();
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
@@ -110,7 +138,7 @@ public class FuncionesAuxiliares {
     }
 
     public static String formato(double variable) {
-        return String.format("%.3f", variable);
+        return String.format("%.2f", variable);
     }
 
     public static void exportCSV(List<Future<Solucion>> soluciones, String name)
