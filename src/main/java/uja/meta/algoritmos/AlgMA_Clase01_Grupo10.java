@@ -98,7 +98,7 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
         long memFrec[][] = new long[10][10];
         for (int i = 0; i < 10; i++)
             for (int j = 0; j < 10; j++)
-                memFrec[i][j]=0;
+                memFrec[i][j] = 0;
 
 
         List<double[]> lTabu = new ArrayList<>();
@@ -125,12 +125,12 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
             mejora = false;
             costeMejorPeor = Double.MAX_VALUE;
             contNoTabu = 0;
-            int x = random.nextInt(10, 4) - 4;
+            int x = random.nextInt(10 - 4) + 4;
             for (int j = 1; j <= x; j++) {
                 for (int k = 0; k < D; k++) {
                     float uniforme = random.nextFloat();
                     if (uniforme <= oscilacion) {
-                        cambiosVecino.set(k, 1);
+                        cambiosVecino.add(k, 1);
                         if (multiarranque == 1) {
                             inf = vSolucion[k] * 0.9;
                             sup = vSolucion[k] * 1.1;
@@ -156,7 +156,7 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                         }
                     } else {
                         vecino[k] = vSolucion[k];
-                        cambiosVecino.set(k, 0);
+                        cambiosVecino.add(k, 0);
                     }
                 }
 
@@ -188,7 +188,7 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                 if (!tabu) {
                     for (int i = 0; i < lTabuMov.size(); i++) {
                         if (cambiosVecino == (lTabuMov.get(i))) {
-                            tabu=true;
+                            tabu = true;
                             break;
                         }
                     }
@@ -299,15 +299,16 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                 }
             }
         }
+        double tiempoFinal = System.nanoTime();
+        String tiempoTotal = calcularTiempo(tiempoInicial, tiempoFinal);
+        log.info("Tiempo transcurrido: " + tiempoTotal + " ms");
         log.info("CGGlobal: " + CGlobal);
         log.info("Vector solucion: " + visualizaVectorLog(vSolucion));
         String costeFormat = formato(costeActual);
         log.info("Coste: " + costeFormat);
-        log.info("Solución global: " + solGlobal);
+        log.info("Solución global: " + visualizaVectorLog(solGlobal));
         log.info("Iteraciones: " + iter);
-        double tiempoFinal = System.nanoTime();
-        String tiempoTotal = calcularTiempo(tiempoInicial, tiempoFinal);
-        log.info("Tiempo transcurrido: " + tiempoTotal + " ms");
+
         return new Solucion(costeFormat, tiempoTotal, semilla);
     }
 }
