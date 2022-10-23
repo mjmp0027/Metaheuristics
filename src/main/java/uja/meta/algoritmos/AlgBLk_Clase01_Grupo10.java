@@ -13,7 +13,7 @@ import static uja.meta.utils.FuncionesAuxiliares.*;
 public class AlgBLk_Clase01_Grupo10 implements Callable<Solucion> {
     private final int D;
     private final long semilla;
-    private final long iteraciones;
+    private final long limiteIteraciones;
     private final double oscilacion;
     private final double rangoInf;
     private final double rangoSup;
@@ -29,12 +29,12 @@ public class AlgBLk_Clase01_Grupo10 implements Callable<Solucion> {
         Random random = new Random();
         double[] vecino = new double[D];
         double[] mejorVecino = vSolucion;
-        double mejorCosteVecino = Double.MAX_VALUE;
-        double costeMejor = calculaCoste(vSolucion, funcion);
+        double vecinoMejorCoste = Double.MAX_VALUE;
+        double mejorCoste = calculaCoste(vSolucion, funcion);
         boolean mejora = true;
-        int iter = 0;
+        int iteraciones = 0;
 
-        while (mejora && iter < iteraciones) {
+        while (mejora && iteraciones < limiteIteraciones) {
             mejora = false;
             int x = random.nextInt(10 - 4) + 4;
 
@@ -46,25 +46,25 @@ public class AlgBLk_Clase01_Grupo10 implements Callable<Solucion> {
                         vecino[j] = vSolucion[j];
                 }
                 double costeVecino = calculaCoste(vecino, funcion);
-                if (costeVecino < mejorCosteVecino) {
+                if (costeVecino < vecinoMejorCoste) {
                     mejorVecino = vecino;
-                    mejorCosteVecino = costeVecino;
+                    vecinoMejorCoste = costeVecino;
                 }
             }
-            if (mejorCosteVecino < costeMejor) {
+            if (vecinoMejorCoste < mejorCoste) {
                 vSolucion = mejorVecino;
-                costeMejor = mejorCosteVecino;
+                mejorCoste = vecinoMejorCoste;
                 mejora = true;
-                iter++;
+                iteraciones++;
             }
         }
         double tiempoFinal = System.nanoTime();
         String tiempoTotal = calcularTiempo(tiempoInicial, tiempoFinal);
         log.info("Tiempo transcurrido: " + tiempoTotal + " ms");
         log.info("Vector solucion: " + visualizaVectorLog(vSolucion));
-        String costeFormat = formato(costeMejor);
+        String costeFormat = formato(mejorCoste);
         log.info("Coste: " + costeFormat);
-        log.info("Iteraciones: " + iter);
+        log.info("Iteraciones: " + iteraciones);
 
         return new Solucion(costeFormat, tiempoTotal, semilla);
     }

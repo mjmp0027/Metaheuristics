@@ -17,10 +17,10 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
     private final String className;
     private final long semilla;
     private int D;
-    private long iteraciones;
+    private long limiteIteraciones;
     private double[] vSolucion;
-    private double rmin;
-    private double rmax;
+    private double rangoInf;
+    private double rangoSup;
     private String funcion;
     private int tenenciaTabu;
     private double oscilacion;
@@ -94,7 +94,7 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
         double tiempoInicial = System.nanoTime();
         double costeActual = calculaCoste(vSolucion, funcion);
         double costeMejorPeor, costeMejorMomento = Double.MAX_VALUE;
-        double CGlobal = costeActual;
+        double costeGlobal = costeActual;
         int osc = 0;
         long[][] memFrec = new long[10][10];
         for (int i = 0; i < 10; i++)
@@ -102,30 +102,30 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                 memFrec[i][j] = 0;
 
 
-        List<double[]> lTabu = new ArrayList<>();
-        List<List<Integer>> lTabuMov = new ArrayList<>();
+        List<double[]> listaTabu = new ArrayList<>();
+        List<List<Integer>> listaTabuMov = new ArrayList<>();
         List<Integer> cambiosVecino = new ArrayList<>();
         List<Integer> cambiosMejorVecino = new ArrayList<>();
         Integer[] vecianso = new Integer[100];
-        lTabu.add(vSolucion);
+        listaTabu.add(vSolucion);
 
         double[] vecino = new double[100];
         double[] mejorVecino = new double[100];
         double[] mejorPeores = new double[100],
                 solGlobal = vSolucion,
                 nuevaSol = new double[100];
-        int iter = 0;
+        int iteraciones = 0;
 
         boolean mejora;
-        double mejorCosteVecino = Double.MAX_VALUE;
-        int contNoTabu;
+        double vecinoMejorCoste = Double.MAX_VALUE;
+        int contadorNoTabu;
         int multiarranque = 1;
 
-        while (iter < iteraciones) {
-            iter++;
+        while (iteraciones < limiteIteraciones) {
+            iteraciones++;
             mejora = false;
             costeMejorPeor = Double.MAX_VALUE;
-            contNoTabu = 0;
+            contadorNoTabu = 0;
             int x = random.nextInt(10 - 4) + 4;
             for (int j = 1; j <= x; j++) {
                 for (int k = 0; k < D; k++) {
@@ -143,14 +143,14 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                                 sup = aux;
                             }
 
-                            if (inf < rmin)
-                                inf = rmin;
-                            if (sup > rmax)
-                                sup = rmax;
+                            if (inf < rangoInf)
+                                inf = rangoInf;
+                            if (sup > rangoSup)
+                                sup = rangoSup;
                             vecino[k] = random.nextDouble(sup - inf) + inf;
                         } else {
                             if (multiarranque == 2) {
-                                vecino[k] = random.nextDouble(rmax - rmin) + rmin;
+                                vecino[k] = random.nextDouble(rangoSup - rangoInf) + rangoInf;
                             } else {
                                 vecino[k] = vSolucion[k] * -1;
                             }
@@ -163,10 +163,10 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
 
                 boolean tabu = false;
 
-                for (int i = 0; i < lTabu.size(); i++) {
+                for (int i = 0; i < listaTabu.size(); i++) {
                     int cont = 0;
                     for (int p = 0; p < D; p++) {
-                        double valor = lTabu.get(i)[p];
+                        double valor = listaTabu.get(i)[p];
                         inf = valor * 0.99;
                         sup = valor * 1.01;
                         if (valor < 0) {
@@ -187,8 +187,8 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                 }
 
                 if (!tabu) {
-                    for (int i = 0; i < lTabuMov.size(); i++) {
-                        if (cambiosVecino == (lTabuMov.get(i))) {
+                    for (int i = 0; i < listaTabuMov.size(); i++) {
+                        if (cambiosVecino == (listaTabuMov.get(i))) {
                             tabu = true;
                             break;
                         }
@@ -196,23 +196,23 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                 }
 
                 if (!tabu) {
-                    contNoTabu++;
+                    contadorNoTabu++;
                     double costeVecino = calculaCoste(vecino, funcion);
 
-                    if (costeVecino < mejorCosteVecino) {
+                    if (costeVecino < vecinoMejorCoste) {
                         mejorVecino = vecino;
-                        mejorCosteVecino = costeVecino;
+                        vecinoMejorCoste = costeVecino;
                         cambiosMejorVecino = cambiosVecino;
 
                     }
                 }
             }
 
-            if (contNoTabu != 0) {
-                double ancho = (rmax - rmin - 1) / 10;
+            if (contadorNoTabu != 0) {
+                double ancho = (rangoSup - rangoInf - 1) / 10;
                 for (int i = 0; i < D; i++) {
                     int posCol = 0;
-                    for (double j = rmin; j < rmax; j += ancho) {
+                    for (double j = rangoInf; j < rangoSup; j += ancho) {
                         if (j < 0)
                             if (Math.abs(mejorVecino[i]) >= Math.abs(j) && Math.abs(mejorVecino[i]) < Math.abs(j + ancho)) {
                                 memFrec[i][posCol]++;
@@ -225,21 +225,21 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                     }
                 }
 
-                lTabu.add(mejorVecino);
-                if (lTabu.size() > tenenciaTabu)
-                    lTabu.remove(0);
+                listaTabu.add(mejorVecino);
+                if (listaTabu.size() > tenenciaTabu)
+                    listaTabu.remove(0);
 
-                lTabuMov.add(cambiosMejorVecino);
-                if (lTabuMov.size() > tenenciaTabu)
-                    lTabuMov.remove(0);
+                listaTabuMov.add(cambiosMejorVecino);
+                if (listaTabuMov.size() > tenenciaTabu)
+                    listaTabuMov.remove(0);
 
-                if (mejorCosteVecino < costeActual) {
+                if (vecinoMejorCoste < costeActual) {
                     vSolucion = mejorVecino;
-                    costeActual = mejorCosteVecino;
+                    costeActual = vecinoMejorCoste;
                     mejora = true;
                 } else {
-                    if (mejorCosteVecino < costeMejorPeor) {
-                        costeMejorPeor = mejorCosteVecino;
+                    if (vecinoMejorCoste < costeMejorPeor) {
+                        costeMejorPeor = vecinoMejorCoste;
                         mejorPeores = vSolucion;
                     }
                 }
@@ -255,8 +255,8 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
 
                 } else {
                     contador = 0;
-                    if (costeActual < CGlobal) {
-                        CGlobal = costeActual;
+                    if (costeActual < costeGlobal) {
+                        costeGlobal = costeActual;
                         solGlobal = vSolucion;
 
                     }
@@ -275,40 +275,40 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
 
                     contador = 0;
 
-                    int prob = random.nextInt(100 - 1) - 1;
+                    int prob = random.nextInt(100 - 1) + 1;
                     if (prob <= 50) {
                         osc = 0;
-                        menosVisitados(memFrec, nuevaSol, rmin, rmax);
+                        menosVisitados(memFrec, nuevaSol, rangoInf, rangoSup);
                     } else {
                         osc = 1;
-                        masVisitados(memFrec, nuevaSol, rmin, rmax);
+                        masVisitados(memFrec, nuevaSol, rangoInf, rangoSup);
 
                     }
 
                     vSolucion = nuevaSol;
                     costeActual = calculaCoste(vSolucion, funcion);
 
-                    if (costeActual < CGlobal) {
-                        CGlobal = costeActual;
+                    if (costeActual < costeGlobal) {
+                        costeGlobal = costeActual;
                         solGlobal = vSolucion;
                     }
 
                     for (int i = 0; i < D; i++)
                         for (int j = 0; j < 10; j++)
                             memFrec[i][j] = 0;
-                    lTabu.clear();
+                    listaTabu.clear();
                 }
             }
         }
         double tiempoFinal = System.nanoTime();
         String tiempoTotal = calcularTiempo(tiempoInicial, tiempoFinal);
         log.info("Tiempo transcurrido: " + tiempoTotal + " ms");
-        log.info("CGGlobal: " + formato(CGlobal));
+        log.info("CGGlobal: " + formato(costeGlobal));
         log.info("Vector solucion: " + visualizaVectorLog(vSolucion));
         String costeFormat = formato(costeActual);
         log.info("Coste: " + costeFormat);
         log.info("Solución global: " + visualizaVectorLog(solGlobal));
-        log.info("Iteraciones: " + iter);
+        log.info("Iteraciones: " + iteraciones);
         double MAPE = MAPE(solucionInicial, vSolucion);
         double RMSE = RMSE(solucionInicial, vSolucion);
         log.info("MAPE :  " + MAPE);
