@@ -97,16 +97,13 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
         double costeGlobal = costeActual;
         int osc = 0;
         long[][] memFrec = new long[10][10];
-        for (int i = 0; i < 10; i++)
-            for (int j = 0; j < 10; j++)
-                memFrec[i][j] = 0;
+
 
 
         List<double[]> listaTabu = new ArrayList<>();
         List<List<Integer>> listaTabuMov = new ArrayList<>();
         List<Integer> cambiosVecino = new ArrayList<>();
         List<Integer> cambiosMejorVecino = new ArrayList<>();
-        Integer[] vecianso = new Integer[100];
         listaTabu.add(vSolucion);
 
         double[] vecino = new double[100];
