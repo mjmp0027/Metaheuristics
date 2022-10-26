@@ -79,7 +79,6 @@ public class Practica1 {
             executor.shutdownNow();
 
         // Conversion de resultados a CSV
-        // NOTA: no hace falta ordenar porque sigue siempre el orden del directorio 'configFiles'
         exportCSV(resultadoBL3, "BL3");
         exportCSV(resultadoBLk, "BLk");
         exportCSV(resultadoTabu, "Tabu");

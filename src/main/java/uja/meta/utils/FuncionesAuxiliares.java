@@ -5,12 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 import static uja.meta.funciones.Ackley.evaluateA;
 import static uja.meta.funciones.Dixonprice.evaluateD;
@@ -60,7 +58,7 @@ public class FuncionesAuxiliares {
                 fileName.add(fileEntry.getName());
             }
         }
-        return fileName;
+        return fileName.stream().sorted().collect(Collectors.toList());
     }
 
     public static double[] generador(double rangoInf, double rangosup, long semilla, int D) {
