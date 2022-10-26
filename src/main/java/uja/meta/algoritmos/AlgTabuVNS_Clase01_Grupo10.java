@@ -10,10 +10,9 @@ import java.util.Random;
 import java.util.concurrent.Callable;
 
 import static uja.meta.utils.FuncionesAuxiliares.*;
-import static uja.meta.utils.FuncionesAuxiliares.calcularTiempo;
 
 @AllArgsConstructor
-public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
+public class AlgTabuVNS_Clase01_Grupo10 implements Callable<Solucion> {
     private final String className;
     private final long semilla;
     private int D;
@@ -99,18 +98,17 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
         long[][] memFrec = new long[10][10];
 
 
-
         List<double[]> listaTabu = new ArrayList<>();
         List<List<Integer>> listaTabuMov = new ArrayList<>();
         List<Integer> cambiosVecino = new ArrayList<>();
         List<Integer> cambiosMejorVecino = new ArrayList<>();
         listaTabu.add(vSolucion);
 
-        double[] vecino = new double[100];
-        double[] mejorVecino = new double[100];
-        double[] mejorPeores = new double[100],
+        double[] vecino = new double[10];
+        double[] mejorVecino = new double[10];
+        double[] mejorPeores = new double[10],
                 solGlobal = vSolucion,
-                nuevaSol = new double[100];
+                nuevaSol = new double[10];
         int iteraciones = 0;
 
         boolean mejora;
@@ -241,24 +239,17 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                     }
                 }
                 if (!mejora) {
-
                     costeActual = costeMejorPeor;
                     vSolucion = mejorPeores;
                     contador++;
-
-                    multiarranque = (multiarranque + 1) % 4;
-                    if (multiarranque == 0)
-                        multiarranque = 1;
-
+                    multiarranque = multiarranque % 3;
                 } else {
                     contador = 0;
                     if (costeActual < costeGlobal) {
                         costeGlobal = costeActual;
                         solGlobal = vSolucion;
-
                     }
                 }
-
                 if (contador == 50) {
                     if (osc == 0) {
                         if (costeMejorMomento > costeActual) {
@@ -269,9 +260,7 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                             costeMejorMomento = costeActual;
                         }
                     }
-
                     contador = 0;
-
                     int prob = random.nextInt(100 - 1) + 1;
                     if (prob <= 50) {
                         osc = 0;
@@ -279,9 +268,7 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                     } else {
                         osc = 1;
                         masVisitados(memFrec, nuevaSol, rangoInf, rangoSup);
-
                     }
-
                     vSolucion = nuevaSol;
                     costeActual = calculaCoste(vSolucion, funcion);
 
@@ -289,7 +276,6 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
                         costeGlobal = costeActual;
                         solGlobal = vSolucion;
                     }
-
                     for (int i = 0; i < D; i++)
                         for (int j = 0; j < 10; j++)
                             memFrec[i][j] = 0;
@@ -300,16 +286,17 @@ public class AlgMA_Clase01_Grupo10 implements Callable<Solucion> {
         double tiempoFinal = System.nanoTime();
         String tiempoTotal = calcularTiempo(tiempoInicial, tiempoFinal);
         log.info("Tiempo transcurrido: " + tiempoTotal + " ms");
-        log.info("CGGlobal: " + formato(costeGlobal));
+        String costeGFormat = formato(costeGlobal);
+        log.info("CGGlobal: " + costeGFormat);
         log.info("Vector solucion: " + visualizaVectorLog(vSolucion));
         String costeFormat = formato(costeActual);
         log.info("Coste: " + costeFormat);
         log.info("Solución global: " + visualizaVectorLog(solGlobal));
         log.info("Iteraciones: " + iteraciones);
-        double MAPE = MAPE(solucionInicial, vSolucion);
-        double RMSE = RMSE(solucionInicial, vSolucion);
-        log.info("MAPE :  " + MAPE);
-        log.info("RMSE: " + RMSE);
-        return new Solucion(costeFormat, tiempoTotal, semilla);
+//        double MAPE = MAPE(solucionInicial, vSolucion);
+//        double RMSE = RMSE(solucionInicial, vSolucion);
+//        log.info("MAPE :  " + MAPE);
+//        log.info("RMSE: " + RMSE);
+        return new Solucion(costeGFormat, tiempoTotal, semilla);
     }
 }
