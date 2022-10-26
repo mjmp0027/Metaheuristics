@@ -1,7 +1,8 @@
 import org.apache.log4j.BasicConfigurator;
 import uja.meta.algoritmos.AlgBL3_Clase01_Grupo10;
 import uja.meta.algoritmos.AlgBLk_Clase01_Grupo10;
-import uja.meta.algoritmos.AlgMA_Clase01_Grupo10;
+import uja.meta.algoritmos.AlgTabuVNS_Clase01_Grupo10;
+import uja.meta.algoritmos.AlgTabu_Clase01_Grupo10;
 import uja.meta.utils.Lector;
 import uja.meta.utils.Solucion;
 
@@ -22,7 +23,8 @@ public class Practica1 {
         ExecutorService executor = Executors.newCachedThreadPool();
         List<Future<Solucion>> resultadoBL3 = new ArrayList<>();
         List<Future<Solucion>> resultadoBLk = new ArrayList<>();
-        List<Future<Solucion>> resultadoMA = new ArrayList<>();
+        List<Future<Solucion>> resultadoTabu = new ArrayList<>();
+        List<Future<Solucion>> resultadoTabuVNS = new ArrayList<>();
         final File folder = new File(ruta);
         List<String> archivosConfig = getFiles(folder);
 
@@ -53,12 +55,19 @@ public class Practica1 {
                                             funcion + ".BLk" + "." + semilla, vSolucion);
                             resultadoBLk.add(executor.submit(blk));
                         }
-                        case "ma" -> {
-                            AlgMA_Clase01_Grupo10 ma =
-                                    new AlgMA_Clase01_Grupo10(funcion + ".MA" + "." + semilla, semilla, D,
+                        case "tabu" -> {
+                            AlgTabu_Clase01_Grupo10 tabu =
+                                    new AlgTabu_Clase01_Grupo10(funcion + ".Tabu" + "." + semilla, semilla, D,
                                             iteraciones, vSolucion, rangoInf, rangoSup, funcion, 1,
                                             oscilacion);
-                            resultadoMA.add(executor.submit(ma));
+                            resultadoTabu.add(executor.submit(tabu));
+                        }
+
+                        case "tabuVNS" ->{
+                            AlgTabuVNS_Clase01_Grupo10 tabuVNS =
+                                    new AlgTabuVNS_Clase01_Grupo10(funcion + ".TabuVNS" + "." + semilla, semilla, D,
+                                            iteraciones, vSolucion, rangoInf, rangoSup, funcion, 1, oscilacion);
+                            resultadoTabuVNS.add(executor.submit(tabuVNS));
                         }
                     }
                 }
@@ -73,7 +82,8 @@ public class Practica1 {
         // NOTA: no hace falta ordenar porque sigue siempre el orden del directorio 'configFiles'
         exportCSV(resultadoBL3, "BL3");
         exportCSV(resultadoBLk, "BLk");
-        //exportCSV(resultadoMA, "MA");
+        exportCSV(resultadoTabu, "Tabu");
+        exportCSV(resultadoTabuVNS, "TabuVNS");
 
         double tiempoFinal = System.nanoTime();
         System.out.println("Tiempo total PRÁCTICA 1: " + calcularTiempo(tiempoInicial, tiempoFinal) + " ms");
