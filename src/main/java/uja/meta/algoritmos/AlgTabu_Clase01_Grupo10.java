@@ -25,7 +25,7 @@ public class AlgTabu_Clase01_Grupo10 implements Callable<Solucion> {
     private int tenenciaTabu;
     private double oscilacion;
 
-    void menosVisitados(long[][] mat, double[] nuevaSol, double rmin, double rmax) {
+    void menosVisitados(long[][] mat, double[] nuevaSol, double rangoInf, double rangoSup) {
         int tam = nuevaSol.length;
         double menor = Double.MAX_VALUE;
         int pc = 0;
@@ -34,7 +34,7 @@ public class AlgTabu_Clase01_Grupo10 implements Callable<Solucion> {
 
         for (int i = 0; i < tam; i++) {
             for (int k = 0; k < 3; k++) {
-                for (int j = 0; j < 10; j++) {
+                for (int j = 0; j < D; j++) {
                     if (mat[i][j] <= menor) {
                         menor = mat[i][j];
                         pc = j;
@@ -45,14 +45,14 @@ public class AlgTabu_Clase01_Grupo10 implements Callable<Solucion> {
             }
             int aleatorio = random.nextInt(2);
             int col = columnas[aleatorio];
-            double ancho = (rmax - rmin + 1) / 10;
-            double ini = rmin + (col * ancho);
+            double ancho = (rangoSup - rangoInf + 1) / 10;
+            double ini = rangoInf + (col * ancho);
             double fin = ini + ancho;
             nuevaSol[i] = random.nextDouble(fin - ini) + ini;
         }
     }
 
-    void masVisitados(long[][] mat, double[] nuevaSol, double rmin, double rmax) {
+    void masVisitados(long[][] mat, double[] nuevaSol, double rangoInf, double rangoSup) {
         int tam = nuevaSol.length;
         double mayor;
         int pc = 0;
@@ -62,7 +62,7 @@ public class AlgTabu_Clase01_Grupo10 implements Callable<Solucion> {
         for (int i = 0; i < tam; i++) {
             for (int k = 0; k < 3; k++) {
                 mayor = -1;
-                for (int j = 0; j < 10; j++) {
+                for (int j = 0; j < D; j++) {
                     if (mat[i][j] >= mayor) {
                         mayor = mat[i][j];
                         pc = j;
@@ -73,8 +73,8 @@ public class AlgTabu_Clase01_Grupo10 implements Callable<Solucion> {
             }
             int aleatorio = random.nextInt(2);
             int col = columnas[aleatorio];
-            double ancho = (rmax - rmin + 1) / 10;
-            double ini = rmin + (col * ancho);
+            double ancho = (rangoSup - rangoInf + 1) / 10;
+            double ini = rangoInf + (col * ancho);
             double fin = ini + ancho;
             nuevaSol[i] = random.nextDouble(fin - ini) + ini;
         }
@@ -88,7 +88,6 @@ public class AlgTabu_Clase01_Grupo10 implements Callable<Solucion> {
         double inf, sup;
         int contador = 0;
 
-        double[] solucionInicial = vSolucion;
         visualizaVectorLog(vSolucion);
 
         double tiempoInicial = System.nanoTime();
@@ -96,7 +95,7 @@ public class AlgTabu_Clase01_Grupo10 implements Callable<Solucion> {
         double costeMejorPeor, costeMejorMomento = Double.MAX_VALUE;
         double costeGlobal = costeActual;
         int osc = 0;
-        long[][] memFrec = new long[10][10];
+        long[][] memFrec = new long[D][D];
 
 
 
@@ -106,11 +105,11 @@ public class AlgTabu_Clase01_Grupo10 implements Callable<Solucion> {
         List<Integer> cambiosMejorVecino = new ArrayList<>();
         listaTabu.add(vSolucion);
 
-        double[] vecino = new double[10];
-        double[] mejorVecino = new double[10];
-        double[] mejorPeores = new double[10],
+        double[] vecino = new double[D];
+        double[] mejorVecino = new double[D];
+        double[] mejorPeores = new double[D],
                 solGlobal = vSolucion,
-                nuevaSol = new double[10];
+                nuevaSol = new double[D];
         int iteraciones = 0;
 
         boolean mejora;
@@ -284,7 +283,7 @@ public class AlgTabu_Clase01_Grupo10 implements Callable<Solucion> {
                     }
 
                     for (int i = 0; i < D; i++)
-                        for (int j = 0; j < 10; j++)
+                        for (int j = 0; j < D; j++)
                             memFrec[i][j] = 0;
                     listaTabu.clear();
                 }
@@ -300,10 +299,6 @@ public class AlgTabu_Clase01_Grupo10 implements Callable<Solucion> {
         log.info("Coste: " + costeFormat);
         log.info("Solución global: " + visualizaVectorLog(solGlobal));
         log.info("Iteraciones: " + iteraciones);
-//        double MAPE = MAPE(solucionInicial, vSolucion);
-//        double RMSE = RMSE(solucionInicial, vSolucion);
-//        log.info("MAPE :  " + MAPE);
-//        log.info("RMSE: " + RMSE);
         return new Solucion(costeGFormat, tiempoTotal, semilla);
     }
 }
