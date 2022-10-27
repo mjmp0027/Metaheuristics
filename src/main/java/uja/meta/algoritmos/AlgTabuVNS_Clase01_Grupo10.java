@@ -147,7 +147,7 @@ public class AlgTabuVNS_Clase01_Grupo10 implements Callable<Solucion> {
                                 vecino[k] = random.nextDouble(rangoSup - rangoInf) + rangoInf;
                             } else  {
                                 if (multiarranque == 2)
-                                vecino[k] = vSolucion[k] * -1;
+                                    vecino[k] = vSolucion[k] * -1;
                             }
                         }
                     } else {

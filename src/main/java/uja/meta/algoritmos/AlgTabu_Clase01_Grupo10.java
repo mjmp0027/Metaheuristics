@@ -115,7 +115,6 @@ public class AlgTabu_Clase01_Grupo10 implements Callable<Solucion> {
         boolean mejora;
         double vecinoMejorCoste = Double.MAX_VALUE;
         int contadorNoTabu;
-        int multiarranque = 1;
 
         while (iteraciones < limiteIteraciones) {
             iteraciones++;
