@@ -238,10 +238,6 @@ public class AlgTabu_Clase01_Grupo10 implements Callable<Solucion> {
                     vSolucion = mejorPeores;
                     contador++;
 
-                    multiarranque = (multiarranque + 1) % 4;
-                    if (multiarranque == 0)
-                        multiarranque = 1;
-
                 } else {
                     contador = 0;
                     if (costeActual < costeGlobal) {
