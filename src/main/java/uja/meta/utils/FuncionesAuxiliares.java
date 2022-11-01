@@ -163,7 +163,7 @@ public class FuncionesAuxiliares {
             }
         }
 
-        FileOutputStream csvFile = new FileOutputStream(name + ".csv");
+        FileOutputStream csvFile = new FileOutputStream("csv/" + name + ".csv");
         try (PrintWriter pw = new PrintWriter(csvFile)) {
             resultado1.stream()
                     .map(FuncionesAuxiliares::convertToCSV)
