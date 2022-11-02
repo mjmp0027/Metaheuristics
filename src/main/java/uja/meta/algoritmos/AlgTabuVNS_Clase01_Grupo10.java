@@ -103,6 +103,7 @@ public class AlgTabuVNS_Clase01_Grupo10 implements Callable<Solucion> {
         List<Integer> cambiosMejorVecino = new ArrayList<>();
         listaTabu.add(vSolucion);
 
+        double[] valorAnterior = new double[D];
         double[] vecino = new double[D];
         double[] mejorVecino = new double[D];
         double[] mejorPeores = new double[D],
@@ -145,7 +146,7 @@ public class AlgTabuVNS_Clase01_Grupo10 implements Callable<Solucion> {
                         } else {
                             if (multiarranque == 1) {
                                 vecino[k] = random.nextDouble(rangoSup - rangoInf) + rangoInf;
-                            } else  {
+                            } else {
                                 if (multiarranque == 2)
                                     vecino[k] = vSolucion[k] * -1;
                             }
@@ -204,29 +205,32 @@ public class AlgTabuVNS_Clase01_Grupo10 implements Callable<Solucion> {
             }
 
             if (contadorNoTabu != 0) {
-                double ancho = (rangoSup - rangoInf - 1) / 10;
-                for (int i = 0; i < D; i++) {
-                    int posCol = 0;
-                    for (double j = rangoInf; j < rangoSup; j += ancho) {
-                        if (j < 0)
-                            if (Math.abs(mejorVecino[i]) >= Math.abs(j) && Math.abs(mejorVecino[i]) < Math.abs(j + ancho)) {
-                                memFrec[i][posCol]++;
-                                break;
-                            } else if (mejorVecino[i] >= j && mejorVecino[i] < j + ancho) {
-                                memFrec[i][posCol]++;
-                                break;
-                            }
-                        posCol++;
+                if (valorAnterior != mejorVecino) {
+                    double ancho = (rangoSup - rangoInf - 1) / 10;
+                    for (int i = 0; i < D; i++) {
+                        int posCol = 0;
+                        for (double j = rangoInf; j < rangoSup; j += ancho) {
+                            if (j < 0)
+                                if (Math.abs(mejorVecino[i]) >= Math.abs(j) && Math.abs(mejorVecino[i]) < Math.abs(j + ancho)) {
+                                    memFrec[i][posCol]++;
+                                    break;
+                                } else if (mejorVecino[i] >= j && mejorVecino[i] < j + ancho) {
+                                    memFrec[i][posCol]++;
+                                    break;
+                                }
+                            posCol++;
+                        }
                     }
+
+                    listaTabu.add(mejorVecino);
+                    if (listaTabu.size() > tenenciaTabu)
+                        listaTabu.remove(0);
+
+                    listaTabuMov.add(cambiosMejorVecino);
+                    if (listaTabuMov.size() > tenenciaTabu)
+                        listaTabuMov.remove(0);
                 }
-
-                listaTabu.add(mejorVecino);
-                if (listaTabu.size() > tenenciaTabu)
-                    listaTabu.remove(0);
-
-                listaTabuMov.add(cambiosMejorVecino);
-                if (listaTabuMov.size() > tenenciaTabu)
-                    listaTabuMov.remove(0);
+                valorAnterior = mejorVecino;
 
                 if (vecinoMejorCoste < costeActual) {
                     vSolucion = mejorVecino;
