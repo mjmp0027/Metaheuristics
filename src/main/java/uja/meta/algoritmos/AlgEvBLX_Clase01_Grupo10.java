@@ -149,6 +149,7 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
             cromosomas = nuevaAg;
         }
         s = mejorCroGlobal;
+        //TODO
         System.out.println("Total evaluaciones: " + contEv);
         System.out.println("Total iteraciones: " + t);
 
