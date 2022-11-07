@@ -135,7 +135,7 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
                 }
             }
             if (!enc) {
-                nuevaAg.get(peor) = mejorCr;
+                nuevaAg.add(peor, mejorCr);
                 costesH[peor] = mejorCo;
             }
             mejorCr = nuevaAg.get(mejorCrHijo);
