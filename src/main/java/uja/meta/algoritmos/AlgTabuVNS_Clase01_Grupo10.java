@@ -114,7 +114,7 @@ public class AlgTabuVNS_Clase01_Grupo10 implements Callable<Solucion> {
         boolean mejora;
         double vecinoMejorCoste = Double.MAX_VALUE;
         int contadorNoTabu;
-        int multiarranque = 1;
+        int multiarranque = 0;
 
         while (iteraciones < limiteIteraciones) {
             iteraciones++;
@@ -254,7 +254,7 @@ public class AlgTabuVNS_Clase01_Grupo10 implements Callable<Solucion> {
                         solGlobal = vSolucion;
                     }
                 }
-                if (contador == 50) {
+                if (contador == iteraciones * 0.05) {
                     if (osc == 0) {
                         if (costeMejorMomento > costeActual) {
                             costeMejorMomento = costeActual;
@@ -266,7 +266,7 @@ public class AlgTabuVNS_Clase01_Grupo10 implements Callable<Solucion> {
                     }
                     contador = 0;
                     int prob = random.nextInt(100 - 1) + 1;
-                    if (prob <= 50) {
+                    if (prob <= iteraciones * 0.05) {
                         osc = 0;
                         menosVisitados(memFrec, nuevaSol, rangoInf, rangoSup);
                     } else {
