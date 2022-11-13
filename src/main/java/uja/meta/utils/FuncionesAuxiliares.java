@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
@@ -198,5 +200,7 @@ public class FuncionesAuxiliares {
     private static String convertToCSV(Solucion solucion) {
         return solucion.toString();
     }
-
+    //TODO crear un archivo .txt que sea igual que el .properties con bucles leyendo los config donde quede
+    //cada parámetro con un solo valor cada semilla con cada algoritmo y a su vez con cada funcion
+    //5(semillas) * 4(algoritmos) * 10(funciones) = 200(logs)
 }
