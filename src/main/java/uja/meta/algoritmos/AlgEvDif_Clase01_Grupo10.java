@@ -64,9 +64,10 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
 
                 do {
                     k1 = random.nextInt(tp - 1 - 0);
-                    while (k1 == (k2 = random.nextInt(tp - 1 - 0))) ;
-                    //while (k1 == (k2 == (k3 = random.nextInt(tp - 1 - 0)))) ;
+                    k2 = random.nextInt(tp - 1 - 0);
                     k3 = random.nextInt(tp - 1 - 0);
+                    while (k1 == k2) ;
+                    while (k1 == k2 && k2 == k3) ;
                 } while (k1 != i && k1 != a1 && k1 != a2 &&
                         k2 != i && k2 != a1 && k2 != a2 &&
                         k3 != i && k3 != a1 && k3 != a2);
@@ -102,14 +103,14 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
                     }
                 }
             }
-            if(mejorCoste<mejorCosteGlobal){
-                mejorCosteGlobal=mejorCoste;
-                mejorCroGlobal=mejorCr;
+            if (mejorCoste < mejorCosteGlobal) {
+                mejorCosteGlobal = mejorCoste;
+                mejorCroGlobal = mejorCr;
             }
         }
 
         //TODO
-        s=mejorCroGlobal;
+        s = mejorCroGlobal;
         System.out.println("Total evaluaciones: " + contEv);
         System.out.println("Total iteraciones: " + t);
         return null;

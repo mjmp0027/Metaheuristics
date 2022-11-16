@@ -12,6 +12,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static uja.meta.funciones.Ackley.evaluateA;
 import static uja.meta.funciones.Dixonprice.evaluateD;
 import static uja.meta.funciones.Griewank.evaluateG;
@@ -139,6 +141,32 @@ public class FuncionesAuxiliares {
 
     public static String formato(double variable) {
         return String.format("%.2f", variable);
+    }
+
+    public static void cruceBLX(int tam, double[] v, double[] w, double alfaBLX, double[] h1,
+                  double rangoMin, double rangoMax) {
+        Random random = new Random();
+        double Cmax, Cmin, I = 0;
+        for (int i = 0; i < tam; i++) {
+            Cmax = max(v[i], w[i]);
+            Cmin = min(v[i], w[i]);
+            double r1 = Cmin - (I * alfaBLX);
+            if (r1 < rangoMin) r1 = rangoMin;
+            double r2 = Cmax + (I * alfaBLX);
+            if (r2 < rangoMin) r2 = rangoMin;
+            h1[i] = random.nextDouble(r2 - r1) + r1;
+        }
+    }
+
+    public static void cruceMedia(int tam, double[] v, double[] w, double[] h){
+
+        for (int i=0; i<tam; i++){
+            h[i]= (v[i]+w[i])/2;
+        }
+    }
+
+    public static void Mutacion(double[] v, int pos, double valor){
+        v[pos]=valor;
     }
 
     public static void exportCSV(List<Future<Solucion>> soluciones, String name)

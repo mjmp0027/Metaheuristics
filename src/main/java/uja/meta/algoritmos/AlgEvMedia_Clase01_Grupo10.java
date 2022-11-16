@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.concurrent.Callable;
 
 import static uja.meta.utils.FuncionesAuxiliares.calculaCoste;
+import static uja.meta.utils.FuncionesAuxiliares.cruceMedia;
 
 @AllArgsConstructor
 public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
@@ -100,7 +101,7 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
                 }
                 x = random.nextDouble();
                 if (x < kProbCruce) {
-                    //cruceMedia(tam, mejor1, mejor2, h);
+                    cruceMedia(tam, mejor1, mejor2, h);
                     nuevaAG.add(i, h);
                     marcados[i] = true;
                 } else {
@@ -142,11 +143,14 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
                 }
             }
             if (!enc) {
-                int p1, p2, p3 = random.nextInt(tp - 1 - 0) + 0, p4 = random.nextInt(tp - 1 - 0) + 0;
+                int p1, p2, p3, p4;
                 p1 = random.nextInt(tp - 1 - 0) + 0;
-                while (p1 == (p2 = random.nextInt(tp - 1 - 0) + 0)) ;
-//                while (p1 == p2 == p3) ;
-//                while (p1 == p2 == p3 == p4) ;
+                p2 = random.nextInt(tp - 1 - 0) + 0;
+                p3 = random.nextInt(tp - 1 - 0) + 0;
+                p4 = random.nextInt(tp - 1 - 0) + 0;
+                while (p1 == p2) ;
+                while (p1 == p2 && p2 == p3) ;
+                while (p1 == p2 && p2 == p3 && p3 == p4) ;
                 if (costesH[p1] > costesH[p2] && costesH[p1] > costesH[p3] && costesH[p1] > costesH[p4])
                     peor = p1;
                 else if (costesH[p2] > costesH[p1] && costesH[p2] > costesH[p3] && costesH[p2] > costesH[p4])

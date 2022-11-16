@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
-import static uja.meta.utils.FuncionesAuxiliares.calculaCoste;
+import static uja.meta.utils.FuncionesAuxiliares.*;
 
 @AllArgsConstructor
 public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
@@ -103,7 +103,7 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
                 }
                 x = random.nextDouble();
                 if (x < kProbCruce) {
-                    //cruceBlX(tam, mejor1, mejor2, alfa, h, rangoMin, rangoMax);
+                    cruceBLX(tam, mejor1, mejor2, alfa, h, rangoMin, rangoMax);
                     nuevaAG.add(i, h);
                     marcados[i] = true;
                 } else {
@@ -121,7 +121,7 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
                     if (x < kProbMuta) {
                         m = true;
                         double valor = random.nextDouble(rangoMax - rangoMin) + rangoMin;
-                        //Mutacion(nuevaAg.get(i),j,valor);
+                        Mutacion(nuevaAg.get(i),j,valor);
                     }
                 }
                 if (m)
@@ -145,11 +145,14 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
                 }
             }
             if (!enc) {
-                int p1, p2, p3 = random.nextInt(tp - 1 - 0) + 0, p4 = random.nextInt(tp - 1 - 0) + 0;
+                int p1, p2, p3, p4;
                 p1 = random.nextInt(tp - 1 - 0) + 0;
-                while (p1 == (p2 = random.nextInt(tp - 1 - 0) + 0)) ;
-//                while (p1 == p2 == p3) ;
-//                while (p1 == p2 == p3 == p4) ;
+                p2 = random.nextInt(tp - 1 - 0) + 0;
+                p3 = random.nextInt(tp - 1 - 0) + 0;
+                p4 = random.nextInt(tp - 1 - 0) + 0;
+                while (p1 == p2) ;
+                while (p1 == p2 && p2 == p3) ;
+                while (p1 == p2 && p2 == p3 && p3 == p4) ;
                 if (costesH[p1] > costesH[p2] && costesH[p1] > costesH[p3] && costesH[p1] > costesH[p4])
                     peor = p1;
                 else if (costesH[p2] > costesH[p1] && costesH[p2] > costesH[p3] && costesH[p2] > costesH[p4])
@@ -160,13 +163,13 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
                     peor = p4;
                 nuevaAg.add(peor, mejorCr);
                 costesH[peor] = mejorCoste;
-                if(mejorCoste<mejorCosteHijo){
+                if (mejorCoste < mejorCosteHijo) {
                     mejorCosteHijo = mejorCoste;
                     nuevaAg.add(mejorCrHijo, mejorCr);
                 }
             }
             mejorCr = nuevaAg.get(mejorCrHijo);
-            mejorCoste=mejorCosteHijo;
+            mejorCoste = mejorCosteHijo;
 
             if (mejorCosteHijo < mejorCosteGlobal) {
                 mejorCosteGlobal = mejorCosteHijo;
