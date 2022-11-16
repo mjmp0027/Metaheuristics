@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
-import static uja.meta.utils.FuncionesAuxiliares.calculaCoste;
-import static uja.meta.utils.FuncionesAuxiliares.cruceMedia;
+import static uja.meta.utils.FuncionesAuxiliares.*;
 
 @AllArgsConstructor
 public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
@@ -119,7 +118,7 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
                     if (x < kProbMuta) {
                         m = true;
                         double valor = random.nextDouble(rangoMax - rangoMin) + rangoMin;
-                        //Mutacion(nuevaAg.get(i),j,valor);
+                        Mutacion(nuevaAg.get(i),j,valor);
                     }
                 }
                 if (m)
