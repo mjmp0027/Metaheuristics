@@ -1,8 +1,5 @@
 import org.apache.log4j.BasicConfigurator;
-import uja.meta.algoritmos.AlgBL3_Clase01_Grupo10;
-import uja.meta.algoritmos.AlgBLk_Clase01_Grupo10;
-import uja.meta.algoritmos.AlgTabuVNS_Clase01_Grupo10;
-import uja.meta.algoritmos.AlgTabu_Clase01_Grupo10;
+import uja.meta.algoritmos.*;
 import uja.meta.utils.Lector;
 import uja.meta.utils.Solucion;
 
@@ -34,40 +31,37 @@ public class Practica1 {
             String funcion = lector.getFuncion();
             long[] semillas = lector.getSemillas();
             int D = lector.getD();
-            int k = lector.getK();
+            int tp = lector.getTp();
             double rangoInf = lector.getRangoInf();
             double rangoSup = lector.getRangoSup();
             long iteraciones = lector.getIteraciones();
             double oscilacion = lector.getOscilacion();
+            double kProbMuta = lector.getKProbMuta();
+            double kProCruce = lector.getKProbCruce();
+            double alfa = lector.getAlfa();
+            double probRecomb = lector.getProbRecomb();
             for (String algoritmo : algoritmos) {
                 for (long semilla : semillas) {
-                    double[] vSolucion = generador(rangoInf, rangoSup, semilla, D);
+                    List<double[]> cromosoma = generador(rangoInf, rangoSup, semilla, D, tp);
+                    double[] vSolucion = new double[D];
                     switch (algoritmo) {
-                        case "bl3" -> {
-                            AlgBL3_Clase01_Grupo10 bl3 =
-                                    new AlgBL3_Clase01_Grupo10(D, k, semilla, iteraciones, oscilacion, rangoInf, rangoSup,
-                                            funcion, funcion + ".BL3" + "." + semilla, vSolucion);
-                            resultadoBL3.add(executor.submit(bl3));
+                        case "evm" -> {
+                            AlgEvMedia_Clase01_Grupo10 EvM =
+                                    new AlgEvMedia_Clase01_Grupo10(funcion + ".EvM" + semilla, tp, D, iteraciones,
+                                            cromosoma, vSolucion, rangoInf, rangoSup, kProbMuta, kProCruce, funcion);
+                            resultadoBL3.add(executor.submit(EvM));
                         }
-                        case "blk" -> {
-                            AlgBLk_Clase01_Grupo10 blk =
-                                    new AlgBLk_Clase01_Grupo10(D, semilla, iteraciones, oscilacion, rangoInf, rangoSup, funcion,
-                                            funcion + ".BLk" + "." + semilla, vSolucion);
-                            resultadoBLk.add(executor.submit(blk));
+                        case "evblx" -> {
+                            AlgEvBLX_Clase01_Grupo10 EvBlk =
+                                    new AlgEvBLX_Clase01_Grupo10(funcion + ".EvBlk" + semilla, tp, D, iteraciones,
+                                            cromosoma, vSolucion, rangoInf, rangoSup, kProbMuta, kProCruce, alfa, funcion);
+                            resultadoBLk.add(executor.submit(EvBlk));
                         }
-                        case "tabu" -> {
-                            AlgTabu_Clase01_Grupo10 tabu =
-                                    new AlgTabu_Clase01_Grupo10(funcion + ".Tabu" + "." + semilla, semilla, D,
-                                            iteraciones, vSolucion, rangoInf, rangoSup, funcion, 1,
-                                            oscilacion);
-                            resultadoTabu.add(executor.submit(tabu));
-                        }
-
-                        case "tabuVNS" ->{
-                            AlgTabuVNS_Clase01_Grupo10 tabuVNS =
-                                    new AlgTabuVNS_Clase01_Grupo10(funcion + ".TabuVNS" + "." + semilla, semilla, D,
-                                            iteraciones, vSolucion, rangoInf, rangoSup, funcion, 1, oscilacion);
-                            resultadoTabuVNS.add(executor.submit(tabuVNS));
+                        case "ed" -> {
+                            AlgEvDif_Clase01_Grupo10 ed =
+                                    new AlgEvDif_Clase01_Grupo10(funcion + ".EvBlk" + semilla, tp, D, iteraciones,
+                                            cromosoma, vSolucion, rangoInf, rangoSup, funcion, probRecomb);
+                            resultadoTabu.add(executor.submit(ed));
                         }
                     }
                 }
@@ -82,9 +76,8 @@ public class Practica1 {
         exportCSV(resultadoBL3, "BL3");
         exportCSV(resultadoBLk, "BLk");
         exportCSV(resultadoTabu, "Tabu");
-        exportCSV(resultadoTabuVNS, "TabuVNS");
 
         double tiempoFinal = System.nanoTime();
-        System.out.println("Tiempo total PRÁCTICA 1: " + calcularTiempo(tiempoInicial, tiempoFinal) + " ms");
+        System.out.println("Tiempo total PRÁCTICA 2: " + calcularTiempo(tiempoInicial, tiempoFinal) + " ms");
     }
 }

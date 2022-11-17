@@ -15,24 +15,24 @@ import static uja.meta.utils.FuncionesAuxiliares.calculaCoste;
 public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
     private final String className;
     private int tp;
-    private int tam;
-    private int evaluaciones;
-    private double[] s;
+    private int D;
+    private long limiteEvaluaciones;
+    private List<double[]> cromosomas;
+    private double[] vSolucion;
     private double rangoMin;
     private double rangoMax;
     private String funcion;
+    private double probRecomb;
 
     @Override
     public Solucion call() throws Exception {
         Logger logger = Logger.getLogger(className);
         Random random = new Random();
         int t = 0;
-        List<double[]> cromosomas = new ArrayList<>();
         double[] costes = new double[tp];
         double mejorCoste = Double.MAX_VALUE;
         double[] mejorCr = new double[tp];
         for (int i = 0; i < tp; i++) {
-            //cargaAleatoria(tam, cromosomas.get(i), rangoMin, rangoMax);
             costes[i] = calculaCoste(cromosomas.get(i), funcion);
             if (costes[i] < mejorCoste) {
                 mejorCoste = costes[i];
@@ -45,7 +45,7 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
 
         int contEv = tp;
 
-        while (contEv < evaluaciones) {
+        while (contEv < limiteEvaluaciones) {
             t++;
 
             double[] ale1, ale2, obj, nuevo = new double[tp], padre;
@@ -79,9 +79,9 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
                     obj = cromosomas.get(k3);
 
                 double factor = random.nextDouble();
-                for (int j = 0; j < tam; j++) {
+                for (int j = 0; j < D; j++) {
                     double porc = random.nextDouble();
-                    if (porc > 0.5)
+                    if (porc > probRecomb)
                         nuevo[j] = obj[j];
                     else {
                         nuevo[j] = padre[j] + (factor * (ale1[j] - ale2[j]));
@@ -110,7 +110,7 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
         }
 
         //TODO
-        s = mejorCroGlobal;
+        vSolucion = mejorCroGlobal;
         System.out.println("Total evaluaciones: " + contEv);
         System.out.println("Total iteraciones: " + t);
         return null;

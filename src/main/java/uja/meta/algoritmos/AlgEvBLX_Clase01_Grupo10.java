@@ -16,9 +16,10 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
     private final String className;
     private int tp;
 
-    private int tam;
-    private int evaluaciones;
-    private double[] s;
+    private int D;
+    private long limiteEvaluaciones;
+    private List<double[]> cromosomas;
+    private double[] vSolucion;
     private double rangoMin;
     private double rangoMax;
     private double kProbMuta;
@@ -32,8 +33,7 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
         Logger logger = Logger.getLogger(className);
         Random random = new Random();
         int t = 0;
-        List<double[]> cromosomas = new ArrayList<>();
-        List<double[]> nuevaAg = new ArrayList<>(tam);
+        List<double[]> nuevag = new ArrayList<>();
         double[] costes = new double[tp], costesH = new double[tp], costesHH = new double[tp];
         int[] posi = new int[tp];
         double[] mejorCr = new double[tp];
@@ -42,7 +42,6 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
         double mejorCoste = Double.MAX_VALUE;
         double mejorCosteHijo = Double.MAX_VALUE;
         for (int i = 0; i < tp; i++) {
-            //cargaAleatoria(tam, cromosomas.get(i), rangoMin, rangoMax);
             costes[i] = calculaCoste(cromosomas.get(i), funcion);
             if (costes[i] < mejorCoste) {
                 mejorCoste = costes[i];
@@ -51,11 +50,11 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
         }
         double mejorCosteGlobal = mejorCoste;
         double[] mejorCroGlobal = mejorCr;
-        List<double[]> nuevaAG = new ArrayList<>(tam);
+        List<double[]> nuevaG = new ArrayList<>(D);
 
         int contEv = tp;
 
-        while (contEv < evaluaciones) {
+        while (contEv < limiteEvaluaciones) {
             t++;
             for (int i = 0; i < tp; i++) {
                 int j, k;
@@ -64,15 +63,13 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
                 posi[i] = (costes[i] < costes[k]) ? j : k;
             }
             for (int i = 0; i < tp; i++) {
-                if (posi[i] == 50)
-                    posi[i]--;
-                nuevaAg.add(i, cromosomas.get(posi[i]));
+                nuevag.add(i, cromosomas.get(posi[i]));
                 costesH[i] = costes[posi[i]];
             }
             int c1, c2, c3, c4;
             double costeMejor1, costeMejor2;
             double[] mejor1, mejor2;
-            double[] h = new double[tam];
+            double[] h = new double[D];
             double x;
             int posAnt = 0;
             boolean[] marcados = new boolean[tp];
@@ -83,45 +80,45 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
                 c1 = random.nextInt((tp - 1 - 0) + 0);
                 while (c1 == (c2 = random.nextInt(tp - 1 - 0) + 0)) ;
                 if (costesH[c1] < costesH[c2]) {
-                    mejor1 = nuevaAg.get(c1);
+                    mejor1 = nuevag.get(c1);
                     costeMejor1 = costesH[c1];
                 } else {
-                    mejor1 = nuevaAg.get(c2);
+                    mejor1 = nuevag.get(c2);
                     costeMejor1 = costesH[c2];
                 }
                 while (posAnt == (c3 = random.nextInt(tp - 1 - 0) + 0)) ;
                 while (posAnt == (c4 = random.nextInt(tp - 1 - 0) + 0)) ;
 
-                c3 = random.nextInt(tp - 1 - 0) + 0;
-                while (c3 == (c4 = random.nextInt(tp - 1 - 0) + 0)) ;
+                //Mirar
+                while (c3 == c4) ;
                 if (costesH[c3] < costesH[c4]) {
-                    mejor2 = nuevaAg.get(c3);
+                    mejor2 = nuevag.get(c3);
                     costeMejor2 = costesH[c3];
                 } else {
-                    mejor2 = nuevaAg.get(c4);
+                    mejor2 = nuevag.get(c4);
                     costeMejor2 = costesH[c4];
                 }
                 x = random.nextDouble();
                 if (x < kProbCruce) {
-                    cruceBLX(tam, mejor1, mejor2, alfa, h, rangoMin, rangoMax);
-                    nuevaAG.add(i, h);
+                    cruceBLX(D, mejor1, mejor2, alfa, h, rangoMin, rangoMax);
+                    nuevaG.add(i, h);
                     marcados[i] = true;
                 } else {
-                    nuevaAG.add(i, mejor1);
+                    nuevaG.add(i, mejor1);
                     costesHH[i] = costeMejor1;
                 }
             }
-            nuevaAg = nuevaAG;
+            nuevag = nuevaG;
             costesH = costesHH;
 
             for (int i = 0; i < tp; i++) {
                 boolean m = false;
-                for (int j = 0; j < tam; j++) {
+                for (int j = 0; j < D; j++) {
                     x = random.nextDouble();
                     if (x < kProbMuta) {
                         m = true;
                         double valor = random.nextDouble(rangoMax - rangoMin) + rangoMin;
-                        Mutacion(nuevaAg.get(i),j,valor);
+                        Mutacion(nuevag.get(i),j,valor);
                     }
                 }
                 if (m)
@@ -130,7 +127,7 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
 
             for (int i = 0; i < tp; i++) {
                 if (marcados[i]) {
-                    costesH[i] = calculaCoste(nuevaAg.get(i), funcion);
+                    costesH[i] = calculaCoste(nuevag.get(i), funcion);
                     contEv++;
                 }
                 if (costesH[i] < mejorCosteHijo) {
@@ -139,8 +136,8 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
                 }
             }
             boolean enc = false;
-            for (int i = 0; i < nuevaAg.size() && !enc; i++) {
-                if (mejorCr == nuevaAg.get(i)) {
+            for (int i = 0; i < nuevag.size() && !enc; i++) {
+                if (mejorCr == nuevag.get(i)) {
                     enc = true;
                 }
             }
@@ -161,25 +158,25 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
                     peor = p3;
                 else
                     peor = p4;
-                nuevaAg.add(peor, mejorCr);
+                nuevag.add(peor, mejorCr);
                 costesH[peor] = mejorCoste;
                 if (mejorCoste < mejorCosteHijo) {
                     mejorCosteHijo = mejorCoste;
-                    nuevaAg.add(mejorCrHijo, mejorCr);
+                    nuevag.add(mejorCrHijo, mejorCr);
                 }
             }
-            mejorCr = nuevaAg.get(mejorCrHijo);
+            mejorCr = nuevag.get(mejorCrHijo);
             mejorCoste = mejorCosteHijo;
 
             if (mejorCosteHijo < mejorCosteGlobal) {
                 mejorCosteGlobal = mejorCosteHijo;
-                mejorCroGlobal = nuevaAg.get(mejorCrHijo);
+                mejorCroGlobal = nuevag.get(mejorCrHijo);
             }
             costes = costesH;
-            cromosomas = nuevaAg;
+            cromosomas = nuevag;
         }
 
-        s = mejorCroGlobal;
+        vSolucion = mejorCroGlobal;
         //TODO
         System.out.println("Total evaluaciones: " + contEv);
         System.out.println("Total iteraciones: " + t);

@@ -15,12 +15,18 @@ public class Lector {
     private int tamSem;
     private long[] semillas;
     private int D;
-    private int k;
+    private int tp;
     private String funcion;
     private double rangoInf;
     private double rangoSup;
     private long iteraciones;
     private double oscilacion;
+    private double kProbMuta;
+    private double kProbCruce;
+    private double alfa;
+
+    private double probRecomb;
+
 
     public Lector(String rutaArchConfig) throws IOException {
         String linea;
@@ -45,7 +51,7 @@ public class Lector {
                     String[] paramArch = separador[1].split(" ");
                     algoritmos.addAll(Arrays.asList(paramArch));
                 }
-                case "k" -> k = Integer.parseInt(separador[1]);
+                case "tp" -> tp = Integer.parseInt(separador[1]);
                 case "funcion" -> funcion = separador[1];
                 case "rangoInf" -> rangoInf = Double.parseDouble(separador[1]);
                 case "rangoSup" -> {
@@ -55,6 +61,10 @@ public class Lector {
                         rangoSup = Double.parseDouble(separador[1]);
                     }
                 }
+                case "kprobmuta" -> kProbMuta = Double.parseDouble(separador[1]);
+                case "kprobcruce" -> kProbCruce = Double.parseDouble(separador[1]);
+                case "alfa" -> alfa = Double.parseDouble(separador[1]);
+                case "probrecomb" -> probRecomb = Double.parseDouble(separador[1]);
             }
         }
     }

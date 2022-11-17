@@ -1,10 +1,14 @@
 tamSem=5
 semillas=53916079 95391607 79539160 07953916 60795391
 D=10
-iteraciones=1000
-algoritmos=bl3 blk tabu tabuVNS
-k=3
 funcion=schewefel
 rangoInf=-5000
 rangoSup=5000
+iteraciones=10000
+algoritmos=evm evblx ed
 oscilacion=0.3
+kprobmuta=0.01
+kprobcruce=0.7
+tp=50
+alfa=0.5
+probrecomb=0.5

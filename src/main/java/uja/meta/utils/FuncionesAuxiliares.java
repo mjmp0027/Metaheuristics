@@ -65,12 +65,16 @@ public class FuncionesAuxiliares {
         return fileName.stream().sorted().collect(Collectors.toList());
     }
 
-    public static double[] generador(double rangoInf, double rangosup, long semilla, int D) {
+    public static List<double[]> generador(double rangoInf, double rangosup, long semilla, int D, int tp) {
         Random random = new Random();
         random.setSeed(semilla);
-        double[] vector = new double[D];
-        for (int i = 0; i < D; i++) {
-            vector[i] = random.nextDouble(rangosup - rangoInf) + rangoInf;
+        List<double[]> vector = new ArrayList<>();
+        double[] vectorAux = new double[D];
+        for (int j = 0; j < tp; j++) {
+            for (int i = 0; i < D; i++) {
+                vectorAux[i] = random.nextDouble(rangosup - rangoInf) + rangoInf;
+            }
+            vector.add(j, vectorAux);
         }
         return vector;
     }

@@ -15,9 +15,10 @@ import static uja.meta.utils.FuncionesAuxiliares.*;
 public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
     private final String className;
     private int tp;
-    private int tam;
-    private int evaluaciones;
-    private double[] s;
+    private int D;
+    private long limiteEvaluaciones;
+    private List<double[]> cromosomas;
+    private double[] vSolucion;
     private double rangoMin;
     private double rangoMax;
     private double kProbMuta;
@@ -30,8 +31,7 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
         Logger logger = Logger.getLogger(className);
         Random random = new Random();
         int t = 0;
-        List<double[]> cromosomas = new ArrayList<>();
-        List<double[]> nuevaAg = new ArrayList<>(tam);
+        List<double[]> nuevaAg = new ArrayList<>();
         double[] costes = new double[tp], costesH = new double[tp], costesHH = new double[tp];
         int[] posi = new int[tp];
         double[] mejorCr = new double[tp];
@@ -40,7 +40,6 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
         double mejorCoste = Double.MAX_VALUE;
         double mejorCosteHijo = Double.MAX_VALUE;
         for (int i = 0; i < tp; i++) {
-            //cargaAleatoria(tam, cromosomas.get(i), rangoMin, rangoMax);
             costes[i] = calculaCoste(cromosomas.get(i), funcion);
             if (costes[i] < mejorCoste) {
                 mejorCoste = costes[i];
@@ -49,11 +48,11 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
         }
         double mejorCosteGlobal = mejorCoste;
         double[] mejorCroGlobal = mejorCr;
-        List<double[]> nuevaAG = new ArrayList<>(tam);
+        List<double[]> nuevaAG = new ArrayList<>(D);
 
         int contEv = tp;
 
-        while (contEv < evaluaciones) {
+        while (contEv < limiteEvaluaciones) {
             t++;
             for (int i = 0; i < tp; i++) {
                 int j, k;
@@ -62,15 +61,13 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
                 posi[i] = (costes[i] < costes[k]) ? j : k;
             }
             for (int i = 0; i < tp; i++) {
-                if (posi[i] == 50)
-                    posi[i]--;
                 nuevaAg.add(i, cromosomas.get(posi[i]));
                 costesH[i] = costes[posi[i]];
             }
             int c1, c2, c3, c4;
             double costeMejor1, costeMejor2;
             double[] mejor1, mejor2;
-            double[] h = new double[tam];
+            double[] h = new double[D];
             double x;
             int posAnt = 0;
             boolean[] marcados = new boolean[tp];
@@ -100,7 +97,7 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
                 }
                 x = random.nextDouble();
                 if (x < kProbCruce) {
-                    cruceMedia(tam, mejor1, mejor2, h);
+                    cruceMedia(D, mejor1, mejor2, h);
                     nuevaAG.add(i, h);
                     marcados[i] = true;
                 } else {
@@ -113,7 +110,7 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
 
             for (int i = 0; i < tp; i++) {
                 boolean m = false;
-                for (int j = 0; j < tam; j++) {
+                for (int j = 0; j < D; j++) {
                     x = random.nextDouble();
                     if (x < kProbMuta) {
                         m = true;
@@ -177,7 +174,7 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
             cromosomas = nuevaAg;
         }
 
-        s = mejorCroGlobal;
+        vSolucion = mejorCroGlobal;
         //TODO
         System.out.println("Total evaluaciones: " + contEv);
         System.out.println("Total iteraciones: " + t);
