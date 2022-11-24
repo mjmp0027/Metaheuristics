@@ -31,8 +31,8 @@ public class FuncionesAuxiliares {
                               List<double[]> nuevaAg, double[] costesNuevaAg, Random random) {
         for (int i = 0; i < tp; i++) {
             int j, k;
-            j = random.nextInt(tp - 1 - 0) + 0;
-            while (j == (k = random.nextInt(tp - 1 - 0) + 0)) ;
+            j = random.nextInt(tp - 1);
+            while (j == (k = random.nextInt(tp - 1))) ;
             posicion[i] = (costes[i] < costes[k]) ? j : k;
         }
         for (int i = 0; i < tp; i++) {
@@ -86,7 +86,7 @@ public class FuncionesAuxiliares {
     }
 
     public static void calculoElite(int tp, List<double[]> nuevaAg, double[] mejorCr,
-                                    double[] costesNuevaAg, double mejorCoste, Random random, int peor){
+                                    double[] costesNuevaAg, double mejorCoste, Random random, int peor) {
         int p1, p2, p3, p4;
         p1 = random.nextInt(tp - 1);
         p2 = random.nextInt(tp - 1);
@@ -105,6 +105,42 @@ public class FuncionesAuxiliares {
             peor = p4;
         nuevaAg.add(peor, mejorCr);
         costesNuevaAg[peor] = mejorCoste;
+    }
+
+    public static void eleccion2aleatorios(int tp, List<double[]> cromosomas, double[] costes, int i,
+                                           double[] ale1, double[] ale2, Random random, int a1, int a2) {
+        do {
+            a1 = random.nextInt(tp - 1 - 0);
+            while (a1 == (a2 = random.nextInt(tp - 1 - 0))) ;
+        } while (a1 != i && a2 != i);
+        if (a1 >= tp)
+            a1 = tp - 1;
+        ale1 = cromosomas.get(a1);
+        ale2 = cromosomas.get(a2);
+    }
+
+    public static void torneoK3(int tp, int i, int a1, int a2, int k1, int k2, int k3, int k4, Random random) {
+        do {
+            k1 = random.nextInt(tp - 1 - 0);
+            k2 = random.nextInt(tp - 1 - 0);
+            k3 = random.nextInt(tp - 1 - 0);
+            while (k1 == k2) ;
+            while (k1 == k2 && k2 == k3) ;
+        } while (k1 != i && k1 != a1 && k1 != a2 &&
+                k2 != i && k2 != a1 && k2 != a2 &&
+                k3 != i && k3 != a1 && k3 != a2);
+    }
+
+    public static void reemplazamiento(double nuevoCoste, int i, double[] costes, List<double[]> cromosomas,
+                                       double[] nuevo, double mejorCoste, double[] mejorCr){
+        if (nuevoCoste < costes[i]) {
+            cromosomas.add(i, nuevo);
+            costes[i] = nuevoCoste;
+            if (nuevoCoste < mejorCoste) {
+                mejorCoste = nuevoCoste;
+                mejorCr = nuevo;
+            }
+        }
     }
 
     public static double MAPE(double[] real, double[] estimation) {

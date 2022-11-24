@@ -4,12 +4,11 @@ import lombok.AllArgsConstructor;
 import org.apache.log4j.Logger;
 import uja.meta.utils.Solucion;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
-import static uja.meta.utils.FuncionesAuxiliares.calculaCoste;
+import static uja.meta.utils.FuncionesAuxiliares.*;
 
 @AllArgsConstructor
 public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
@@ -25,7 +24,7 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
     private double probRecomb;
 
     @Override
-    public Solucion call() throws Exception {
+    public Solucion call() {
         Logger logger = Logger.getLogger(className);
         Random random = new Random();
         int t = 0;
@@ -46,31 +45,17 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
         int contEv = tp;
 
         while (contEv < limiteEvaluaciones) {
-            t++;
 
-            double[] ale1, ale2, obj, nuevo = new double[tp], padre;
-            int a1, a2, k1, k2, k3;
+            double[] ale1 = new double[tp], ale2 = new double[tp], obj, nuevo = new double[tp], padre;
+            int a1 = 0, a2 = 0, k1 = 0, k2 = 0, k3 = 0, k4 = 0;
 
             for (int i = 0; i < tp; i++) {
                 padre = cromosomas.get(i);
-                do {
-                    a1 = random.nextInt(tp - 1 - 0);
-                    while (a1 == (a2 = random.nextInt(tp - 1 - 0))) ;
-                } while (a1 != i && a2 != i);
-                if (a1 >= tp)
-                    a1 = tp - 1;
-                ale1 = cromosomas.get(a1);
-                ale2 = cromosomas.get(a2);
 
-                do {
-                    k1 = random.nextInt(tp - 1 - 0);
-                    k2 = random.nextInt(tp - 1 - 0);
-                    k3 = random.nextInt(tp - 1 - 0);
-                    while (k1 == k2) ;
-                    while (k1 == k2 && k2 == k3) ;
-                } while (k1 != i && k1 != a1 && k1 != a2 &&
-                        k2 != i && k2 != a1 && k2 != a2 &&
-                        k3 != i && k3 != a1 && k3 != a2);
+                eleccion2aleatorios(tp, cromosomas, costes, i, ale1, ale2, random, a1, a2);
+
+                torneoK3(tp, i, a1, a2, k1, k2, k3, k4, random);
+
                 if (costes[k1] < costes[k2] && costes[k1] < costes[k3])
                     obj = cromosomas.get(k1);
                 else if (costes[k2] < costes[k1] && costes[k2] < costes[k3])
@@ -79,6 +64,7 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
                     obj = cromosomas.get(k3);
 
                 double factor = random.nextDouble();
+
                 for (int j = 0; j < D; j++) {
                     double porc = random.nextDouble();
                     if (porc > probRecomb)
@@ -94,19 +80,15 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
 
                 double nuevoCoste = calculaCoste(nuevo, funcion);
                 contEv++;
-                if (nuevoCoste < costes[i]) {
-                    cromosomas.add(i, nuevo);
-                    costes[i] = nuevoCoste;
-                    if (nuevoCoste < mejorCoste) {
-                        mejorCoste = nuevoCoste;
-                        mejorCr = nuevo;
-                    }
-                }
+                reemplazamiento(nuevoCoste, i, costes, cromosomas, nuevo, mejorCoste, mejorCr);
+
             }
             if (mejorCoste < mejorCosteGlobal) {
                 mejorCosteGlobal = mejorCoste;
                 mejorCroGlobal = mejorCr;
             }
+            t++;
+            mejorCoste = Double.MAX_VALUE;
         }
 
         //TODO

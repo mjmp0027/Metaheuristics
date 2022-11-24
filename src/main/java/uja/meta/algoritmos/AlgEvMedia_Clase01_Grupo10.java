@@ -97,12 +97,12 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
             }
 
             boolean enc = false;
-            for (int i = 0; i < nuevaAg.size() && !enc; i++) {
-                if (mejorCr == nuevaAg.get(i)) {
+            for (int i = 0; i < nuevaAg.size() && !enc; i++)
+                if (mejorCr == nuevaAg.get(i))
                     enc = true;
-                }
-            }
+
             if (!enc) {
+
                 calculoElite(tp, nuevaAG, mejorCr, costesNuevaAg, mejorCoste, random, peor);
 
                 if (mejorCoste < mejorCosteHijo) {

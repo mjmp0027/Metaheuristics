@@ -15,7 +15,6 @@ import static uja.meta.utils.FuncionesAuxiliares.*;
 public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
     private final String className;
     private int tp;
-
     private int D;
     private long limiteEvaluaciones;
     private List<double[]> cromosomas;
@@ -27,20 +26,26 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
     private double alfa;
     private String funcion;
 
-
     @Override
     public Solucion call() {
+
         Logger logger = Logger.getLogger(className);
         Random random = new Random();
         int t = 0;
-        List<double[]> nuevag = new ArrayList<>();
-        double[] costes = new double[tp], costesH = new double[tp], costesHH = new double[tp];
-        int[] posi = new int[tp];
+        List<double[]> nuevaAg = new ArrayList<>();
+        double[] costes = new double[tp], costesNuevaAg = new double[tp], costesHH = new double[tp];
+        int[] posicion = new int[tp];
         double[] mejorCr = new double[tp];
-        int peor;
+        int peor = 0;
         int mejorCrHijo = 1;
         double mejorCoste = Double.MAX_VALUE;
         double mejorCosteHijo = Double.MAX_VALUE;
+        double mejorCosteGlobal = mejorCoste;
+        double[] mejorCroGlobal = mejorCr;
+        double[] h = new double[D];
+        List<double[]> nuevaAG = new ArrayList<>(D);
+        int contEv = tp;
+
         for (int i = 0; i < tp; i++) {
             costes[i] = calculaCoste(cromosomas.get(i), funcion);
             if (costes[i] < mejorCoste) {
@@ -48,132 +53,76 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
                 mejorCr = cromosomas.get(i);
             }
         }
-        double mejorCosteGlobal = mejorCoste;
-        double[] mejorCroGlobal = mejorCr;
-        List<double[]> nuevaG = new ArrayList<>(D);
+        double[] mejor1 = new double[tp];
+        double[] mejor2 = new double[tp];
+        double costeMejor1 = 0.0;
+        double costeMejor2 = 0.0;
 
-        int contEv = tp;
 
         while (contEv < limiteEvaluaciones) {
-            t++;
-            for (int i = 0; i < tp; i++) {
-                int j, k;
-                j = random.nextInt(tp - 1 - 0) + 0;
-                while (j == (k = random.nextInt(tp - 1 - 0) + 0)) ;
-                posi[i] = (costes[i] < costes[k]) ? j : k;
-            }
-            for (int i = 0; i < tp; i++) {
-                nuevag.add(i, cromosomas.get(posi[i]));
-                costesH[i] = costes[posi[i]];
-            }
-            int c1, c2, c3, c4;
-            double costeMejor1, costeMejor2;
-            double[] mejor1, mejor2;
-            double[] h = new double[D];
-            double x;
-            int posAnt = 0;
+
+            torneo(tp, posicion, costes, cromosomas, nuevaAg, costesNuevaAg, random);
+
             boolean[] marcados = new boolean[tp];
             for (int i = 0; i < tp; i++) {
                 marcados[i] = false;
             }
-            for (int i = 0; i < tp; i++) {
-                c1 = random.nextInt((tp - 1 - 0) + 0);
-                while (c1 == (c2 = random.nextInt(tp - 1 - 0) + 0)) ;
-                if (costesH[c1] < costesH[c2]) {
-                    mejor1 = nuevag.get(c1);
-                    costeMejor1 = costesH[c1];
-                } else {
-                    mejor1 = nuevag.get(c2);
-                    costeMejor1 = costesH[c2];
-                }
-                while (posAnt == (c3 = random.nextInt(tp - 1 - 0) + 0)) ;
-                while (posAnt == (c4 = random.nextInt(tp - 1 - 0) + 0)) ;
+            double uniforme;
 
-                //Mirar
-                while (c3 == c4) ;
-                if (costesH[c3] < costesH[c4]) {
-                    mejor2 = nuevag.get(c3);
-                    costeMejor2 = costesH[c3];
-                } else {
-                    mejor2 = nuevag.get(c4);
-                    costeMejor2 = costesH[c4];
-                }
-                x = random.nextDouble();
-                if (x < kProbCruce) {
+            for (int i = 0; i < tp; i++) {
+                torneo2a2(tp, nuevaAG, costesNuevaAg, mejor1, mejor2, random, costeMejor1, costeMejor2);
+                uniforme = random.nextDouble();
+                if (uniforme < kProbCruce) {
                     cruceBLX(D, mejor1, mejor2, alfa, h, rangoMin, rangoMax);
-                    nuevaG.add(i, h);
+                    nuevaAG.add(i, h);
                     marcados[i] = true;
                 } else {
-                    nuevaG.add(i, mejor1);
+                    nuevaAG.add(i, mejor1);
                     costesHH[i] = costeMejor1;
                 }
             }
-            nuevag = nuevaG;
-            costesH = costesHH;
+            nuevaAg = nuevaAG;
+            costesNuevaAg = costesHH;
 
-            for (int i = 0; i < tp; i++) {
-                boolean m = false;
-                for (int j = 0; j < D; j++) {
-                    x = random.nextDouble();
-                    if (x < kProbMuta) {
-                        m = true;
-                        double valor = random.nextDouble(rangoMax - rangoMin) + rangoMin;
-                        Mutacion(nuevag.get(i),j,valor);
-                    }
-                }
-                if (m)
-                    marcados[i] = true;
-            }
+            mutar(tp, D, kProbMuta, rangoMin, rangoMax, nuevaAG, marcados, random);
 
             for (int i = 0; i < tp; i++) {
                 if (marcados[i]) {
-                    costesH[i] = calculaCoste(nuevag.get(i), funcion);
+                    costesNuevaAg[i] = calculaCoste(nuevaAg.get(i), funcion);
                     contEv++;
                 }
-                if (costesH[i] < mejorCosteHijo) {
-                    mejorCosteHijo = costesH[i];
+                if (costesNuevaAg[i] < mejorCosteHijo) {
+                    mejorCosteHijo = costesNuevaAg[i];
                     mejorCrHijo = i;
                 }
             }
+
             boolean enc = false;
-            for (int i = 0; i < nuevag.size() && !enc; i++) {
-                if (mejorCr == nuevag.get(i)) {
+            for (int i = 0; i < nuevaAg.size() && !enc; i++)
+                if (mejorCr == nuevaAg.get(i))
                     enc = true;
-                }
-            }
+
+
             if (!enc) {
-                int p1, p2, p3, p4;
-                p1 = random.nextInt(tp - 1 - 0) + 0;
-                p2 = random.nextInt(tp - 1 - 0) + 0;
-                p3 = random.nextInt(tp - 1 - 0) + 0;
-                p4 = random.nextInt(tp - 1 - 0) + 0;
-                while (p1 == p2) ;
-                while (p1 == p2 && p2 == p3) ;
-                while (p1 == p2 && p2 == p3 && p3 == p4) ;
-                if (costesH[p1] > costesH[p2] && costesH[p1] > costesH[p3] && costesH[p1] > costesH[p4])
-                    peor = p1;
-                else if (costesH[p2] > costesH[p1] && costesH[p2] > costesH[p3] && costesH[p2] > costesH[p4])
-                    peor = p2;
-                else if (costesH[p3] > costesH[p1] && costesH[p3] > costesH[p2] && costesH[p3] > costesH[p4])
-                    peor = p3;
-                else
-                    peor = p4;
-                nuevag.add(peor, mejorCr);
-                costesH[peor] = mejorCoste;
+
+                calculoElite(tp, nuevaAG, mejorCr, costesNuevaAg, mejorCoste, random, peor);
+
                 if (mejorCoste < mejorCosteHijo) {
                     mejorCosteHijo = mejorCoste;
-                    nuevag.add(mejorCrHijo, mejorCr);
+                    nuevaAg.add(mejorCrHijo, mejorCr);
                 }
             }
-            mejorCr = nuevag.get(mejorCrHijo);
+
+            mejorCr = nuevaAg.get(mejorCrHijo);
             mejorCoste = mejorCosteHijo;
 
             if (mejorCosteHijo < mejorCosteGlobal) {
                 mejorCosteGlobal = mejorCosteHijo;
-                mejorCroGlobal = nuevag.get(mejorCrHijo);
+                mejorCroGlobal = nuevaAg.get(mejorCrHijo);
             }
-            costes = costesH;
-            cromosomas = nuevag;
+            costes = costesNuevaAg;
+            cromosomas = nuevaAg;
+            t++;
         }
 
         vSolucion = mejorCroGlobal;
