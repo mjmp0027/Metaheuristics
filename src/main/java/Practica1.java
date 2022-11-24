@@ -18,10 +18,9 @@ public class Practica1 {
         BasicConfigurator.configure();
         String ruta = "src/main/resources/configFiles/";
         ExecutorService executor = Executors.newCachedThreadPool();
-        List<Future<Solucion>> resultadoBL3 = new ArrayList<>();
-        List<Future<Solucion>> resultadoBLk = new ArrayList<>();
-        List<Future<Solucion>> resultadoTabu = new ArrayList<>();
-        List<Future<Solucion>> resultadoTabuVNS = new ArrayList<>();
+        List<Future<Solucion>> resultadoEvMedia = new ArrayList<>();
+        List<Future<Solucion>> resultadoEvBlX = new ArrayList<>();
+        List<Future<Solucion>> resultadoEvDif = new ArrayList<>();
         final File folder = new File(ruta);
         List<String> archivosConfig = getFiles(folder);
 
@@ -49,19 +48,19 @@ public class Practica1 {
                             AlgEvMedia_Clase01_Grupo10 EvM =
                                     new AlgEvMedia_Clase01_Grupo10(funcion + ".EvM" + semilla, tp, D, iteraciones,
                                             cromosoma, vSolucion, rangoInf, rangoSup, kProbMuta, kProCruce, funcion);
-                            resultadoBL3.add(executor.submit(EvM));
+                            resultadoEvMedia.add(executor.submit(EvM));
                         }
                         case "evblx" -> {
                             AlgEvBLX_Clase01_Grupo10 EvBlk =
                                     new AlgEvBLX_Clase01_Grupo10(funcion + ".EvBlk" + semilla, tp, D, iteraciones,
                                             cromosoma, vSolucion, rangoInf, rangoSup, kProbMuta, kProCruce, alfa, funcion);
-                            resultadoBLk.add(executor.submit(EvBlk));
+                            resultadoEvBlX.add(executor.submit(EvBlk));
                         }
                         case "ed" -> {
                             AlgEvDif_Clase01_Grupo10 ed =
                                     new AlgEvDif_Clase01_Grupo10(funcion + ".EvBlk" + semilla, tp, D, iteraciones,
                                             cromosoma, vSolucion, rangoInf, rangoSup, funcion, probRecomb);
-                            resultadoTabu.add(executor.submit(ed));
+                            resultadoEvDif.add(executor.submit(ed));
                         }
                     }
                 }
@@ -73,9 +72,9 @@ public class Practica1 {
             executor.shutdownNow();
 
         // Conversion de resultados a CSV
-        exportCSV(resultadoBL3, "BL3");
-        exportCSV(resultadoBLk, "BLk");
-        exportCSV(resultadoTabu, "Tabu");
+        exportCSV(resultadoEvMedia, "EvMedia");
+        exportCSV(resultadoEvBlX, "EvBlX");
+        exportCSV(resultadoEvDif, "EvDif");
 
         double tiempoFinal = System.nanoTime();
         System.out.println("Tiempo total PRÁCTICA 2: " + calcularTiempo(tiempoInicial, tiempoFinal) + " ms");
