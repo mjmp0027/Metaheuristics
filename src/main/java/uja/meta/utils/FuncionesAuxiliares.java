@@ -27,6 +27,86 @@ import static uja.meta.funciones.Trid.evaluateT;
 
 public class FuncionesAuxiliares {
 
+    public static void torneo(int tp, int[] posicion, double[] costes, List<double[]> cromosomas,
+                              List<double[]> nuevaAg, double[] costesNuevaAg, Random random) {
+        for (int i = 0; i < tp; i++) {
+            int j, k;
+            j = random.nextInt(tp - 1 - 0) + 0;
+            while (j == (k = random.nextInt(tp - 1 - 0) + 0)) ;
+            posicion[i] = (costes[i] < costes[k]) ? j : k;
+        }
+        for (int i = 0; i < tp; i++) {
+            nuevaAg.add(i, cromosomas.get(posicion[i]));
+            costesNuevaAg[i] = costes[posicion[i]];
+        }
+    }
+
+    public static void torneo2a2(int tp, List<double[]> nuevaAg, double[] costesNuevaAg, double[] mejor1,
+                                 double[] mejor2, Random random, double costeMejor1, double costeMejor2) {
+        int c1, c2, c3, c4;
+        int posAnt = 0;
+
+        c1 = random.nextInt(tp - 1);
+        while (c1 == (c2 = random.nextInt(tp - 1))) ;
+        if (costesNuevaAg[c1] < costesNuevaAg[c2]) {
+            mejor1 = nuevaAg.get(c1);
+            costeMejor1 = costesNuevaAg[c1];
+        } else {
+            mejor1 = nuevaAg.get(c2);
+            costeMejor1 = costesNuevaAg[c2];
+        }
+        while (posAnt == (c3 = random.nextInt(tp - 1))) ;
+        while (posAnt == (c4 = random.nextInt(tp - 1))) ;
+
+
+        if (costesNuevaAg[c3] < costesNuevaAg[c4]) {
+            mejor2 = nuevaAg.get(c3);
+            costeMejor2 = costesNuevaAg[c3];
+        } else {
+            mejor2 = nuevaAg.get(c4);
+            costeMejor2 = costesNuevaAg[c4];
+        }
+    }
+
+    public static void mutar(int tp, int D, double kProbMuta, double rangoMin, double rangoMax,
+                             List<double[]> nuevaAg, boolean[] marcados, Random random) {
+        for (int i = 0; i < tp; i++) {
+            boolean m = false;
+            for (int j = 0; j < D; j++) {
+                double uniforme = random.nextDouble();
+                if (uniforme < kProbMuta) {
+                    m = true;
+                    double valor = random.nextDouble(rangoMax - rangoMin) + rangoMin;
+                    Mutacion(nuevaAg.get(i), j, valor);
+                }
+            }
+            if (m)
+                marcados[i] = true;
+        }
+    }
+
+    public static void calculoElite(int tp, List<double[]> nuevaAg, double[] mejorCr,
+                                    double[] costesNuevaAg, double mejorCoste, Random random, int peor){
+        int p1, p2, p3, p4;
+        p1 = random.nextInt(tp - 1);
+        p2 = random.nextInt(tp - 1);
+        p3 = random.nextInt(tp - 1);
+        p4 = random.nextInt(tp - 1);
+        while (p1 == p2) ;
+        while (p1 == p2 && p2 == p3) ;
+        while (p1 == p2 && p2 == p3 && p3 == p4) ;
+        if (costesNuevaAg[p1] > costesNuevaAg[p2] && costesNuevaAg[p1] > costesNuevaAg[p3] && costesNuevaAg[p1] > costesNuevaAg[p4])
+            peor = p1;
+        else if (costesNuevaAg[p2] > costesNuevaAg[p1] && costesNuevaAg[p2] > costesNuevaAg[p3] && costesNuevaAg[p2] > costesNuevaAg[p4])
+            peor = p2;
+        else if (costesNuevaAg[p3] > costesNuevaAg[p1] && costesNuevaAg[p3] > costesNuevaAg[p2] && costesNuevaAg[p3] > costesNuevaAg[p4])
+            peor = p3;
+        else
+            peor = p4;
+        nuevaAg.add(peor, mejorCr);
+        costesNuevaAg[peor] = mejorCoste;
+    }
+
     public static double MAPE(double[] real, double[] estimation) {
         int N = real.length;
         double score;

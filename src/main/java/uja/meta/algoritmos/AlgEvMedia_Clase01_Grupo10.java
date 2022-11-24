@@ -26,19 +26,25 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
     private String funcion;
 
     @Override
-    public Solucion call() throws Exception {
+    public Solucion call() {
 
         Logger logger = Logger.getLogger(className);
         Random random = new Random();
         int t = 0;
         List<double[]> nuevaAg = new ArrayList<>();
-        double[] costes = new double[tp], costesH = new double[tp], costesHH = new double[tp];
-        int[] posi = new int[tp];
+        double[] costes = new double[tp], costesNuevaAg = new double[tp], costesHH = new double[tp];
+        int[] posicion = new int[tp];
         double[] mejorCr = new double[tp];
-        int peor;
+        int peor = 0;
         int mejorCrHijo = 1;
         double mejorCoste = Double.MAX_VALUE;
         double mejorCosteHijo = Double.MAX_VALUE;
+        double mejorCosteGlobal = mejorCoste;
+        double[] mejorCroGlobal = mejorCr;
+        double[] h = new double[D];
+        List<double[]> nuevaAG = new ArrayList<>(D);
+        int contEv = tp;
+
         for (int i = 0; i < tp; i++) {
             costes[i] = calculaCoste(cromosomas.get(i), funcion);
             if (costes[i] < mejorCoste) {
@@ -46,57 +52,26 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
                 mejorCr = cromosomas.get(i);
             }
         }
-        double mejorCosteGlobal = mejorCoste;
-        double[] mejorCroGlobal = mejorCr;
-        List<double[]> nuevaAG = new ArrayList<>(D);
+        double[] mejor1 = new double[tp];
+        double[] mejor2 = new double[tp];
+        double costeMejor1 = 0.0;
+        double costeMejor2 = 0.0;
 
-        int contEv = tp;
 
         while (contEv < limiteEvaluaciones) {
-            t++;
-            for (int i = 0; i < tp; i++) {
-                int j, k;
-                j = random.nextInt(tp - 1 - 0) + 0;
-                while (j == (k = random.nextInt(tp - 1 - 0) + 0)) ;
-                posi[i] = (costes[i] < costes[k]) ? j : k;
-            }
-            for (int i = 0; i < tp; i++) {
-                nuevaAg.add(i, cromosomas.get(posi[i]));
-                costesH[i] = costes[posi[i]];
-            }
-            int c1, c2, c3, c4;
-            double costeMejor1, costeMejor2;
-            double[] mejor1, mejor2;
-            double[] h = new double[D];
-            double x;
-            int posAnt = 0;
+
+            torneo(tp, posicion, costes, cromosomas, nuevaAg, costesNuevaAg, random);
+
             boolean[] marcados = new boolean[tp];
             for (int i = 0; i < tp; i++) {
                 marcados[i] = false;
             }
+            double uniforme;
+
             for (int i = 0; i < tp; i++) {
-                c1 = random.nextInt((tp - 1 - 0) + 0);
-                while (c1 == (c2 = random.nextInt(tp - 1 - 0) + 0)) ;
-                if (costesH[c1] < costesH[c2]) {
-                    mejor1 = nuevaAg.get(c1);
-                    costeMejor1 = costesH[c1];
-                } else {
-                    mejor1 = nuevaAg.get(c2);
-                    costeMejor1 = costesH[c2];
-                }
-                while (posAnt == (c3 = random.nextInt(tp - 1 - 0) + 0)) ;
-                while (posAnt == (c4 = random.nextInt(tp - 1 - 0) + 0)) ;
-
-
-                if (costesH[c3] < costesH[c4]) {
-                    mejor2 = nuevaAg.get(c3);
-                    costeMejor2 = costesH[c3];
-                } else {
-                    mejor2 = nuevaAg.get(c4);
-                    costeMejor2 = costesH[c4];
-                }
-                x = random.nextDouble();
-                if (x < kProbCruce) {
+                torneo2a2(tp, nuevaAG, costesNuevaAg, mejor1, mejor2, random, costeMejor1, costeMejor2);
+                uniforme = random.nextDouble();
+                if (uniforme < kProbCruce) {
                     cruceMedia(D, mejor1, mejor2, h);
                     nuevaAG.add(i, h);
                     marcados[i] = true;
@@ -106,32 +81,21 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
                 }
             }
             nuevaAg = nuevaAG;
-            costesH = costesHH;
+            costesNuevaAg = costesHH;
 
-            for (int i = 0; i < tp; i++) {
-                boolean m = false;
-                for (int j = 0; j < D; j++) {
-                    x = random.nextDouble();
-                    if (x < kProbMuta) {
-                        m = true;
-                        double valor = random.nextDouble(rangoMax - rangoMin) + rangoMin;
-                        Mutacion(nuevaAg.get(i),j,valor);
-                    }
-                }
-                if (m)
-                    marcados[i] = true;
-            }
+            mutar(tp, D, kProbMuta, rangoMin, rangoMax, nuevaAG, marcados, random);
 
             for (int i = 0; i < tp; i++) {
                 if (marcados[i]) {
-                    costesH[i] = calculaCoste(nuevaAg.get(i), funcion);
+                    costesNuevaAg[i] = calculaCoste(nuevaAg.get(i), funcion);
                     contEv++;
                 }
-                if (costesH[i] < mejorCosteHijo) {
-                    mejorCosteHijo = costesH[i];
+                if (costesNuevaAg[i] < mejorCosteHijo) {
+                    mejorCosteHijo = costesNuevaAg[i];
                     mejorCrHijo = i;
                 }
             }
+
             boolean enc = false;
             for (int i = 0; i < nuevaAg.size() && !enc; i++) {
                 if (mejorCr == nuevaAg.get(i)) {
@@ -139,30 +103,14 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
                 }
             }
             if (!enc) {
-                int p1, p2, p3, p4;
-                p1 = random.nextInt(tp - 1 - 0) + 0;
-                p2 = random.nextInt(tp - 1 - 0) + 0;
-                p3 = random.nextInt(tp - 1 - 0) + 0;
-                p4 = random.nextInt(tp - 1 - 0) + 0;
-                while (p1 == p2) ;
-                while (p1 == p2 && p2 == p3) ;
-                while (p1 == p2 && p2 == p3 && p3 == p4) ;
-                if (costesH[p1] > costesH[p2] && costesH[p1] > costesH[p3] && costesH[p1] > costesH[p4])
-                    peor = p1;
-                else if (costesH[p2] > costesH[p1] && costesH[p2] > costesH[p3] && costesH[p2] > costesH[p4])
-                    peor = p2;
-                else if (costesH[p3] > costesH[p1] && costesH[p3] > costesH[p2] && costesH[p3] > costesH[p4])
-                    peor = p3;
-                else
-                    peor = p4;
-                nuevaAg.add(peor, mejorCr);
-                costesH[peor] = mejorCoste;
+                calculoElite(tp, nuevaAG, mejorCr, costesNuevaAg, mejorCoste, random, peor);
 
                 if (mejorCoste < mejorCosteHijo) {
                     mejorCosteHijo = mejorCoste;
                     nuevaAg.add(mejorCrHijo, mejorCr);
                 }
             }
+
             mejorCr = nuevaAg.get(mejorCrHijo);
             mejorCoste = mejorCosteHijo;
 
@@ -170,8 +118,9 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
                 mejorCosteGlobal = mejorCosteHijo;
                 mejorCroGlobal = nuevaAg.get(mejorCrHijo);
             }
-            costes = costesH;
+            costes = costesNuevaAg;
             cromosomas = nuevaAg;
+            t++;
         }
 
         vSolucion = mejorCroGlobal;
