@@ -34,7 +34,6 @@ public class Practica1 {
             double rangoInf = lector.getRangoInf();
             double rangoSup = lector.getRangoSup();
             long iteraciones = lector.getIteraciones();
-            double oscilacion = lector.getOscilacion();
             double kProbMuta = lector.getKProbMuta();
             double kProCruce = lector.getKProbCruce();
             double alfa = lector.getAlfa();
@@ -44,22 +43,22 @@ public class Practica1 {
                     List<double[]> cromosoma = generador(rangoInf, rangoSup, semilla, D, tp);
                     double[] vSolucion = new double[D];
                     switch (algoritmo) {
-                        case "evm" -> {
-                            AlgEvMedia_Clase01_Grupo10 EvM =
-                                    new AlgEvMedia_Clase01_Grupo10(funcion + ".EvM" + semilla, tp, D, iteraciones,
-                                            cromosoma, vSolucion, rangoInf, rangoSup, kProbMuta, kProCruce, funcion);
-                            resultadoEvMedia.add(executor.submit(EvM));
-                        }
-                        case "evblx" -> {
-                            AlgEvBLX_Clase01_Grupo10 EvBlk =
-                                    new AlgEvBLX_Clase01_Grupo10(funcion + ".EvBlk" + semilla, tp, D, iteraciones,
-                                            cromosoma, vSolucion, rangoInf, rangoSup, kProbMuta, kProCruce, alfa, funcion);
-                            resultadoEvBlX.add(executor.submit(EvBlk));
-                        }
+//                        case "evm" -> {
+//                            AlgEvMedia_Clase01_Grupo10 EvM =
+//                                    new AlgEvMedia_Clase01_Grupo10(funcion + ".EvM." + semilla, tp, D, iteraciones,
+//                                            cromosoma, vSolucion, rangoInf, rangoSup, kProbMuta, kProCruce, funcion, semilla);
+//                            resultadoEvMedia.add(executor.submit(EvM));
+//                        }
+//                        case "evblx" -> {
+//                            AlgEvBLX_Clase01_Grupo10 EvBlk =
+//                                    new AlgEvBLX_Clase01_Grupo10(funcion + ".EvBlk." + semilla, tp, D, iteraciones,
+//                                            cromosoma, vSolucion, rangoInf, rangoSup, kProbMuta, kProCruce, alfa, funcion, semilla);
+//                            resultadoEvBlX.add(executor.submit(EvBlk));
+//                        }
                         case "ed" -> {
                             AlgEvDif_Clase01_Grupo10 ed =
-                                    new AlgEvDif_Clase01_Grupo10(funcion + ".EvBlk" + semilla, tp, D, iteraciones,
-                                            cromosoma, vSolucion, rangoInf, rangoSup, funcion, probRecomb);
+                                    new AlgEvDif_Clase01_Grupo10(funcion + ".EvDif." + semilla, tp, D, iteraciones,
+                                            cromosoma, vSolucion, rangoInf, rangoSup, funcion, probRecomb, semilla);
                             resultadoEvDif.add(executor.submit(ed));
                         }
                     }
@@ -72,9 +71,9 @@ public class Practica1 {
             executor.shutdownNow();
 
         // Conversion de resultados a CSV
-        exportCSV(resultadoEvMedia, "EvMedia");
-        exportCSV(resultadoEvBlX, "EvBlX");
-        exportCSV(resultadoEvDif, "EvDif");
+//        exportCSV(resultadoEvMedia, "EvMedia");
+//        exportCSV(resultadoEvBlX, "EvBlX");
+//        exportCSV(resultadoEvDif, "EvDif");
 
         double tiempoFinal = System.nanoTime();
         System.out.println("Tiempo total PRÁCTICA 2: " + calcularTiempo(tiempoInicial, tiempoFinal) + " ms");

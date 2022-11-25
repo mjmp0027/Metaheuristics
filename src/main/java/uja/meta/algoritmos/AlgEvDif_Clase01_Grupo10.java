@@ -22,11 +22,13 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
     private double rangoMax;
     private String funcion;
     private double probRecomb;
+    private Long semilla;
 
     @Override
     public Solucion call() {
-        Logger logger = Logger.getLogger(className);
+        Logger log = Logger.getLogger(className);
         Random random = new Random();
+        double tiempoInicial = System.nanoTime();
         int t = 0;
         double[] costes = new double[tp];
         double mejorCoste = Double.MAX_VALUE;
@@ -43,11 +45,10 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
         double[] mejorCroGlobal = mejorCr;
 
         int contEv = tp;
+        double[] ale1 = new double[tp], ale2 = new double[tp], obj, nuevo = new double[tp], padre;
+        int a1 = 0, a2 = 0, k1 = 0, k2 = 0, k3 = 0, k4 = 0;
 
         while (contEv < limiteEvaluaciones) {
-
-            double[] ale1 = new double[tp], ale2 = new double[tp], obj, nuevo = new double[tp], padre;
-            int a1 = 0, a2 = 0, k1 = 0, k2 = 0, k3 = 0, k4 = 0;
 
             for (int i = 0; i < tp; i++) {
                 padre = cromosomas.get(i);
@@ -92,9 +93,15 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
         }
 
         //TODO
-        vSolucion = mejorCroGlobal;
-        System.out.println("Total evaluaciones: " + contEv);
-        System.out.println("Total iteraciones: " + t);
-        return null;
+        double tiempoFinal = System.nanoTime();
+        String tiempoTotal = calcularTiempo(tiempoInicial, tiempoFinal);
+        log.info("Tiempo transcurrido: " + tiempoTotal + " ms");
+        log.info("Mejor cromosoma: " + visualizaVectorLog(vSolucion));
+        String costeFormat = formato(mejorCosteGlobal);
+        log.info("Mejor coste: " + costeFormat);
+        log.info("Total evaluaciones: " + contEv);
+        log.info("Total iteraciones: " + t);
+
+        return new Solucion(costeFormat, tiempoTotal, semilla);
     }
 }

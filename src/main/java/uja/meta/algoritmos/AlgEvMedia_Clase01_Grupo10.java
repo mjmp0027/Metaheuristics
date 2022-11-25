@@ -24,12 +24,14 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
     private double kProbMuta;
     private double kProbCruce;
     private String funcion;
+    private Long semilla;
 
     @Override
     public Solucion call() {
 
-        Logger logger = Logger.getLogger(className);
+        Logger log = Logger.getLogger(className);
         Random random = new Random();
+        double tiempoInicial = System.nanoTime();
         int t = 0;
         List<double[]> nuevaAg = new ArrayList<>();
         double[] costes = new double[tp], costesNuevaAg = new double[tp], costesHH = new double[tp];
@@ -69,7 +71,7 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
             double uniforme;
 
             for (int i = 0; i < tp; i++) {
-                torneo2a2(tp, nuevaAG, costesNuevaAg, mejor1, mejor2, random, costeMejor1, costeMejor2);
+                torneo2a2(tp, nuevaAg, costesNuevaAg, mejor1, mejor2, random, costeMejor1, costeMejor2);
                 uniforme = random.nextDouble();
                 if (uniforme < kProbCruce) {
                     cruceMedia(D, mejor1, mejor2, h);
@@ -125,9 +127,15 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
 
         vSolucion = mejorCroGlobal;
         //TODO
-        System.out.println("Total evaluaciones: " + contEv);
-        System.out.println("Total iteraciones: " + t);
+        double tiempoFinal = System.nanoTime();
+        String tiempoTotal = calcularTiempo(tiempoInicial, tiempoFinal);
+        log.info("Tiempo transcurrido: " + tiempoTotal + " ms");
+        log.info("Mejor cromosoma: " + visualizaVectorLog(vSolucion));
+        String costeFormat = formato(mejorCosteGlobal);
+        log.info("Mejor coste: " + costeFormat);
+        log.info("Total evaluaciones: " + contEv);
+        log.info("Total iteraciones: " + t);
 
-        return null;
+        return new Solucion(costeFormat, tiempoTotal, semilla);
     }
 }

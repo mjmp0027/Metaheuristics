@@ -350,7 +350,8 @@ public class FuncionesAuxiliares {
     private static String convertToCSV(Solucion solucion) {
         return solucion.toString();
     }
-    //TODO crear un archivo .txt que sea igual que el .properties con bucles leyendo los config donde quede
-    //cada parámetro con un solo valor cada semilla con cada algoritmo y a su vez con cada funcion
-    //5(semillas) * 4(algoritmos) * 10(funciones) = 200(logs)
+    //TODO crear un archivo .txt que sea igual que el .properties con bucles leyendo los config
+    // donde quede cada parámetro con un solo valor cada semilla con cada algoritmo y a su vez
+    // con cada funcion 5(semillas) * 4(algoritmos) * 10(funciones) = 200(logs)
+
 }
