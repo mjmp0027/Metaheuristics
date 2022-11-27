@@ -1,4 +1,4 @@
-package uja.meta.algoritmos;
+package uja.meta.algoritmos.practica2;
 
 import lombok.AllArgsConstructor;
 import org.apache.log4j.Logger;
@@ -45,17 +45,30 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
         double[] mejorCroGlobal = mejorCr;
 
         int contEv = tp;
-        double[] ale1 = new double[tp], ale2 = new double[tp], obj, nuevo = new double[tp], padre;
-        int a1 = 0, a2 = 0, k1 = 0, k2 = 0, k3 = 0, k4 = 0;
+        double[] ale1 = new double[tp],
+                ale2 = new double[tp], obj,
+                nuevo = new double[tp], padre;
+        int a1, a2, k1, k2, k3;
 
         while (contEv < limiteEvaluaciones) {
-
+            log.info("ITERACION: " + contEv);
             for (int i = 0; i < tp; i++) {
                 padre = cromosomas.get(i);
+                log.info("primer for: " + i);
+                do {
+                    a1 = random.nextInt(tp - 1);
+                    while (a1 == (a2 = random.nextInt(tp - 1))) ;
+                } while (a1 != i && a2 != i);
+                ale1 = cromosomas.get(a1);
+                ale2 = cromosomas.get(a2);
 
-                eleccion2aleatorios(tp, cromosomas, costes, i, ale1, ale2, random, a1, a2);
-
-                torneoK3(tp, i, a1, a2, k1, k2, k3, k4, random);
+                do {
+                    k1 = random.nextInt(tp - 1);
+                    while (k1 == (k2 = random.nextInt(tp - 1))) ;
+                    while ((k2 == (k3 = random.nextInt(tp - 1)))) ;
+                } while (k1 != i && k1 != a1 && k1 != a2 &&
+                        k2 != i && k2 != a1 && k2 != a2 &&
+                        k3 != i && k3 != a1 && k3 != a2);
 
                 if (costes[k1] < costes[k2] && costes[k1] < costes[k3])
                     obj = cromosomas.get(k1);
@@ -67,6 +80,7 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
                 double factor = random.nextDouble();
 
                 for (int j = 0; j < D; j++) {
+                    log.info("segundo for: " + j);
                     double porc = random.nextDouble();
                     if (porc > probRecomb)
                         nuevo[j] = obj[j];

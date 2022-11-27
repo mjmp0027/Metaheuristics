@@ -1,7 +1,6 @@
-package uja.meta.algoritmos;
+package uja.meta.algoritmos.practica1;
 
 import lombok.AllArgsConstructor;
-
 import org.apache.log4j.Logger;
 import uja.meta.utils.Solucion;
 
@@ -11,9 +10,8 @@ import java.util.concurrent.Callable;
 import static uja.meta.utils.FuncionesAuxiliares.*;
 
 @AllArgsConstructor
-public class AlgBL3_Clase01_Grupo10 implements Callable<Solucion> {
+public class AlgBLk_Clase01_Grupo10 implements Callable<Solucion> {
     private final int D;
-    private final int k;
     private final long semilla;
     private final long limiteIteraciones;
     private final double oscilacion;
@@ -26,10 +24,10 @@ public class AlgBL3_Clase01_Grupo10 implements Callable<Solucion> {
     @Override
     public Solucion call() {
         Logger log = Logger.getLogger(className);
+        log.info("Vector inicial: " + visualizaVectorLog(vSolucion));
         double tiempoInicial = System.nanoTime();
         Random random = new Random();
         double[] vecino = new double[D];
-        log.info("Vector inicial: " + visualizaVectorLog(vSolucion));
         double[] mejorVecino = vSolucion;
         double vecinoMejorCoste = Double.MAX_VALUE;
         double mejorCoste = calculaCoste(vSolucion, funcion);
@@ -38,8 +36,10 @@ public class AlgBL3_Clase01_Grupo10 implements Callable<Solucion> {
 
         while (mejora && iteraciones < limiteIteraciones) {
             mejora = false;
-            for (int i = 1; i <= k; i++) {
-                for (int j = 0; j < D; j++) {    //	Para j = 1 hasta d
+            int x = random.nextInt(10 - 4) + 4;
+
+            for (int i = 0; i <= x; i++) {
+                for (int j = 0; j < D; j++) {
                     if (random.nextDouble() <= oscilacion) {
                         nuevaSolucion(vSolucion, vecino, j, rangoInf, rangoSup);
                     } else
@@ -51,8 +51,6 @@ public class AlgBL3_Clase01_Grupo10 implements Callable<Solucion> {
                     vecinoMejorCoste = costeVecino;
                 }
             }
-
-            // Comparacion actual con entorno
             if (vecinoMejorCoste < mejorCoste) {
                 vSolucion = mejorVecino;
                 mejorCoste = vecinoMejorCoste;

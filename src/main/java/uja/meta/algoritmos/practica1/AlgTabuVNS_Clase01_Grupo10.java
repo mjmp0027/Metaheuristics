@@ -1,4 +1,4 @@
-package uja.meta.algoritmos;
+package uja.meta.algoritmos.practica1;
 
 import lombok.AllArgsConstructor;
 import org.apache.log4j.Logger;
