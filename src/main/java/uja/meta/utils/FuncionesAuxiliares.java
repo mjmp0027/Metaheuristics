@@ -1,15 +1,11 @@
 package uja.meta.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.io.*;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import static java.lang.Math.max;
@@ -77,7 +73,7 @@ public class FuncionesAuxiliares {
                 if (uniforme < kProbMuta) {
                     m = true;
                     double valor = random.nextDouble(rangoMax - rangoMin) + rangoMin;
-                    Mutacion(nuevaAg.get(i), j, valor);
+                    mutacion(nuevaAg.get(i), j, valor);
                 }
             }
             if (m)
@@ -95,11 +91,14 @@ public class FuncionesAuxiliares {
         while (p1 == p2) ;
         while (p1 == p2 && p2 == p3) ;
         while (p1 == p2 && p2 == p3 && p3 == p4) ;
-        if (costesNuevaAg[p1] > costesNuevaAg[p2] && costesNuevaAg[p1] > costesNuevaAg[p3] && costesNuevaAg[p1] > costesNuevaAg[p4])
+        if (costesNuevaAg[p1] > costesNuevaAg[p2] && costesNuevaAg[p1] > costesNuevaAg[p3]
+                && costesNuevaAg[p1] > costesNuevaAg[p4])
             peor = p1;
-        else if (costesNuevaAg[p2] > costesNuevaAg[p1] && costesNuevaAg[p2] > costesNuevaAg[p3] && costesNuevaAg[p2] > costesNuevaAg[p4])
+        else if (costesNuevaAg[p2] > costesNuevaAg[p1] && costesNuevaAg[p2] > costesNuevaAg[p3]
+                && costesNuevaAg[p2] > costesNuevaAg[p4])
             peor = p2;
-        else if (costesNuevaAg[p3] > costesNuevaAg[p1] && costesNuevaAg[p3] > costesNuevaAg[p2] && costesNuevaAg[p3] > costesNuevaAg[p4])
+        else if (costesNuevaAg[p3] > costesNuevaAg[p1] && costesNuevaAg[p3] > costesNuevaAg[p2]
+                && costesNuevaAg[p3] > costesNuevaAg[p4])
             peor = p3;
         else
             peor = p4;
@@ -108,22 +107,23 @@ public class FuncionesAuxiliares {
     }
 
     public static void eleccion2aleatorios(int tp, List<double[]> cromosomas, double[] costes, int i,
-                                           double[] ale1, double[] ale2, Random random, int a1, int a2) {
+                                           double[] ale1, double[] ale2, Random random) {
+        int a1, a2 = random.nextInt(tp - 1);
         do {
-            a1 = random.nextInt(tp - 1 - 0);
-            while (a1 == (a2 = random.nextInt(tp - 1 - 0))) ;
+            a1 = random.nextInt(tp - 1);
+            while (a1 == a2) ;
         } while (a1 != i && a2 != i);
-        if (a1 >= tp)
-            a1 = tp - 1;
         ale1 = cromosomas.get(a1);
         ale2 = cromosomas.get(a2);
     }
 
-    public static void torneoK3(int tp, int i, int a1, int a2, int k1, int k2, int k3, int k4, Random random) {
+    public static void torneoK3(int tp, int i, int a1, int k1, int k2, int k3, int k4, Random random) {
+        int a2 = random.nextInt(tp - 1);
+        k2 = random.nextInt(tp - 1);
+        k3 = random.nextInt(tp - 1);
+
         do {
-            k1 = random.nextInt(tp - 1 - 0);
-            k2 = random.nextInt(tp - 1 - 0);
-            k3 = random.nextInt(tp - 1 - 0);
+            k1 = random.nextInt(tp - 1);
             while (k1 == k2) ;
             while (k1 == k2 && k2 == k3) ;
         } while (k1 != i && k1 != a1 && k1 != a2 &&
@@ -132,7 +132,7 @@ public class FuncionesAuxiliares {
     }
 
     public static void reemplazamiento(double nuevoCoste, int i, double[] costes, List<double[]> cromosomas,
-                                       double[] nuevo, double mejorCoste, double[] mejorCr){
+                                       double[] nuevo, double mejorCoste, double[] mejorCr) {
         if (nuevoCoste < costes[i]) {
             cromosomas.add(i, nuevo);
             costes[i] = nuevoCoste;
@@ -185,8 +185,9 @@ public class FuncionesAuxiliares {
         Random random = new Random();
         random.setSeed(semilla);
         List<double[]> vector = new ArrayList<>();
-        double[] vectorAux = new double[D];
+
         for (int j = 0; j < tp; j++) {
+            double[] vectorAux = new double[D];
             for (int i = 0; i < D; i++) {
                 vectorAux[i] = random.nextDouble(rangosup - rangoInf) + rangoInf;
             }
@@ -281,18 +282,17 @@ public class FuncionesAuxiliares {
     }
 
     public static void cruceMedia(int tam, double[] v, double[] w, double[] h) {
-
         for (int i = 0; i < tam; i++) {
             h[i] = (v[i] + w[i]) / 2;
         }
     }
 
-    public static void Mutacion(double[] v, int pos, double valor) {
+    public static void mutacion(double[] v, int pos, double valor) {
         v[pos] = valor;
     }
 
     public static void exportCSV(List<Future<Solucion>> soluciones, String name)
-            throws IOException, ExecutionException, InterruptedException {
+            throws IOException, ExecutionException, InterruptedException, TimeoutException {
 
         List<Solucion> resultado1 = new ArrayList<>();
         List<Solucion> resultado2 = new ArrayList<>();
@@ -301,7 +301,7 @@ public class FuncionesAuxiliares {
         List<Solucion> resultado5 = new ArrayList<>();
 
         for (Future<Solucion> solucion : soluciones) {
-            Solucion s = solucion.get();
+            Solucion s = solucion.get(10, TimeUnit.SECONDS);
             if (s.getSemilla() == 53916079) {
                 resultado1.add(s);
             } else if (s.getSemilla() == 95391607) {
@@ -350,8 +350,45 @@ public class FuncionesAuxiliares {
     private static String convertToCSV(Solucion solucion) {
         return solucion.toString();
     }
-    //TODO crear un archivo .txt que sea igual que el .properties con bucles leyendo los config
-    // donde quede cada parámetro con un solo valor cada semilla con cada algoritmo y a su vez
-    // con cada funcion 5(semillas) * 4(algoritmos) * 10(funciones) = 200(logs)
 
+    private static String convertToLogAppender(String algoritmo, String funcion, String semilla) {
+        return "log4j.appender." + funcion + "." + algoritmo + "." + semilla +
+                " = org.apache.log4j.FileAppender\n" +
+                "log4j.appender." + funcion + "." + algoritmo + "." + semilla +
+                ".file = src/main/resources/logs/" + funcion + "/" + algoritmo + "/" + semilla + ".log\n" +
+                "log4j.appender." + funcion + "." + algoritmo + "." + semilla +
+                ".append = false\n" +
+                "log4j.appender." + funcion + "." + algoritmo + "." + semilla +
+                ".layout = org.apache.log4j.PatternLayout\n" +
+                "log4j.appender." + funcion + "." + algoritmo + "." + semilla +
+                ".layout.ConversionPattern = %d %c{3} - %m%n\n\n" +
+                "log4j.logger." + funcion + "." + algoritmo + "." + semilla +
+                " = INFO, " + funcion + "." + algoritmo + "." + semilla + "\n\n";
+    }
+
+    /**
+     * @param archivosConfig
+     * @param ruta
+     * @throws IOException
+     * @brief Solo se ejecuta una vez para crear el log4j.properties
+     */
+    public static void createAppendersLog(List<String> archivosConfig, String ruta) throws IOException {
+        FileOutputStream csvFile = new FileOutputStream("log/log4j.properties");
+        try (PrintWriter pw = new PrintWriter(csvFile)) {
+            for (String archivo : archivosConfig) {
+                Lector lector = new Lector(ruta + archivo);
+                List<String> algoritmos = lector.getAlgoritmos();
+                long[] semillas = lector.getSemillas();
+                List<Long> semillasList = Arrays.stream(semillas).boxed().collect(Collectors.toList());
+
+                for (String algoritmo : algoritmos) {
+                    semillasList.stream()
+                            .map(s -> convertToLogAppender(algoritmo, lector.getFuncion(), String.valueOf(s)))
+                            .forEach(pw::print);
+
+                    pw.println();
+                }
+            }
+        }
+    }
 }
