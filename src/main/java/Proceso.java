@@ -3,7 +3,9 @@ import uja.meta.algoritmos.practica1.AlgBL3_Clase01_Grupo10;
 import uja.meta.algoritmos.practica1.AlgBLk_Clase01_Grupo10;
 import uja.meta.algoritmos.practica1.AlgTabuVNS_Clase01_Grupo10;
 import uja.meta.algoritmos.practica1.AlgTabu_Clase01_Grupo10;
+import uja.meta.algoritmos.practica2.AlgEvBLX_Clase01_Grupo10;
 import uja.meta.algoritmos.practica2.AlgEvDif_Clase01_Grupo10;
+import uja.meta.algoritmos.practica2.AlgEvMedia_Clase01_Grupo10;
 import uja.meta.utils.Daido;
 import uja.meta.utils.Lector;
 import uja.meta.utils.LectorDaido;
@@ -56,50 +58,50 @@ public class Proceso {
                     List<double[]> cromosoma = generador(rangoInf, rangoSup, semilla, D, tp);
                     double[] vSolucion = new double[D];
                     switch (algoritmo) {
-//                        case "bl3" -> {
-//                            AlgBL3_Clase01_Grupo10 bl3 =
-//                                    new AlgBL3_Clase01_Grupo10(D, 3, semilla, iteraciones, oscilacion, rangoInf, rangoSup,
-//                                            funcion, funcion + ".bl3" + "." + semilla, vSolucion);
-//                            resultadoBL3.add(executor.submit(bl3));
-//                        }
-//                        case "blk" -> {
-//                            AlgBLk_Clase01_Grupo10 blk =
-//                                    new AlgBLk_Clase01_Grupo10(D, semilla, iteraciones, oscilacion, rangoInf, rangoSup, funcion,
-//                                            funcion + ".blk" + "." + semilla, vSolucion);
-//                            resultadoBLk.add(executor.submit(blk));
-//                        }
-//                        case "tabu" -> {
-//                            AlgTabu_Clase01_Grupo10 tabu =
-//                                    new AlgTabu_Clase01_Grupo10(funcion + ".tabu" + "." + semilla, semilla, D,
-//                                            iteraciones, vSolucion, rangoInf, rangoSup, funcion, 1,
-//                                            oscilacion);
-//                            resultadoTabu.add(executor.submit(tabu));
-//                        }
-//
-//                        case "tabuVNS" -> {
-//                            AlgTabuVNS_Clase01_Grupo10 tabuVNS =
-//                                    new AlgTabuVNS_Clase01_Grupo10(funcion + ".tabuVNS" + "." + semilla, semilla, D,
-//                                            iteraciones, vSolucion, rangoInf, rangoSup, funcion, 1, oscilacion);
-//                            resultadoTabuVNS.add(executor.submit(tabuVNS));
-//                        }
-//                        case "evm" -> {
-//                            AlgEvMedia_Clase01_Grupo10 EvM =
-//                                    new AlgEvMedia_Clase01_Grupo10(funcion + ".evm." + semilla, tp, D, iteraciones,
-//                                            cromosoma, vSolucion, rangoInf, rangoSup, kProbMuta, kProCruce, funcion, semilla);
-//                            resultadoEvMedia.add(executor.submit(EvM));
-//                        }
-//                        case "evblx" -> {
-//                            AlgEvBLX_Clase01_Grupo10 EvBlk =
-//                                    new AlgEvBLX_Clase01_Grupo10(funcion + ".evblx." + semilla, tp, D, iteraciones,
-//                                            cromosoma, vSolucion, rangoInf, rangoSup, kProbMuta, kProCruce, alfa, funcion, semilla);
-//                            resultadoEvBlX.add(executor.submit(EvBlk));
-//                        }
-//                        case "ed" -> {
-//                            AlgEvDif_Clase01_Grupo10 ed =
-//                                    new AlgEvDif_Clase01_Grupo10(funcion + ".ed." + semilla, tp, D, iteraciones,
-//                                            cromosoma, vSolucion, rangoInf, rangoSup, funcion, probRecomb, semilla);
-//                            resultadoEvDif.add(executor.submit(ed));
-//                        }
+                        case "bl3" -> {
+                            AlgBL3_Clase01_Grupo10 bl3 =
+                                    new AlgBL3_Clase01_Grupo10(D, 3, semilla, iteraciones, oscilacion, rangoInf, rangoSup,
+                                            funcion, funcion + ".bl3" + "." + semilla, vSolucion);
+                            resultadoBL3.add(executor.submit(bl3));
+                        }
+                        case "blk" -> {
+                            AlgBLk_Clase01_Grupo10 blk =
+                                    new AlgBLk_Clase01_Grupo10(D, semilla, iteraciones, oscilacion, rangoInf, rangoSup, funcion,
+                                            funcion + ".blk" + "." + semilla, vSolucion);
+                            resultadoBLk.add(executor.submit(blk));
+                        }
+                        case "tabu" -> {
+                            AlgTabu_Clase01_Grupo10 tabu =
+                                    new AlgTabu_Clase01_Grupo10(funcion + ".tabu" + "." + semilla, semilla, D,
+                                            iteraciones, vSolucion, rangoInf, rangoSup, funcion, 1,
+                                            oscilacion);
+                            resultadoTabu.add(executor.submit(tabu));
+                        }
+
+                        case "tabuVNS" -> {
+                            AlgTabuVNS_Clase01_Grupo10 tabuVNS =
+                                    new AlgTabuVNS_Clase01_Grupo10(funcion + ".tabuVNS" + "." + semilla, semilla, D,
+                                            iteraciones, vSolucion, rangoInf, rangoSup, funcion, 1, oscilacion);
+                            resultadoTabuVNS.add(executor.submit(tabuVNS));
+                        }
+                        case "evm" -> {
+                            AlgEvMedia_Clase01_Grupo10 EvM =
+                                    new AlgEvMedia_Clase01_Grupo10(funcion + ".evm." + semilla, tp, D, iteraciones,
+                                            cromosoma, vSolucion, rangoInf, rangoSup, kProbMuta, kProCruce, funcion, semilla);
+                            resultadoEvMedia.add(executor.submit(EvM));
+                        }
+                        case "evblx" -> {
+                            AlgEvBLX_Clase01_Grupo10 EvBlk =
+                                    new AlgEvBLX_Clase01_Grupo10(funcion + ".evblx." + semilla, tp, D, iteraciones,
+                                            cromosoma, vSolucion, rangoInf, rangoSup, kProbMuta, kProCruce, alfa, funcion, semilla);
+                            resultadoEvBlX.add(executor.submit(EvBlk));
+                        }
+                        case "ed" -> {
+                            AlgEvDif_Clase01_Grupo10 ed =
+                                    new AlgEvDif_Clase01_Grupo10(funcion + ".ed." + semilla, tp, D, iteraciones,
+                                            cromosoma, vSolucion, rangoInf, rangoSup, funcion, probRecomb, semilla);
+                            resultadoEvDif.add(executor.submit(ed));
+                        }
                     }
                 }
             }

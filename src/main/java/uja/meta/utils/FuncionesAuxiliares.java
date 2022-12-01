@@ -272,6 +272,7 @@ public class FuncionesAuxiliares {
             Cmax = max(mejor1[i], mejor2[i]);
             Cmin = min(mejor1[i], mejor2[i]);
             double r1 = Cmin - (I * alfaBLX);
+            I = Cmax- Cmin;
             if (r1 > rangoMin)
                 r1 = rangoMin;
             double r2 = Cmax + (I * alfaBLX);
