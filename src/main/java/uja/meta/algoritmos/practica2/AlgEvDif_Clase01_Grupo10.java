@@ -45,27 +45,24 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
         double[] mejorCroGlobal = mejorCr;
 
         int contEv = tp;
-        double[] ale1 = new double[tp],
-                ale2 = new double[tp], obj,
+        double[] ale1, ale2, obj,
                 nuevo = new double[tp], padre;
         int a1, a2, k1, k2, k3;
 
         while (contEv < limiteEvaluaciones) {
-            log.info("ITERACION: " + contEv);
             for (int i = 0; i < tp; i++) {
                 padre = cromosomas.get(i);
-                log.info("primer for: " + i);
                 do {
-                    a1 = random.nextInt(tp - 1);
-                    while (a1 == (a2 = random.nextInt(tp - 1))) ;
+                    a1 = random.nextInt(tp);
+                    while (a1 == (a2 = random.nextInt(tp))) ;
                 } while (a1 != i && a2 != i);
                 ale1 = cromosomas.get(a1);
                 ale2 = cromosomas.get(a2);
 
                 do {
-                    k1 = random.nextInt(tp - 1);
-                    while (k1 == (k2 = random.nextInt(tp - 1))) ;
-                    while ((k2 == (k3 = random.nextInt(tp - 1)))) ;
+                    k1 = random.nextInt(tp);
+                    while (k1 == (k2 = random.nextInt(tp))) ;
+                    while ((k2 == (k3 = random.nextInt(tp)))) ;
                 } while (k1 != i && k1 != a1 && k1 != a2 &&
                         k2 != i && k2 != a1 && k2 != a2 &&
                         k3 != i && k3 != a1 && k3 != a2);
@@ -80,7 +77,6 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
                 double factor = random.nextDouble();
 
                 for (int j = 0; j < D; j++) {
-                    log.info("segundo for: " + j);
                     double porc = random.nextDouble();
                     if (porc > probRecomb)
                         nuevo[j] = obj[j];
@@ -106,6 +102,7 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
             mejorCoste = Double.MAX_VALUE;
         }
 
+        vSolucion = mejorCroGlobal;
         //TODO
         double tiempoFinal = System.nanoTime();
         String tiempoTotal = calcularTiempo(tiempoInicial, tiempoFinal);

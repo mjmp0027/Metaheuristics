@@ -27,8 +27,8 @@ public class FuncionesAuxiliares {
                               List<double[]> nuevaAg, double[] costesNuevaAg, Random random) {
         for (int i = 0; i < tp; i++) {
             int j, k;
-            j = random.nextInt(tp - 1);
-            while (j == (k = random.nextInt(tp - 1))) ;
+            j = random.nextInt(tp);
+            while (j == (k = random.nextInt(tp))) ;
             posicion[i] = (costes[i] < costes[k]) ? j : k;
         }
         for (int i = 0; i < tp; i++) {
@@ -42,18 +42,20 @@ public class FuncionesAuxiliares {
         int c1, c2, c3, c4;
         int posAnt = 0;
 
-        c1 = random.nextInt(tp - 1);
-        while (c1 == (c2 = random.nextInt(tp - 1))) ;
+        c1 = random.nextInt(tp);
+        while (c1 == (c2 = random.nextInt(tp))) ;
         if (costesNuevaAg[c1] < costesNuevaAg[c2]) {
             mejor1 = nuevaAg.get(c1);
             costeMejor1 = costesNuevaAg[c1];
+            posAnt = c1;
         } else {
             mejor1 = nuevaAg.get(c2);
             costeMejor1 = costesNuevaAg[c2];
+            posAnt = c2;
         }
-        while (posAnt == (c3 = random.nextInt(tp - 1))) ;
-        while (posAnt == (c4 = random.nextInt(tp - 1))) ;
 
+        while (posAnt == (c3 = random.nextInt(tp))) ;
+        while (posAnt == (c4 = random.nextInt(tp))) ;
 
         if (costesNuevaAg[c3] < costesNuevaAg[c4]) {
             mejor2 = nuevaAg.get(c3);
@@ -73,7 +75,7 @@ public class FuncionesAuxiliares {
                 if (uniforme < kProbMuta) {
                     m = true;
                     double valor = random.nextDouble(rangoMax - rangoMin) + rangoMin;
-                    mutacion(nuevaAg.get(i), j, valor);
+                    nuevaAg.get(i)[j] = valor;
                 }
             }
             if (m)
@@ -84,13 +86,10 @@ public class FuncionesAuxiliares {
     public static void calculoElite(int tp, List<double[]> nuevaAg, double[] mejorCr,
                                     double[] costesNuevaAg, double mejorCoste, Random random, int peor) {
         int p1, p2, p3, p4;
-        p1 = random.nextInt(tp - 1);
-        p2 = random.nextInt(tp - 1);
-        p3 = random.nextInt(tp - 1);
-        p4 = random.nextInt(tp - 1);
-        while (p1 == p2) ;
-        while (p1 == p2 && p2 == p3) ;
-        while (p1 == p2 && p2 == p3 && p3 == p4) ;
+        p1 = random.nextInt(tp);
+        while (p1 == (p2 = random.nextInt(tp))) ;
+        while (p1 == (p3 = random.nextInt(tp))) ;
+        while (p1 == (p4 = random.nextInt(tp))) ;
         if (costesNuevaAg[p1] > costesNuevaAg[p2] && costesNuevaAg[p1] > costesNuevaAg[p3]
                 && costesNuevaAg[p1] > costesNuevaAg[p4])
             peor = p1;
@@ -108,9 +107,9 @@ public class FuncionesAuxiliares {
 
     public static void eleccion2aleatorios(int tp, List<double[]> cromosomas, double[] costes, int i,
                                            double[] ale1, double[] ale2, Random random) {
-        int a1, a2 = random.nextInt(tp - 1);
+        int a1, a2 = random.nextInt(tp);
         do {
-            a1 = random.nextInt(tp - 1);
+            a1 = random.nextInt(tp);
             while (a1 == a2) ;
         } while (a1 != i && a2 != i);
         ale1 = cromosomas.get(a1);
@@ -118,14 +117,12 @@ public class FuncionesAuxiliares {
     }
 
     public static void torneoK3(int tp, int i, int a1, int k1, int k2, int k3, int k4, Random random) {
-        int a2 = random.nextInt(tp - 1);
-        k2 = random.nextInt(tp - 1);
-        k3 = random.nextInt(tp - 1);
+        int a2 = random.nextInt(tp);
 
         do {
-            k1 = random.nextInt(tp - 1);
-            while (k1 == k2) ;
-            while (k1 == k2 && k2 == k3) ;
+            k1 = random.nextInt(tp);
+            while (k1 == (k2 = random.nextInt(tp))) ;
+            while (k1 == (k3 = random.nextInt(tp))) ;
         } while (k1 != i && k1 != a1 && k1 != a2 &&
                 k2 != i && k2 != a1 && k2 != a2 &&
                 k3 != i && k3 != a1 && k3 != a2);
@@ -272,7 +269,7 @@ public class FuncionesAuxiliares {
             Cmax = max(mejor1[i], mejor2[i]);
             Cmin = min(mejor1[i], mejor2[i]);
             double r1 = Cmin - (I * alfaBLX);
-            I = Cmax- Cmin;
+            I = Cmax - Cmin;
             if (r1 > rangoMin)
                 r1 = rangoMin;
             double r2 = Cmax + (I * alfaBLX);
@@ -283,13 +280,8 @@ public class FuncionesAuxiliares {
     }
 
     public static void cruceMedia(int tam, double[] v, double[] w, double[] h) {
-        for (int i = 0; i < tam; i++) {
+        for (int i = 0; i < tam; i++)
             h[i] = (v[i] + w[i]) / 2;
-        }
-    }
-
-    public static void mutacion(double[] v, int pos, double valor) {
-        v[pos] = valor;
     }
 
     public static void exportCSV(List<Future<Solucion>> soluciones, String name)

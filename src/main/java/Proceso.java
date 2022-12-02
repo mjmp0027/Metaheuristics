@@ -8,7 +8,6 @@ import uja.meta.algoritmos.practica2.AlgEvDif_Clase01_Grupo10;
 import uja.meta.algoritmos.practica2.AlgEvMedia_Clase01_Grupo10;
 import uja.meta.utils.Daido;
 import uja.meta.utils.Lector;
-import uja.meta.utils.LectorDaido;
 import uja.meta.utils.Solucion;
 
 import java.io.File;
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 import static uja.meta.utils.FuncionesAuxiliares.*;
 import static uja.meta.utils.LectorDaido.daidos;
