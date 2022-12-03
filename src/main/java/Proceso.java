@@ -7,7 +7,6 @@ import uja.meta.algoritmos.practica2.AlgEvBLX_Clase01_Grupo10;
 import uja.meta.algoritmos.practica2.AlgEvDif_Clase01_Grupo10;
 import uja.meta.algoritmos.practica2.AlgEvMedia_Clase01_Grupo10;
 import uja.meta.utils.Daido;
-import uja.meta.utils.FuncionesAuxiliares;
 import uja.meta.utils.Lector;
 import uja.meta.utils.Solucion;
 
@@ -15,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.*;
 
 import static uja.meta.utils.FuncionesAuxiliares.*;
@@ -113,14 +113,12 @@ public class Proceso {
             executor.shutdownNow();
 
         double[] a = new double[5];
-        a[0] = 0.00001;
-        a[1] = 0.00001;
-        a[2] = 0.00001;
-        a[3] = 0.00001;
-        a[4] = 0.00001;
+        Random random = new Random();
+        for (int i = 0; i < a.length; i++)
+            a[i] = random.nextDouble(1 + 1) - 1;
 
         System.out.println(potencia(a, daidos, "MAPE"));
-        System.out.println(potencia(a, daidos, "otro"));
+        System.out.println(potencia(a, daidos, "RMSE"));
 
         // Conversion de resultados a CSV
 //        exportCSV(resultadoEvMedia, "EvMedia");
