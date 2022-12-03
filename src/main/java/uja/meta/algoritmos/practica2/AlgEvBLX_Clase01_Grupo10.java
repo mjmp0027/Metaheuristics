@@ -72,7 +72,32 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
             torneo(tp, posicion, costes, cromosomas, nuevaAg, costesNuevaAg, random);
 
             for (int i = 0; i < tp; i++) {
-                torneo2a2(tp, nuevaAg, costesNuevaAg, mejor1, mejor2, random, costeMejor1, costeMejor2);
+                //torneo2a2(tp, nuevaAg, costesNuevaAg, mejor1, mejor2, random, costeMejor1, costeMejor2);
+                int c1, c2, c3, c4;
+                int posAnt = 0;
+
+                c1 = random.nextInt(tp);
+                while (c1 == (c2 = random.nextInt(tp))) ;
+                if (costesNuevaAg[c1] < costesNuevaAg[c2]) {
+                    mejor1 = nuevaAg.get(c1);
+                    costeMejor1 = costesNuevaAg[c1];
+                    posAnt = c1;
+                } else {
+                    mejor1 = nuevaAg.get(c2);
+                    costeMejor1 = costesNuevaAg[c2];
+                    posAnt = c2;
+                }
+
+                while (posAnt == (c3 = random.nextInt(tp))) ;
+                while (posAnt == (c4 = random.nextInt(tp))) ;
+
+                if (costesNuevaAg[c3] < costesNuevaAg[c4]) {
+                    mejor2 = nuevaAg.get(c3);
+                    costeMejor2 = costesNuevaAg[c3];
+                } else {
+                    mejor2 = nuevaAg.get(c4);
+                    costeMejor2 = costesNuevaAg[c4];
+                }
                 uniforme = random.nextDouble();
                 if (uniforme < kProbCruce) {
                     cruceBLX(D, mejor1, mejor2, alfa, h, rangoMin, rangoMax);
@@ -128,7 +153,7 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
         }
 
         vSolucion = mejorCroGlobal;
-        //TODO
+
         double tiempoFinal = System.nanoTime();
         String tiempoTotal = calcularTiempo(tiempoInicial, tiempoFinal);
         log.info("Tiempo transcurrido: " + tiempoTotal + " ms");

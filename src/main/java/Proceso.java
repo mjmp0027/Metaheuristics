@@ -104,12 +104,6 @@ public class Proceso {
                 }
             }
         }
-//        double[] vSolucion = new double[10];
-//        List<double[]> cromosoma = generador(-32765, 32765, 53914154, 10, 50);
-//        AlgEvDif_Clase01_Grupo10 ed =
-//                new AlgEvDif_Clase01_Grupo10("asa" + ".EvDif." + 53914154, 50, 10, 10000,
-//                        cromosoma, vSolucion, -32765, 32765, "ackley", 0.5, 53914154L);
-//        resultadoEvDif.add(executor.submit(ed));
 
         List<Daido> daidos = daidos("src/main/resources/daido-tra.dat");
 
