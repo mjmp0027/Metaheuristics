@@ -12,7 +12,7 @@ import java.util.concurrent.Callable;
 import static uja.meta.utils.FuncionesAuxiliares.*;
 
 @AllArgsConstructor
-public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
+public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> { //FIXME refactorizar torneo2a2
     private final String className;
     private int tp;
     private int D;

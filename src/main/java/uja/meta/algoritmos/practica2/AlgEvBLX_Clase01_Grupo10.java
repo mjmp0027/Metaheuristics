@@ -1,6 +1,6 @@
 package uja.meta.algoritmos.practica2;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
 import uja.meta.utils.Solucion;
 
@@ -11,21 +11,25 @@ import java.util.concurrent.Callable;
 
 import static uja.meta.utils.FuncionesAuxiliares.*;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
     private final String className;
-    private int tp;
-    private int D;
-    private long limiteEvaluaciones;
+    private final int tp;
+    private final int D;
+    private final long limiteEvaluaciones;
+    private final double rangoInf;
+    private final double rangoSup;
+    private final double kProbMuta;
+    private final double kProbCruce;
+    private final double alfa;
+    private final String funcion;
+    private final Long semilla;
     private List<double[]> cromosomas;
     private double[] vSolucion;
-    private double rangoMin;
-    private double rangoMax;
-    private double kProbMuta;
-    private double kProbCruce;
-    private double alfa;
-    private String funcion;
-    private Long semilla;
+    private double[] mejor1;
+    private double[] mejor2;
+    private double costeMejor1;
+    private double costeMejor2;
 
     @Override
     public Solucion call() {
@@ -33,6 +37,8 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
         Logger log = Logger.getLogger(className);
         Random random = new Random();
         double tiempoInicial = System.nanoTime();
+        cromosomas = generador(rangoInf, rangoSup, semilla, D, tp);
+        vSolucion = new double[D];
         int t = 0;
         List<double[]> nuevaAg = new ArrayList<>();
         double[] costes = new double[tp], costesNuevaAg = new double[tp], costesHH = new double[tp];
@@ -55,14 +61,8 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
                 mejorCr = cromosomas.get(i);
             }
         }
-        double[] mejor1 = new double[tp];
-        double[] mejor2 = new double[tp];
-        double costeMejor1 = 0.0;
-        double costeMejor2 = 0.0;
-
 
         while (contEv < limiteEvaluaciones) {
-
             boolean[] marcados = new boolean[tp];
             for (int i = 0; i < tp; i++) {
                 marcados[i] = false;
@@ -72,35 +72,10 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
             torneo(tp, posicion, costes, cromosomas, nuevaAg, costesNuevaAg, random);
 
             for (int i = 0; i < tp; i++) {
-                //torneo2a2(tp, nuevaAg, costesNuevaAg, mejor1, mejor2, random, costeMejor1, costeMejor2);
-                int c1, c2, c3, c4;
-                int posAnt = 0;
-
-                c1 = random.nextInt(tp);
-                while (c1 == (c2 = random.nextInt(tp))) ;
-                if (costesNuevaAg[c1] < costesNuevaAg[c2]) {
-                    mejor1 = nuevaAg.get(c1);
-                    costeMejor1 = costesNuevaAg[c1];
-                    posAnt = c1;
-                } else {
-                    mejor1 = nuevaAg.get(c2);
-                    costeMejor1 = costesNuevaAg[c2];
-                    posAnt = c2;
-                }
-
-                while (posAnt == (c3 = random.nextInt(tp))) ;
-                while (posAnt == (c4 = random.nextInt(tp))) ;
-
-                if (costesNuevaAg[c3] < costesNuevaAg[c4]) {
-                    mejor2 = nuevaAg.get(c3);
-                    costeMejor2 = costesNuevaAg[c3];
-                } else {
-                    mejor2 = nuevaAg.get(c4);
-                    costeMejor2 = costesNuevaAg[c4];
-                }
+                torneo2a2(tp, nuevaAg, costesNuevaAg, random);
                 uniforme = random.nextDouble();
                 if (uniforme < kProbCruce) {
-                    cruceBLX(D, mejor1, mejor2, alfa, h, rangoMin, rangoMax);
+                    cruceBLX(D, mejor1, mejor2, alfa, h, rangoInf, rangoSup);
                     nuevaAG.add(i, h);
                     marcados[i] = true;
                 } else {
@@ -111,7 +86,7 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
             nuevaAg = nuevaAG;
             costesNuevaAg = costesHH;
 
-            mutar(tp, D, kProbMuta, rangoMin, rangoMax, nuevaAG, marcados, random);
+            mutar(tp, D, kProbMuta, rangoInf, rangoSup, nuevaAG, marcados, random);
 
             for (int i = 0; i < tp; i++) {
                 if (marcados[i]) {
@@ -164,5 +139,32 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
         log.info("Total iteraciones: " + t);
 
         return new Solucion(costeFormat, tiempoTotal, semilla);
+    }
+
+
+    public void torneo2a2(int tp, List<double[]> nuevaAg, double[] costesNuevaAg, Random random) {
+        int c1 = random.nextInt(tp), c2, c3, c4, posAnt;
+
+        while (c1 == (c2 = random.nextInt(tp))) ;
+        if (costesNuevaAg[c1] < costesNuevaAg[c2]) {
+            mejor1 = nuevaAg.get(c1);
+            costeMejor1 = costesNuevaAg[c1];
+            posAnt = c1;
+        } else {
+            mejor1 = nuevaAg.get(c2);
+            costeMejor1 = costesNuevaAg[c2];
+            posAnt = c2;
+        }
+
+        while (posAnt == (c3 = random.nextInt(tp))) ;
+        while (posAnt == (c4 = random.nextInt(tp))) ;
+
+        if (costesNuevaAg[c3] < costesNuevaAg[c4]) {
+            mejor2 = nuevaAg.get(c3);
+            costeMejor2 = costesNuevaAg[c3];
+        } else {
+            mejor2 = nuevaAg.get(c4);
+            costeMejor2 = costesNuevaAg[c4];
+        }
     }
 }
