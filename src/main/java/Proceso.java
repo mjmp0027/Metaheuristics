@@ -7,6 +7,7 @@ import uja.meta.algoritmos.practica2.AlgEvBLX_Clase01_Grupo10;
 import uja.meta.algoritmos.practica2.AlgEvDif_Clase01_Grupo10;
 import uja.meta.algoritmos.practica2.AlgEvMedia_Clase01_Grupo10;
 import uja.meta.utils.Daido;
+import uja.meta.utils.FuncionesAuxiliares;
 import uja.meta.utils.Lector;
 import uja.meta.utils.Solucion;
 
@@ -91,7 +92,7 @@ public class Proceso {
                         case "evblx" -> {
                             AlgEvBLX_Clase01_Grupo10 EvBlk =
                                     new AlgEvBLX_Clase01_Grupo10(funcion + ".evblx." + semilla, tp, D, iteraciones,
-                                            cromosoma, vSolucion, rangoInf, rangoSup, kProbMuta, kProCruce, alfa, funcion, semilla);
+                                            rangoInf, rangoSup, kProbMuta, kProCruce, alfa, funcion, semilla);
                             resultadoEvBlX.add(executor.submit(EvBlk));
                         }
                         case "ed" -> {
@@ -110,6 +111,16 @@ public class Proceso {
         executor.shutdown();
         if (!executor.awaitTermination(1, TimeUnit.MINUTES))
             executor.shutdownNow();
+
+        double[] a = new double[5];
+        a[0] = 0.00001;
+        a[1] = 0.00001;
+        a[2] = 0.00001;
+        a[3] = 0.00001;
+        a[4] = 0.00001;
+
+        System.out.println(potencia(a, daidos, "MAPE"));
+        System.out.println(potencia(a, daidos, "otro"));
 
         // Conversion de resultados a CSV
 //        exportCSV(resultadoEvMedia, "EvMedia");

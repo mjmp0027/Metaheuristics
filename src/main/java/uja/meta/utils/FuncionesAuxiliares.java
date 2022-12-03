@@ -37,35 +37,6 @@ public class FuncionesAuxiliares {
         }
     }
 
-    public static void torneo2a2(int tp, List<double[]> nuevaAg, double[] costesNuevaAg, double[] mejor1,
-                                 double[] mejor2, Random random, double costeMejor1, double costeMejor2) {
-        int c1, c2, c3, c4;
-        int posAnt = 0;
-
-        c1 = random.nextInt(tp);
-        while (c1 == (c2 = random.nextInt(tp))) ;
-        if (costesNuevaAg[c1] < costesNuevaAg[c2]) {
-            mejor1 = nuevaAg.get(c1);
-            costeMejor1 = costesNuevaAg[c1];
-            posAnt = c1;
-        } else {
-            mejor1 = nuevaAg.get(c2);
-            costeMejor1 = costesNuevaAg[c2];
-            posAnt = c2;
-        }
-
-        while (posAnt == (c3 = random.nextInt(tp))) ;
-        while (posAnt == (c4 = random.nextInt(tp))) ;
-
-        if (costesNuevaAg[c3] < costesNuevaAg[c4]) {
-            mejor2 = nuevaAg.get(c3);
-            costeMejor2 = costesNuevaAg[c3];
-        } else {
-            mejor2 = nuevaAg.get(c4);
-            costeMejor2 = costesNuevaAg[c4];
-        }
-    }
-
     public static void mutar(int tp, int D, double kProbMuta, double rangoMin, double rangoMax,
                              List<double[]> nuevaAg, boolean[] marcados, Random random) {
         for (int i = 0; i < tp; i++) {
@@ -383,5 +354,20 @@ public class FuncionesAuxiliares {
                 }
             }
         }
+    }
+
+    public static double potencia(double[] a, List<Daido> observaciones, String tipoError) {
+        double pm;
+        int filas = observaciones.size();
+        double[] real = new double[filas], estimado = new double[filas];
+
+        for (int i = 0; i < filas; i++) {
+            pm = observaciones.get(i).getDni() * (a[0] + (a[1] * observaciones.get(i).getDni()) + (a[2]
+                    * observaciones.get(i).getTemp_amb()) + (a[3] * observaciones.get(i).getVel_viento()) +
+                    (a[4] * observaciones.get(i).getSmr()));
+            estimado[i] = pm;
+            real[i] = observaciones.get(i).getPotencia();
+        }
+        return tipoError.equals("MAPE") ? MAPE(real, estimado) : RMSE(real, estimado);
     }
 }
