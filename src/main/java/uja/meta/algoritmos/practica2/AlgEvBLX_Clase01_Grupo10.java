@@ -24,12 +24,13 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
     private final double alfa;
     private final String funcion;
     private final Long semilla;
+    private final double prob;
     private List<double[]> cromosomas;
     private double[] vSolucion;
-    private double[] mejor1;
-    private double[] mejor2;
-    private double costeMejor1;
-    private double costeMejor2;
+    private double[] mejorCr1;
+    private double[] mejorCr2;
+    private double costeMejorCr1;
+    private double costeMejorCr2;
 
     @Override
     public Solucion call() {
@@ -75,12 +76,17 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
                 torneo2a2(tp, nuevaAg, costesNuevaAg, random);
                 uniforme = random.nextDouble();
                 if (uniforme < kProbCruce) {
-                    cruceBLX(D, mejor1, mejor2, alfa, h, rangoInf, rangoSup);
+                    cruceBLX(D, mejorCr1, mejorCr2, alfa, h, rangoInf, rangoSup);
                     nuevaAG.add(i, h);
                     marcados[i] = true;
                 } else {
-                    nuevaAG.add(i, mejor1);
-                    costesHH[i] = costeMejor1;
+                    if (uniforme < prob) {
+                        nuevaAG.add(i, mejorCr1);
+                        costesHH[i] = costeMejorCr1;
+                    } else {
+                        nuevaAG.add(i, mejorCr2);
+                        costesHH[i] = costeMejorCr2;
+                    }
                 }
             }
             nuevaAg = nuevaAG;
@@ -147,12 +153,12 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
 
         while (c1 == (c2 = random.nextInt(tp))) ;
         if (costesNuevaAg[c1] < costesNuevaAg[c2]) {
-            mejor1 = nuevaAg.get(c1);
-            costeMejor1 = costesNuevaAg[c1];
+            mejorCr1 = nuevaAg.get(c1);
+            costeMejorCr1 = costesNuevaAg[c1];
             posAnt = c1;
         } else {
-            mejor1 = nuevaAg.get(c2);
-            costeMejor1 = costesNuevaAg[c2];
+            mejorCr1 = nuevaAg.get(c2);
+            costeMejorCr1 = costesNuevaAg[c2];
             posAnt = c2;
         }
 
@@ -160,11 +166,11 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
         while (posAnt == (c4 = random.nextInt(tp))) ;
 
         if (costesNuevaAg[c3] < costesNuevaAg[c4]) {
-            mejor2 = nuevaAg.get(c3);
-            costeMejor2 = costesNuevaAg[c3];
+            mejorCr2 = nuevaAg.get(c3);
+            costeMejorCr2 = costesNuevaAg[c3];
         } else {
-            mejor2 = nuevaAg.get(c4);
-            costeMejor2 = costesNuevaAg[c4];
+            mejorCr2 = nuevaAg.get(c4);
+            costeMejorCr2 = costesNuevaAg[c4];
         }
     }
 }

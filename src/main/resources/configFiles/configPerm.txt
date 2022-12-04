@@ -12,3 +12,4 @@ kprobcruce=0.7
 tp=50
 alfa=0.5
 probrecomb=0.5
+prob=0.5

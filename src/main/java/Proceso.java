@@ -4,7 +4,7 @@ import uja.meta.algoritmos.practica1.AlgBLk_Clase01_Grupo10;
 import uja.meta.algoritmos.practica1.AlgTabuVNS_Clase01_Grupo10;
 import uja.meta.algoritmos.practica1.AlgTabu_Clase01_Grupo10;
 import uja.meta.algoritmos.practica2.AlgEvBLX_Clase01_Grupo10;
-import uja.meta.algoritmos.practica2.AlgEvDif_Clase01_Grupo10;
+import uja.meta.algoritmos.practica2.AlgEDif_Clase01_Grupo10;
 import uja.meta.algoritmos.practica2.AlgEvMedia_Clase01_Grupo10;
 import uja.meta.utils.Daido;
 import uja.meta.utils.Lector;
@@ -52,6 +52,7 @@ public class Proceso {
             double kProCruce = lector.getKProbCruce();
             double alfa = lector.getAlfa();
             double probRecomb = lector.getProbRecomb();
+            double prob = lector.getProb();
             for (String algoritmo : algoritmos) {
                 for (long semilla : semillas) {
                     List<double[]> cromosoma = generador(rangoInf, rangoSup, semilla, D, tp);
@@ -86,18 +87,18 @@ public class Proceso {
                         case "evm" -> {
                             AlgEvMedia_Clase01_Grupo10 EvM =
                                     new AlgEvMedia_Clase01_Grupo10(funcion + ".evm." + semilla, tp, D, iteraciones,
-                                            cromosoma, vSolucion, rangoInf, rangoSup, kProbMuta, kProCruce, funcion, semilla);
+                                            cromosoma, vSolucion, rangoInf, rangoSup, kProbMuta, kProCruce, funcion, semilla, prob);
                             resultadoEvMedia.add(executor.submit(EvM));
                         }
                         case "evblx" -> {
                             AlgEvBLX_Clase01_Grupo10 EvBlk =
                                     new AlgEvBLX_Clase01_Grupo10(funcion + ".evblx." + semilla, tp, D, iteraciones,
-                                            rangoInf, rangoSup, kProbMuta, kProCruce, alfa, funcion, semilla);
+                                            rangoInf, rangoSup, kProbMuta, kProCruce, alfa, funcion, semilla, prob);
                             resultadoEvBlX.add(executor.submit(EvBlk));
                         }
                         case "ed" -> {
-                            AlgEvDif_Clase01_Grupo10 ed =
-                                    new AlgEvDif_Clase01_Grupo10(funcion + ".ed." + semilla, tp, D, iteraciones,
+                            AlgEDif_Clase01_Grupo10 ed =
+                                    new AlgEDif_Clase01_Grupo10(funcion + ".ed." + semilla, tp, D, iteraciones,
                                             cromosoma, vSolucion, rangoInf, rangoSup, funcion, probRecomb, semilla);
                             resultadoEvDif.add(executor.submit(ed));
                         }

@@ -25,6 +25,7 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> { //FIXME 
     private double kProbCruce;
     private String funcion;
     private Long semilla;
+    private double prob;
 
     @Override
     public Solucion call() {
@@ -54,10 +55,10 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> { //FIXME 
                 mejorCr = cromosomas.get(i);
             }
         }
-        double[] mejor1 = new double[tp];
-        double[] mejor2 = new double[tp];
-        double costeMejor1 = 0.0;
-        double costeMejor2 = 0.0;
+        double[] mejor1;
+        double[] mejor2;
+        double costeMejor1;
+        double costeMejor2;
 
 
         while (contEv < limiteEvaluaciones) {
@@ -73,7 +74,7 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> { //FIXME 
             for (int i = 0; i < tp; i++) {
                 //torneo2a2(tp, nuevaAg, costesNuevaAg, mejor1, mejor2, random, costeMejor1, costeMejor2);
                 int c1, c2, c3, c4;
-                int posAnt = 0;
+                int posAnt;
 
                 c1 = random.nextInt(tp);
                 while (c1 == (c2 = random.nextInt(tp))) ;
@@ -103,8 +104,13 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> { //FIXME 
                     nuevaAG.add(i, h);
                     marcados[i] = true;
                 } else {
-                    nuevaAG.add(i, mejor1);
-                    costesHH[i] = costeMejor1;
+                    if (uniforme < prob) {
+                        nuevaAG.add(i, mejor1);
+                        costesHH[i] = costeMejor1;
+                    } else {
+                        nuevaAG.add(i, mejor2);
+                        costesHH[i] = costeMejor2;
+                    }
                 }
             }
             nuevaAg = nuevaAG;
@@ -151,7 +157,6 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> { //FIXME 
         }
 
         vSolucion = mejorCroGlobal;
-        //TODO
         double tiempoFinal = System.nanoTime();
         String tiempoTotal = calcularTiempo(tiempoInicial, tiempoFinal);
         log.info("Tiempo transcurrido: " + tiempoTotal + " ms");

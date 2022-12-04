@@ -24,8 +24,8 @@ public class Lector {
     private double kProbMuta;
     private double kProbCruce;
     private double alfa;
-
     private double probRecomb;
+    private double prob;
 
 
     public Lector(String rutaArchConfig) throws IOException {
@@ -65,6 +65,7 @@ public class Lector {
                 case "kprobcruce" -> kProbCruce = Double.parseDouble(separador[1]);
                 case "alfa" -> alfa = Double.parseDouble(separador[1]);
                 case "probrecomb" -> probRecomb = Double.parseDouble(separador[1]);
+                case "prob" -> prob = Double.parseDouble(separador[1]);
             }
         }
     }
