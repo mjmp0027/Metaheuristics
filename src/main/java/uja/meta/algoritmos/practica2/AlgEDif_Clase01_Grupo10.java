@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
 import static uja.meta.utils.FuncionesAuxiliares.*;
 
 @AllArgsConstructor
-public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
+public class AlgEDif_Clase01_Grupo10 implements Callable<Solucion> {
     private final String className;
     private int tp;
     private int D;
@@ -45,49 +45,19 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
         double[] mejorCroGlobal = mejorCr;
 
         int contEv = tp;
-        double[] ale1, ale2, obj,
+        double[] ale1 = new double[tp], ale2 = new double[tp], obj = new double[tp],
                 nuevo = new double[tp], padre;
-        int a1, a2, k1, k2, k3;
+        int a1 = 0, a2 = 0;
 
         while (contEv < limiteEvaluaciones) {
             for (int i = 0; i < tp; i++) {
                 padre = cromosomas.get(i);
-                do {
-                    a1 = random.nextInt(tp);
-                    while (a1 == (a2 = random.nextInt(tp))) ;
-                } while (a1 != i && a2 != i);
-                ale1 = cromosomas.get(a1);
-                ale2 = cromosomas.get(a2);
 
-                do {
-                    k1 = random.nextInt(tp);
-                    while (k1 == (k2 = random.nextInt(tp))) ;
-                    while ((k2 == (k3 = random.nextInt(tp)))) ;
-                } while (k1 != i && k1 != a1 && k1 != a2 &&
-                        k2 != i && k2 != a1 && k2 != a2 &&
-                        k3 != i && k3 != a1 && k3 != a2);
+                eleccion2aleatorios(tp, cromosomas, i, ale1, ale2, random, a1, a2);
 
-                if (costes[k1] < costes[k2] && costes[k1] < costes[k3])
-                    obj = cromosomas.get(k1);
-                else if (costes[k2] < costes[k1] && costes[k2] < costes[k3])
-                    obj = cromosomas.get(k2);
-                else
-                    obj = cromosomas.get(k3);
+                torneoK3(tp, i, a1, a2, random, cromosomas, obj, costes);
 
-                double factor = random.nextDouble();
-
-                for (int j = 0; j < D; j++) {
-                    double porc = random.nextDouble();
-                    if (porc > probRecomb)
-                        nuevo[j] = obj[j];
-                    else {
-                        nuevo[j] = padre[j] + (factor * (ale1[j] - ale2[j]));
-                        if (nuevo[j] > rangoMax)
-                            nuevo[j] = rangoMax;
-                        else if (nuevo[j] < rangoMin)
-                            nuevo[j] = rangoMin;
-                    }
-                }
+                eleccionNuevoCr(D, probRecomb, padre, nuevo, ale1, ale2, rangoMin, rangoMax, obj, random);
 
                 double nuevoCoste = calculaCoste(nuevo, funcion);
                 contEv++;
@@ -103,7 +73,6 @@ public class AlgEvDif_Clase01_Grupo10 implements Callable<Solucion> {
         }
 
         vSolucion = mejorCroGlobal;
-        //TODO
         double tiempoFinal = System.nanoTime();
         String tiempoTotal = calcularTiempo(tiempoInicial, tiempoFinal);
         log.info("Tiempo transcurrido: " + tiempoTotal + " ms");

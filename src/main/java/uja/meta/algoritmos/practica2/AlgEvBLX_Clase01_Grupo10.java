@@ -113,7 +113,7 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
 
             if (!enc) {
 
-                calculoElite(tp, nuevaAG, mejorCr, costesNuevaAg, mejorCoste, random, peor);
+                calculoElite(tp, nuevaAG, mejorCr, costesNuevaAg, mejorCoste, random);
 
                 if (mejorCoste < mejorCosteHijo) {
                     mejorCosteHijo = mejorCoste;
