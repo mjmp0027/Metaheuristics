@@ -33,7 +33,7 @@ public class AlgEDif_Clase01_Grupo10 implements Callable<Solucion> {
         int t = 0;
         double[] costes = new double[tp];
         double mejorCoste = Double.MAX_VALUE;
-        double[] mejorCr = new double[tp];
+        double[] mejorCr = new double[D];
         for (int i = 0; i < tp; i++) {
             costes[i] = calculaCoste(cromosomas.get(i), funcion);
             if (costes[i] < mejorCoste) {

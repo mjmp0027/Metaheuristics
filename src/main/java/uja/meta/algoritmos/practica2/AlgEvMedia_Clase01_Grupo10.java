@@ -36,10 +36,9 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> { //FIXME 
         double tiempoInicial = System.nanoTime();
         int t = 0;
         List<double[]> nuevaAg = new ArrayList<>();
-        double[] costes = new double[tp], costesNuevaAg = new double[tp], costesHH = new double[tp];
+        double[] costes = new double[tp], costesNuevaAg = new double[tp], costesNuevaAG = new double[tp];
         int[] posicion = new int[tp];
-        double[] mejorCr = new double[tp];
-        int peor = 0;
+        double[] mejorCr = new double[D];
         int mejorCrHijo = 1;
         double mejorCoste = Double.MAX_VALUE;
         double mejorCosteHijo = Double.MAX_VALUE;
@@ -107,15 +106,15 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> { //FIXME 
                 } else {
                     if (uniforme < prob) {
                         nuevaAG.add(i, mejor1);
-                        costesHH[i] = costeMejor1;
+                        costesNuevaAG[i] = costeMejor1;
                     } else {
                         nuevaAG.add(i, mejor2);
-                        costesHH[i] = costeMejor2;
+                        costesNuevaAG[i] = costeMejor2;
                     }
                 }
             }
             nuevaAg = nuevaAG;
-            costesNuevaAg = costesHH;
+            costesNuevaAg = costesNuevaAG;
 
             mutar(tp, D, kProbMuta, rangoMin, rangoMax, nuevaAG, marcados, random);
 
