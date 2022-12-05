@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.apache.log4j.Logger;
 import uja.meta.utils.Solucion;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
@@ -25,7 +26,7 @@ public class AlgEDif_Clase01_Grupo10 implements Callable<Solucion> {
     private Long semilla;
 
     @Override
-    public Solucion call() {
+    public Solucion call() throws IOException {
         Logger log = Logger.getLogger(className);
         Random random = new Random();
         double tiempoInicial = System.nanoTime();

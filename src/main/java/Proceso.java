@@ -107,22 +107,30 @@ public class Proceso {
             }
         }
 
-        List<Daido> daidos = daidos("src/main/resources/daido-tra.dat");
 
-        executor.shutdown();
-        if (!executor.awaitTermination(1, TimeUnit.MINUTES))
-            executor.shutdownNow();
+
+
 
         double[] a = new double[5];
         Random random = new Random();
         for (int i = 0; i < a.length; i++)
             a[i] = random.nextDouble(1 + 1) - 1;
 
-        System.out.println(potencia(a, daidos, "MAPE"));
-        System.out.println(potencia(a, daidos, "RMSE"));
+        String archivo = archivosConfig.get(0);
+        Lector lector = new Lector(ruta + archivo);
+        for (Long semilla : lector.getSemillas()) {
+            AlgEvBLX_Clase01_Grupo10 EvBlk =
+                    new AlgEvBLX_Clase01_Grupo10("potenciaMAPE", 50, 5, 10000,
+                            -1, 1, 0.01, 0.7, 0.5, "potenciaMAPE", semilla, 0.5);
+            resultadoEvBlX.add(executor.submit(EvBlk));
+        }
+
+        executor.shutdown();
+        if (!executor.awaitTermination(1, TimeUnit.MINUTES))
+            executor.shutdownNow();
 
         // Conversion de resultados a CSV
-//        exportCSV(resultadoEvMedia, "EvMedia");
+        //exportCSV(resultadoEvMedia, "EvMedia");
 //        exportCSV(resultadoEvBlX, "EvBlX");
 //        exportCSV(resultadoBL3, "BL3");
 //        exportCSV(resultadoBLk, "BLk");

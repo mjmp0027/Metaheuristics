@@ -20,6 +20,7 @@ import static uja.meta.funciones.Rosenbrock.evaluateRosen;
 import static uja.meta.funciones.RotatedHypeEllipsoid.evaluateRot;
 import static uja.meta.funciones.Schewefel.evaluateS;
 import static uja.meta.funciones.Trid.evaluateT;
+import static uja.meta.utils.LectorDaido.daidos;
 
 public class FuncionesAuxiliares {
 
@@ -237,7 +238,7 @@ public class FuncionesAuxiliares {
         vecino[j] = (Math.random() * (sup - inf)) + inf;
     }
 
-    public static double calculaCoste(double[] vSolucion, String funcion) {
+    public static double calculaCoste(double[] vSolucion, String funcion) throws IOException {
         switch (funcion) {
             case "dixonprice" -> {
                 return evaluateD(vSolucion);
@@ -268,6 +269,9 @@ public class FuncionesAuxiliares {
             }
             case "michalewicz" -> {
                 return evaluateM(vSolucion);
+            }
+            case "potenciaMAPE" ->{
+                return potenciaMAPE(vSolucion);
             }
             default -> {
                 return 0;
@@ -408,7 +412,8 @@ public class FuncionesAuxiliares {
         }
     }
 
-    public static double potencia(double[] a, List<Daido> observaciones, String tipoError) {
+    public static double potenciaMAPE(double[] a) throws IOException {
+        List<Daido> observaciones =  daidos("src/main/resources/daido-tra.dat");
         double pm;
         int filas = observaciones.size();
         double[] real = new double[filas], estimado = new double[filas];
@@ -419,7 +424,25 @@ public class FuncionesAuxiliares {
                     (a[4] * observaciones.get(i).getSmr()));
             estimado[i] = pm;
             real[i] = observaciones.get(i).getPotencia();
+
         }
-        return tipoError.equals("MAPE") ? MAPE(real, estimado) : RMSE(real, estimado);
+        return MAPE(real, estimado);
+    }
+
+    public static double potenciaRMSE(double[] a) throws IOException {
+        List<Daido> observaciones =  daidos("src/main/resources/daido-tra.dat");
+        double pm;
+        int filas = observaciones.size();
+        double[] real = new double[filas], estimado = new double[filas];
+
+        for (int i = 0; i < filas; i++) {
+            pm = observaciones.get(i).getDni() * (a[0] + (a[1] * observaciones.get(i).getDni()) + (a[2]
+                    * observaciones.get(i).getTemp_amb()) + (a[3] * observaciones.get(i).getVel_viento()) +
+                    (a[4] * observaciones.get(i).getSmr()));
+            estimado[i] = pm;
+            real[i] = observaciones.get(i).getPotencia();
+
+        }
+        return RMSE(real, estimado);
     }
 }

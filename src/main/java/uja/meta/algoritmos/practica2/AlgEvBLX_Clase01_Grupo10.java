@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
 import uja.meta.utils.Solucion;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -33,18 +34,20 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
     private double costeMejorCr2;
 
     @Override
-    public Solucion call() {
+    public Solucion call() throws IOException {
 
         Logger log = Logger.getLogger(className);
         Random random = new Random();
         double tiempoInicial = System.nanoTime();
         cromosomas = generador(rangoInf, rangoSup, semilla, D, tp);
         vSolucion = new double[D];
+        for (int i = 0; i < vSolucion.length; i++)
+            vSolucion[i] = random.nextDouble(1 + 1) - 1;
         int t = 0;
         List<double[]> nuevaAg = new ArrayList<>();
         double[] costes = new double[tp], costesNuevaAg = new double[tp], costesHH = new double[tp];
         int[] posicion = new int[tp];
-        double[] mejorCr = new double[tp];
+        double[] mejorCr = new double[D];
         int peor = 0;
         int mejorCrHijo = 1;
         double mejorCoste = Double.MAX_VALUE;

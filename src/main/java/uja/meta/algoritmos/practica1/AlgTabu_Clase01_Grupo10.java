@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.apache.log4j.Logger;
 import uja.meta.utils.Solucion;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -81,7 +82,7 @@ public class AlgTabu_Clase01_Grupo10 implements Callable<Solucion> {
     }
 
     @Override
-    public Solucion call() {
+    public Solucion call() throws IOException {
         Logger log = Logger.getLogger(className);
         //log.info("Vector inicial: " + visualizaVectorLog(vSolucion));
         Random random = new Random();
