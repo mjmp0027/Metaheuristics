@@ -67,13 +67,14 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
         }
 
         while (contEv < limiteEvaluaciones) {
+            t++;
+            torneo(tp, posicion, costes, cromosomas, nuevaAg, costesNuevaAg, random);
+
             boolean[] marcados = new boolean[tp];
             for (int i = 0; i < tp; i++) {
                 marcados[i] = false;
             }
             double uniforme;
-
-            torneo(tp, posicion, costes, cromosomas, nuevaAg, costesNuevaAg, random);
 
             for (int i = 0; i < tp; i++) {
                 torneo2a2(tp, nuevaAg, costesNuevaAg, random);
@@ -133,7 +134,7 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
             }
             costes = costesNuevaAg;
             cromosomas = nuevaAg;
-            t++;
+
         }
 
         vSolucion = mejorCroGlobal;

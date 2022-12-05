@@ -111,19 +111,19 @@ public class Proceso {
 
 
 
-        double[] a = new double[5];
-        Random random = new Random();
-        for (int i = 0; i < a.length; i++)
-            a[i] = random.nextDouble(1 + 1) - 1;
-
-        String archivo = archivosConfig.get(0);
-        Lector lector = new Lector(ruta + archivo);
-        for (Long semilla : lector.getSemillas()) {
-            AlgEvBLX_Clase01_Grupo10 EvBlk =
-                    new AlgEvBLX_Clase01_Grupo10("potenciaMAPE", 50, 5, 10000,
-                            -1, 1, 0.01, 0.7, 0.5, "potenciaMAPE", semilla, 0.5);
-            resultadoEvBlX.add(executor.submit(EvBlk));
-        }
+//        double[] a = new double[5];
+//        Random random = new Random();
+//        for (int i = 0; i < a.length; i++)
+//            a[i] = random.nextDouble(1 + 1) - 1;
+//
+//        String archivo = archivosConfig.get(0);
+//        Lector lector = new Lector(ruta + archivo);
+//        for (Long semilla : lector.getSemillas()) {
+//            AlgEvBLX_Clase01_Grupo10 EvBlk =
+//                    new AlgEvBLX_Clase01_Grupo10("potenciaMAPE", 50, 5, 10000,
+//                            -1, 1, 0.01, 0.7, 0.5, "potenciaMAPE", semilla, 0.5);
+//            resultadoEvBlX.add(executor.submit(EvBlk));
+//        }
 
         executor.shutdown();
         if (!executor.awaitTermination(1, TimeUnit.MINUTES))

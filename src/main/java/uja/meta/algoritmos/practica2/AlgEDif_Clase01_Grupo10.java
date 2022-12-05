@@ -63,7 +63,6 @@ public class AlgEDif_Clase01_Grupo10 implements Callable<Solucion> {
                 double nuevoCoste = calculaCoste(nuevo, funcion);
                 contEv++;
                 reemplazamiento(nuevoCoste, i, costes, cromosomas, nuevo, mejorCoste, mejorCr);
-
             }
             if (mejorCoste < mejorCosteGlobal) {
                 mejorCosteGlobal = mejorCoste;

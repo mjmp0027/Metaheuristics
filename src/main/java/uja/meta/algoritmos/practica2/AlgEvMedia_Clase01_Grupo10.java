@@ -62,7 +62,7 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> { //FIXME 
 
 
         while (contEv < limiteEvaluaciones) {
-
+            t++;
             torneo(tp, posicion, costes, cromosomas, nuevaAg, costesNuevaAg, random);
 
             boolean[] marcados = new boolean[tp];
@@ -153,7 +153,7 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> { //FIXME 
             }
             costes = costesNuevaAg;
             cromosomas = nuevaAg;
-            t++;
+
         }
 
         vSolucion = mejorCroGlobal;
