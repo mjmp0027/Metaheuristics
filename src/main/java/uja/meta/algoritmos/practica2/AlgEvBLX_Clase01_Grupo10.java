@@ -40,15 +40,11 @@ public class AlgEvBLX_Clase01_Grupo10 implements Callable<Solucion> {
         Random random = new Random();
         double tiempoInicial = System.nanoTime();
         cromosomas = generador(rangoInf, rangoSup, semilla, D, tp);
-        vSolucion = new double[D];
-        for (int i = 0; i < vSolucion.length; i++)
-            vSolucion[i] = random.nextDouble(1 + 1) - 1;
         int t = 0;
         List<double[]> nuevaAg = new ArrayList<>();
         double[] costes = new double[tp], costesNuevaAg = new double[tp], costesHH = new double[tp];
         int[] posicion = new int[tp];
         double[] mejorCr = new double[D];
-        int peor = 0;
         int mejorCrHijo = 1;
         double mejorCoste = Double.MAX_VALUE;
         double mejorCosteHijo = Double.MAX_VALUE;

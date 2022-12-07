@@ -1,6 +1,6 @@
 package uja.meta.algoritmos.practica2;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
 import uja.meta.utils.Solucion;
 
@@ -12,21 +12,25 @@ import java.util.concurrent.Callable;
 
 import static uja.meta.utils.FuncionesAuxiliares.*;
 
-@AllArgsConstructor
-public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> { //FIXME refactorizar torneo2a2
+@RequiredArgsConstructor
+public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
     private final String className;
-    private int tp;
-    private int D;
-    private long limiteEvaluaciones;
+    private final int tp;
+    private final int D;
+    private final long limiteEvaluaciones;
+    private final double rangoMin;
+    private final double rangoMax;
+    private final double kProbMuta;
+    private final double kProbCruce;
+    private final String funcion;
+    private final Long semilla;
+    private final double prob;
     private List<double[]> cromosomas;
     private double[] vSolucion;
-    private double rangoMin;
-    private double rangoMax;
-    private double kProbMuta;
-    private double kProbCruce;
-    private String funcion;
-    private Long semilla;
-    private double prob;
+    private double[] mejor1;
+    private double[] mejor2;
+    private double costeMejor1;
+    private double costeMejor2;
 
     @Override
     public Solucion call() throws IOException {
@@ -34,6 +38,7 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> { //FIXME 
         Logger log = Logger.getLogger(className);
         Random random = new Random();
         double tiempoInicial = System.nanoTime();
+        cromosomas = generador(rangoMin, rangoMax, semilla, D, tp);
         int t = 0;
         List<double[]> nuevaAg = new ArrayList<>();
         double[] costes = new double[tp], costesNuevaAg = new double[tp], costesNuevaAG = new double[tp];
@@ -45,7 +50,7 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> { //FIXME 
         double mejorCosteGlobal = mejorCoste;
         double[] mejorCroGlobal = mejorCr;
         double[] h = new double[D];
-        List<double[]> nuevaAG = new ArrayList<>(D);
+        List<double[]> nuevaAG = new ArrayList<>();
         int contEv = tp;
 
         for (int i = 0; i < tp; i++) {
@@ -55,11 +60,6 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> { //FIXME 
                 mejorCr = cromosomas.get(i);
             }
         }
-        double[] mejor1;
-        double[] mejor2;
-        double costeMejor1;
-        double costeMejor2;
-
 
         while (contEv < limiteEvaluaciones) {
             t++;
@@ -72,32 +72,7 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> { //FIXME 
             double uniforme;
 
             for (int i = 0; i < tp; i++) {
-                //torneo2a2(tp, nuevaAg, costesNuevaAg, mejor1, mejor2, random, costeMejor1, costeMejor2);
-                int c1, c2, c3, c4;
-                int posAnt;
-
-                c1 = random.nextInt(tp);
-                while (c1 == (c2 = random.nextInt(tp))) ;
-                if (costesNuevaAg[c1] < costesNuevaAg[c2]) {
-                    mejor1 = nuevaAg.get(c1);
-                    costeMejor1 = costesNuevaAg[c1];
-                    posAnt = c1;
-                } else {
-                    mejor1 = nuevaAg.get(c2);
-                    costeMejor1 = costesNuevaAg[c2];
-                    posAnt = c2;
-                }
-
-                while (posAnt == (c3 = random.nextInt(tp))) ;
-                while (posAnt == (c4 = random.nextInt(tp))) ;
-
-                if (costesNuevaAg[c3] < costesNuevaAg[c4]) {
-                    mejor2 = nuevaAg.get(c3);
-                    costeMejor2 = costesNuevaAg[c3];
-                } else {
-                    mejor2 = nuevaAg.get(c4);
-                    costeMejor2 = costesNuevaAg[c4];
-                }
+                torneo2a2(tp, nuevaAg, costesNuevaAg, random);
                 uniforme = random.nextDouble();
                 if (uniforme < kProbCruce) {
                     cruceMedia(D, mejor1, mejor2, h);
@@ -167,5 +142,31 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> { //FIXME 
         log.info("Total iteraciones: " + t);
 
         return new Solucion(costeFormat, tiempoTotal, semilla);
+    }
+
+    public void torneo2a2(int tp, List<double[]> nuevaAg, double[] costesNuevaAg, Random random) {
+        int c1 = random.nextInt(tp), c2, c3, c4, posAnt;
+
+        while (c1 == (c2 = random.nextInt(tp))) ;
+        if (costesNuevaAg[c1] < costesNuevaAg[c2]) {
+            mejor1 = nuevaAg.get(c1);
+            costeMejor1 = costesNuevaAg[c1];
+            posAnt = c1;
+        } else {
+            mejor1 = nuevaAg.get(c2);
+            costeMejor1 = costesNuevaAg[c2];
+            posAnt = c2;
+        }
+
+        while (posAnt == (c3 = random.nextInt(tp))) ;
+        while (posAnt == (c4 = random.nextInt(tp))) ;
+
+        if (costesNuevaAg[c3] < costesNuevaAg[c4]) {
+            mejor2 = nuevaAg.get(c3);
+            costeMejor2 = costesNuevaAg[c3];
+        } else {
+            mejor2 = nuevaAg.get(c4);
+            costeMejor2 = costesNuevaAg[c4];
+        }
     }
 }
