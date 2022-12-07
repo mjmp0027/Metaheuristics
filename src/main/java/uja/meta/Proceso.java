@@ -1,3 +1,5 @@
+package uja.meta;
+
 import org.apache.log4j.BasicConfigurator;
 import uja.meta.algoritmos.practica1.AlgBL3_Clase01_Grupo10;
 import uja.meta.algoritmos.practica1.AlgBLk_Clase01_Grupo10;
@@ -10,16 +12,18 @@ import uja.meta.utils.Lector;
 import uja.meta.utils.Solucion;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import static uja.meta.utils.FuncionesAuxiliares.*;
 
 public class Proceso {
 
-    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException, TimeoutException {
+    public static void main(String[] args) throws Exception {
         double tiempoInicial = System.nanoTime();
         BasicConfigurator.configure();
         String ruta = "src/main/resources/configFiles/";
@@ -108,14 +112,14 @@ public class Proceso {
         if (!executor.awaitTermination(3, TimeUnit.MINUTES))
             executor.shutdownNow();
 
-        // Conversion de resultados a CSV
-        //exportCSV(resultadoEvMedia, "EvMedia");
-//        exportCSV(resultadoEvBlX, "EvBlX");
+        //Conversion de resultados a CSV
+        exportCSV(resultadoEvMedia, "EvMedia");
+        exportCSV(resultadoEvBlX, "EvBlx");
 //        exportCSV(resultadoBL3, "BL3");
 //        exportCSV(resultadoBLk, "BLk");
 //        exportCSV(resultadoTabu, "Tabu");
 //        exportCSV(resultadoTabuVNS, "TabuVNS");
-//        exportCSV(resultadoEvDif, "EvDif");
+        exportCSV(resultadoEvDif, "EvDif");
 
         double tiempoFinal = System.nanoTime();
         System.out.println("Tiempo total PRÁCTICA 2: " + calcularTiempo(tiempoInicial, tiempoFinal) + " ms");

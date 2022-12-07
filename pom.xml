@@ -26,8 +26,8 @@
     </dependencies>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>19</maven.compiler.source>
+        <maven.compiler.target>19</maven.compiler.target>
     </properties>
     <build>
         <plugins>
@@ -38,7 +38,9 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <packageName>uja.meta</packageName>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>uja.meta.Proceso</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Created-By>Pedro</Created-By>

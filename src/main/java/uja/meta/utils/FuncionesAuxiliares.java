@@ -163,6 +163,7 @@ public class FuncionesAuxiliares {
 
     public static List<String> getFiles(final File folder) {
         List<String> fileName = new ArrayList<>();
+
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
             if (fileEntry.isDirectory()) {
                 getFiles(fileEntry);
@@ -170,6 +171,7 @@ public class FuncionesAuxiliares {
                 fileName.add(fileEntry.getName());
             }
         }
+
         return fileName.stream().sorted().collect(Collectors.toList());
     }
 

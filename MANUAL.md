@@ -10,7 +10,7 @@ Finalmente esto no ha sido posible así que la forma de obtener ejecutar el proy
   está desarrollado este proyecto.
 - Descargar/clonar el proyecto.
 - Establecer la versión java 17 en el proyecto.
-- Lanzar la clase principal _'Proceso.java'_.
+- Lanzar la clase principal _'uja.meta.Proceso.java'_.
 - Visualizar los resultados.
 
 
