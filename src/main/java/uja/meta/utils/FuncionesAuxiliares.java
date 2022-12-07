@@ -38,35 +38,6 @@ public class FuncionesAuxiliares {
         }
     }
 
-    public static void torneo2a2(int tp, List<double[]> nuevaAg, double[] costesNuevaAg, double[] mejor1,
-                                 double[] mejor2, Random random, double costeMejor1, double costeMejor2){
-        int c1, c2, c3, c4;
-        int posAnt;
-
-        c1 = random.nextInt(tp);
-        while (c1 == (c2 = random.nextInt(tp))) ;
-        if (costesNuevaAg[c1] < costesNuevaAg[c2]) {
-            mejor1 = nuevaAg.get(c1);
-            costeMejor1 = costesNuevaAg[c1];
-            posAnt = c1;
-        } else {
-            mejor1 = nuevaAg.get(c2);
-            costeMejor1 = costesNuevaAg[c2];
-            posAnt = c2;
-        }
-
-        while (posAnt == (c3 = random.nextInt(tp))) ;
-        while (posAnt == (c4 = random.nextInt(tp))) ;
-
-        if (costesNuevaAg[c3] < costesNuevaAg[c4]) {
-            mejor2 = nuevaAg.get(c3);
-            costeMejor2 = costesNuevaAg[c3];
-        } else {
-            mejor2 = nuevaAg.get(c4);
-            costeMejor2 = costesNuevaAg[c4];
-        }
-    }
-
     public static void mutar(int tp, int D, double kProbMuta, double rangoMin, double rangoMax,
                              List<double[]> nuevaAg, boolean[] marcados, Random random) {
         for (int i = 0; i < tp; i++) {
@@ -85,7 +56,7 @@ public class FuncionesAuxiliares {
     }
 
     public static void calculoElite(int tp, List<double[]> nuevaAg, double[] mejorCr,
-                                    double[] costesNuevaAg, double mejorCoste, Random random ) {
+                                    double[] costesNuevaAg, double mejorCoste, Random random) {
 
         int p1, p2, p3, p4, peor;
         p1 = random.nextInt(tp);
@@ -270,8 +241,11 @@ public class FuncionesAuxiliares {
             case "michalewicz" -> {
                 return evaluateM(vSolucion);
             }
-            case "potenciaMAPE" ->{
+            case "MAPE" -> {
                 return potenciaMAPE(vSolucion);
+            }
+            case "RMSE" -> {
+                return potenciaRMSE(vSolucion);
             }
             default -> {
                 return 0;
@@ -413,7 +387,7 @@ public class FuncionesAuxiliares {
     }
 
     public static double potenciaMAPE(double[] a) throws IOException {
-        List<Daido> observaciones =  daidos("src/main/resources/daido-tra.dat");
+        List<Daido> observaciones = daidos("src/main/resources/daido-tra.dat");
         double pm;
         int filas = observaciones.size();
         double[] real = new double[filas], estimado = new double[filas];
@@ -430,7 +404,7 @@ public class FuncionesAuxiliares {
     }
 
     public static double potenciaRMSE(double[] a) throws IOException {
-        List<Daido> observaciones =  daidos("src/main/resources/daido-tra.dat");
+        List<Daido> observaciones = daidos("src/main/resources/daido-tra.dat");
         double pm;
         int filas = observaciones.size();
         double[] real = new double[filas], estimado = new double[filas];

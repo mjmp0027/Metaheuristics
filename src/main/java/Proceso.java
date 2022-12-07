@@ -3,10 +3,9 @@ import uja.meta.algoritmos.practica1.AlgBL3_Clase01_Grupo10;
 import uja.meta.algoritmos.practica1.AlgBLk_Clase01_Grupo10;
 import uja.meta.algoritmos.practica1.AlgTabuVNS_Clase01_Grupo10;
 import uja.meta.algoritmos.practica1.AlgTabu_Clase01_Grupo10;
-import uja.meta.algoritmos.practica2.AlgEvBLX_Clase01_Grupo10;
 import uja.meta.algoritmos.practica2.AlgEDif_Clase01_Grupo10;
+import uja.meta.algoritmos.practica2.AlgEvBLX_Clase01_Grupo10;
 import uja.meta.algoritmos.practica2.AlgEvMedia_Clase01_Grupo10;
-import uja.meta.utils.Daido;
 import uja.meta.utils.Lector;
 import uja.meta.utils.Solucion;
 
@@ -14,11 +13,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.*;
 
 import static uja.meta.utils.FuncionesAuxiliares.*;
-import static uja.meta.utils.LectorDaido.daidos;
 
 public class Proceso {
 
@@ -87,7 +84,7 @@ public class Proceso {
                         case "evm" -> {
                             AlgEvMedia_Clase01_Grupo10 EvM =
                                     new AlgEvMedia_Clase01_Grupo10(funcion + ".evm." + semilla, tp, D, iteraciones,
-                                            cromosoma, vSolucion, rangoInf, rangoSup, kProbMuta, kProCruce, funcion, semilla, prob);
+                                            rangoInf, rangoSup, kProbMuta, kProCruce, funcion, semilla, prob);
                             resultadoEvMedia.add(executor.submit(EvM));
                         }
                         case "evblx" -> {
@@ -107,26 +104,8 @@ public class Proceso {
             }
         }
 
-
-
-
-
-//        double[] a = new double[5];
-//        Random random = new Random();
-//        for (int i = 0; i < a.length; i++)
-//            a[i] = random.nextDouble(1 + 1) - 1;
-//
-//        String archivo = archivosConfig.get(0);
-//        Lector lector = new Lector(ruta + archivo);
-//        for (Long semilla : lector.getSemillas()) {
-//            AlgEvBLX_Clase01_Grupo10 EvBlk =
-//                    new AlgEvBLX_Clase01_Grupo10("potenciaMAPE", 50, 5, 10000,
-//                            -1, 1, 0.01, 0.7, 0.5, "potenciaMAPE", semilla, 0.5);
-//            resultadoEvBlX.add(executor.submit(EvBlk));
-//        }
-
         executor.shutdown();
-        if (!executor.awaitTermination(1, TimeUnit.MINUTES))
+        if (!executor.awaitTermination(3, TimeUnit.MINUTES))
             executor.shutdownNow();
 
         // Conversion de resultados a CSV
