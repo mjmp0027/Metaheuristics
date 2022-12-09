@@ -1,8 +1,8 @@
 # MANUAL DE USUARIO
 
-En una primera instancia se pretendía obtener un ejecutable de este proyecto 
-para así conseguir de forma muy sencilla que cualquier usuario pudiera acceder a 
-una ejecución y resultados del proyecto. 
+Contamos con dor formas principales de ejecutar esta práctica:
+
+### Ejecución manual
 
 Finalmente esto no ha sido posible así que la forma de obtener ejecutar el proyecto es la siguiente:
 
@@ -13,5 +13,12 @@ Finalmente esto no ha sido posible así que la forma de obtener ejecutar el proy
 - Lanzar la clase principal _'uja.meta.Proceso.java'_.
 - Visualizar los resultados.
 
+### Ejecución del archivo ejecutable
 
-_* Para futuras implementaciones se desarrollará un archivo ejecutable que facilite este proceso_.
+Será suficiente con abrir la consola de nuestro sistema en la ruta del proyecto y ejecutar el comando:
+
+``
+java -jar ejecutable.jar
+``
+
+Con ambos casos podremos realizar la ejecución y obtener los datos, los cuales pueden diferir en las distintas ejecuciones.
