@@ -43,12 +43,12 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
         List<double[]> nuevaAg = new ArrayList<>();
         double[] costes = new double[tp], costesNuevaAg = new double[tp], costesNuevaAG = new double[tp];
         int[] posicion = new int[tp];
-        double[] mejorCr = new double[D];
+        double[] elite = new double[D];
         int mejorCrHijo = 1;
         double mejorCoste = Double.MAX_VALUE;
         double mejorCosteHijo = Double.MAX_VALUE;
         double mejorCosteGlobal = mejorCoste;
-        double[] mejorCroGlobal = mejorCr;
+        double[] mejorCroGlobal = elite;
         double[] h = new double[D];
         List<double[]> nuevaAG = new ArrayList<>();
         int contEv = tp;
@@ -57,7 +57,7 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
             costes[i] = calculaCoste(cromosomas.get(i), funcion);
             if (costes[i] < mejorCoste) {
                 mejorCoste = costes[i];
-                mejorCr = cromosomas.get(i);
+                elite = cromosomas.get(i);
             }
         }
 
@@ -106,20 +106,20 @@ public class AlgEvMedia_Clase01_Grupo10 implements Callable<Solucion> {
 
             boolean enc = false;
             for (int i = 0; i < nuevaAg.size() && !enc; i++)
-                if (mejorCr == nuevaAg.get(i))
+                if (elite == nuevaAg.get(i))
                     enc = true;
 
             if (!enc) {
 
-                calculoElite(tp, nuevaAG, mejorCr, costesNuevaAg, mejorCoste, random);
+                reemplazamiento(tp, nuevaAG, elite, costesNuevaAg, mejorCoste, random);
 
                 if (mejorCoste < mejorCosteHijo) {
                     mejorCosteHijo = mejorCoste;
-                    nuevaAg.add(mejorCrHijo, mejorCr);
+                    nuevaAg.add(mejorCrHijo, elite);
                 }
             }
 
-            mejorCr = nuevaAg.get(mejorCrHijo);
+            elite = nuevaAg.get(mejorCrHijo);
             mejorCoste = mejorCosteHijo;
 
             if (mejorCosteHijo < mejorCosteGlobal) {

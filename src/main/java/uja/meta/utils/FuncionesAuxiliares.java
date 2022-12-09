@@ -1,6 +1,9 @@
 package uja.meta.utils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -13,8 +16,10 @@ import static java.lang.Math.min;
 import static uja.meta.funciones.Ackley.evaluateA;
 import static uja.meta.funciones.Dixonprice.evaluateD;
 import static uja.meta.funciones.Griewank.evaluateG;
+import static uja.meta.funciones.MAPE.MAPE;
 import static uja.meta.funciones.Michalewicz.evaluateM;
 import static uja.meta.funciones.Perm.evaluateP;
+import static uja.meta.funciones.RMSE.RMSE;
 import static uja.meta.funciones.Rastringin.evaluateR;
 import static uja.meta.funciones.Rosenbrock.evaluateRosen;
 import static uja.meta.funciones.RotatedHypeEllipsoid.evaluateRot;
@@ -55,8 +60,8 @@ public class FuncionesAuxiliares {
         }
     }
 
-    public static void calculoElite(int tp, List<double[]> nuevaAg, double[] mejorCr,
-                                    double[] costesNuevaAg, double mejorCoste, Random random) {
+    public static void reemplazamiento(int tp, List<double[]> nuevaAg, double[] mejorCr,
+                                       double[] costesNuevaAg, double mejorCoste, Random random) {
 
         int p1, p2, p3, p4, peor;
         p1 = random.nextInt(tp);
@@ -133,32 +138,6 @@ public class FuncionesAuxiliares {
                 mejorCr = nuevo;
             }
         }
-    }
-
-    public static double MAPE(double[] real, double[] estimation) {
-        int N = real.length;
-        double score;
-        double sum = 0.0;
-        double num = 0.0;
-        for (int i = 0; i < N; i++) {
-            if (real[i] != 0) {
-                sum += Math.abs((real[i] - estimation[i]) / Math.abs(real[i]));
-                num++;
-            }
-        }
-        score = sum / num;
-        return score;
-    }
-
-    public static double RMSE(double[] real, double[] estimation) {
-        int N = real.length;
-        double score;
-        double sum = 0;
-        for (int i = 0; i < N; i++) {
-            sum += Math.pow(real[i] - estimation[i], 2);
-        }
-        score = Math.sqrt(1.0 / N * sum);
-        return score;
     }
 
     public static List<String> getFiles(final File folder) {
