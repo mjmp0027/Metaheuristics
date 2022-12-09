@@ -1,4 +1,4 @@
-# PRÁCTICA 1
+# PRÁCTICA 2
 
 ## Introducción
 
@@ -44,9 +44,12 @@ En este proyecto realizamos la implementación de funciones de regresión lineal
 
 ![img_9.png](img/img_9.png)
 
+### MAPE & RMSE
+![image](https://user-images.githubusercontent.com/49394226/206679173-78a9103a-41c8-4eae-af6c-89524c58ef73.png)
+
 *Implementación disponible en: _'src/main/java/uja/meta/funciones'_
 
-Además son implementados los algoritmos de Búsqueda local del mejor y búsqueda con conceptos tabú.   
+Además son implementados los algoritmos de Búsqueda local del mejor, búsqueda con conceptos tabú, evolutivos y diferencial.   
 
 *Implementación disponible en: _'src/main/java/uja/meta/algoritmos'_
 
