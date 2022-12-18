@@ -169,6 +169,41 @@ public class FuncionesAuxiliares {
         return vector;
     }
 
+    public static List<int[]> generadorH(long semilla, int ciudades, int tHormigas, List<boolean[]> marcados) {
+        Random random = new Random();
+        random.setSeed(semilla);
+        List<int[]> vector = new ArrayList<>();
+        for (int i = 0; i < tHormigas; i++) {
+            int[] vectorAux = new int[ciudades];
+            boolean[] vectorMarcados = new boolean[ciudades];
+            vectorAux[0] = random.nextInt(ciudades);
+            vectorMarcados[0] = true;
+            vector.add(i, vectorAux);
+            marcados.add(i, vectorMarcados);
+        }
+        return vector;
+    }
+
+    public static double calculaCoste(int[] hormiga, double[][] dist, int ciudades) {
+        double coste = 0;
+        for (int i = 0; i < ciudades - 1; i++) {
+            coste += dist[hormiga[i]][hormiga[i + 1]];
+        }
+        coste += dist[hormiga[0]][hormiga[ciudades - 1]];
+        return coste;
+    }
+
+    public static void mejorHormiga(double mejorCosteActual, int tHormigas, List<int[]> hormigas,
+                                    double[][] dist, int ciudades, int[] mejorHormigaActual) {
+        for (int i = 0; i < tHormigas; i++) {
+            double coste = calculaCoste(hormigas.get(i), dist, ciudades);
+            if (coste < mejorCosteActual) {
+                mejorCosteActual = coste;
+                mejorHormigaActual = hormigas.get(i);
+            }
+        }
+    }
+
     public static String visualizaVectorLog(double[] vSolucion) {
         StringBuilder vector = new StringBuilder();
         vector.append("[");
