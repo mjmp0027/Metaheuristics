@@ -1,0 +1,11 @@
+tamSem=5
+semillas=53916079 95391607 79539160 07953916 60795391
+algoritmos=hormigas
+ciudades=5
+thormigas=10
+alfah=1
+betah=1
+q0=0.95
+p=0.1
+fi=0.1
+tiempo=600000
