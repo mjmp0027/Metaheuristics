@@ -26,6 +26,14 @@ public class Lector {
     private double alfa;
     private double probRecomb;
     private double prob;
+    private int ciudades;
+    private int tHormigas;
+    private int alfah;
+    private int betah;
+    private double q0;
+    private double p;
+    private double fi;
+    private int tiempo;
 
 
     public Lector(String rutaArchConfig) throws IOException {
@@ -66,6 +74,14 @@ public class Lector {
                 case "alfa" -> alfa = Double.parseDouble(separador[1]);
                 case "probrecomb" -> probRecomb = Double.parseDouble(separador[1]);
                 case "prob" -> prob = Double.parseDouble(separador[1]);
+                case "ciudades" -> ciudades = Integer.parseInt(separador[1]);
+                case "hormigas" -> tHormigas = Integer.parseInt(separador[1]);
+                case "alfah" -> alfah = Integer.parseInt(separador[1]);
+                case "betah" -> betah = Integer.parseInt(separador[1]);
+                case "q0" -> q0 = Double.parseDouble(separador[1]);
+                case "p" -> p = Double.parseDouble(separador[1]);
+                case "fi" -> fi = Double.parseDouble(separador[1]);
+                case "tiempo" -> tiempo = Integer.parseInt(separador[1]);
             }
         }
     }

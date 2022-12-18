@@ -56,10 +56,20 @@ public class Proceso {
             double alfa = lector.getAlfa();
             double probRecomb = lector.getProbRecomb();
             double prob = lector.getProb();
+            int tHormigas = lector.getTHormigas();
+            int ciudades = lector.getCiudades();
+            int alfah = lector.getAlfah();
+            int betah = lector.getBetah();
+            double q0 = lector.getQ0();
+            double p = lector.getP();
+            double fi = lector.getFi();
+            int tiempo = lector.getTiempo();
             for (String algoritmo : algoritmos) {
                 for (long semilla : semillas) {
                     List<double[]> cromosoma = generador(rangoInf, rangoSup, semilla, D, tp);
                     double[] vSolucion = new double[D];
+                    List<boolean[]> marcados = new ArrayList<>();
+                    List<int[]> hormigas = generadorH(semilla, ciudades, tHormigas, marcados);
                     switch (algoritmo) {
 //                        case "bl3" -> {
 //                            AlgBL3_Clase01_Grupo10 bl3 =
@@ -106,11 +116,12 @@ public class Proceso {
 //                            resultadoEvDif.add(executor.submit(ed));
 //                        }
                         case "hormigas" -> {
+                            // TODO dist tiene que ser igual a la matriz de distancias que dan en los ficheros(hay que leer los ficheros)
                             double[][] dist = new double[10][10];
-                            Hormigas hormigas =
-                                    new Hormigas(funcion + ".hormigas." + semilla, dist, iteraciones, semilla,
-                                            1, 1, 1, 1, 1.1, 1.1, 1.1, 1.1);
-                            resultadoHormigas.add(executor.submit(hormigas));
+                            Hormigas sch =
+                                    new Hormigas(funcion + ".hormigas." + semilla, dist, hormigas, marcados, iteraciones, semilla,
+                                            ciudades, tHormigas, alfah, betah, q0, p, fi, 1.1, tiempo);
+                            resultadoHormigas.add(executor.submit(sch));
                         } //TODO appenders
                         //TODO configs
                     }
@@ -130,7 +141,7 @@ public class Proceso {
 //        exportCSV(resultadoTabu, "Tabu");
 //        exportCSV(resultadoTabuVNS, "TabuVNS");
 //        exportCSV(resultadoEvDif, "EvDif");
-//        exportCSV(resultadoHormigas, "SHC");
+//        exportCSV(resultadoHormigas, "SCH");
 
         double tiempoFinal = System.nanoTime();
         System.out.println("Tiempo total PRÁCTICA 2: " + calcularTiempo(tiempoInicial, tiempoFinal) + " ms");
