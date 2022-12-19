@@ -11,8 +11,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
+import static java.lang.Math.*;
+import static java.lang.Math.pow;
 import static uja.meta.funciones.Ackley.evaluateA;
 import static uja.meta.funciones.Dixonprice.evaluateD;
 import static uja.meta.funciones.Griewank.evaluateG;
@@ -434,5 +434,112 @@ public class FuncionesAuxiliares {
 
         }
         return RMSE(real, estimado);
+    }
+
+    public static void cargaInicial(double fInicial, int tHormigas, double greedy, int ciudades,
+                                    List<double[]> feromona, List<double[]> heuristica, double[][] dist) {
+        for (int i = 0; i < ciudades - 1; i++) {
+            for (int j = i + 1; j < ciudades; j++) {
+                if (i != j) {
+                    feromona.get(j)[i] = feromona.get(i)[j] = fInicial;
+                    heuristica.get(j)[i] = heuristica.get(i)[j] = 1 / dist[i][j];
+                }
+            }
+        }
+    }
+
+    public static double[] calculaFerxHeu(int ciudades, List<boolean[]> marcados,
+                                          List<double[]> heuristica, List<double[]> feromona, List<int[]> hormigas,
+                                          int alfah, int betah, int h, int comp) {
+        double[] ferxHeu = new double[ciudades];
+        for (int i = 0; i < ciudades; i++) {
+            if (!marcados.get(h)[i])
+                ferxHeu[i] = pow(heuristica.get(hormigas.get(h)[comp - 1])[i], betah)
+                        * pow(feromona.get(hormigas.get(h)[comp - 1])[i], alfah);
+        }
+        return ferxHeu;
+    }
+
+    public static int calculoArgMax(double denominador, int ciudades, double argMax,
+                                    List<boolean[]> marcados, double[] ferxHeu, int h) {
+        int posArgMax = 0;
+        for (int i = 0; i < ciudades; i++) {
+            if (!marcados.get(h)[i]) {
+                denominador += ferxHeu[i];
+                if (ferxHeu[i] > argMax) {
+                    argMax = ferxHeu[i];
+                    posArgMax = i;
+                }
+            }
+        }
+        return posArgMax;
+    }
+
+    public static int transicion(int ciudades, List<boolean[]> marcados, int posArgMax, double q0,
+                                 double[] ferxHeu, double denominador, Random random, int h) {
+        int elegido = 0;
+        double[] prob = new double[ciudades];
+        double q = random.nextDouble();   //aleatorio inicial
+        if (q0 >= q) {  //aplicamos argumento maximo y nos quedamos con el mejor
+            elegido = posArgMax;
+        } else {  //aplicamos regla de transicion normal
+            for (int i = 0; i < ciudades; i++) {
+                if (!marcados.get(h)[i]) {
+                    double numerador = ferxHeu[i];
+                    prob[i] = numerador / denominador;
+                }
+            }
+
+            //elegimos la componente a añadir buscando en los intervalos de probabilidad
+            double uniforme = random.nextDouble();  //aleatorio para regla de transición
+            double acumulado = 0.0;
+            for (int i = 0; i < ciudades; i++) {
+                if (!marcados.get(h)[i]) {
+                    acumulado += prob[i];
+                    if (uniforme <= acumulado) {
+                        elegido = i;
+                        break;
+                    }
+                }
+            }
+        }
+        return elegido;
+    }
+
+    public static void actualizacionLocal(List<double[]> feromona, List<int[]> hormigas, int h,
+                                          int comp, double fInicial, double fi) {
+        feromona.get(hormigas.get(h)[comp - 1])[hormigas.get(h)[comp]] =
+                ((1 - fi) * feromona.get(hormigas.get(h)[comp - 1])[hormigas.get(h)[comp]]) + (fi * fInicial);
+        feromona.get(hormigas.get(h)[comp])[hormigas.get(h)[comp - 1]] =
+                feromona.get(hormigas.get(h)[comp - 1])[hormigas.get(h)[comp]];
+    }
+
+    public static void actualizarFeromona(double mejorCosteActual, int ciudades, List<double[]> feromona,
+                                          int[] mejorHormigaActual, double p) {
+        double deltaMejor = 1 / mejorCosteActual;  //al ser minimizacion
+        for (int i = 0; i < ciudades - 1; i++) {
+            feromona.get(mejorHormigaActual[i])[mejorHormigaActual[i + 1]] += (p * deltaMejor);
+            feromona.get(mejorHormigaActual[i + 1])[mejorHormigaActual[i]] =
+                    feromona.get(mejorHormigaActual[i])[mejorHormigaActual[i + 1]];  //simetrica
+        }
+
+        // y se evapora en todos los arcos de la matriz de feromona (cristobal), solo se evapora en los arcos
+        //de la mejor solución global (UGR)
+        for (int i = 0; i < ciudades; i++) {
+            for (int j = 0; j < ciudades; j++) {
+                if (i != j) {
+                    feromona.get(i)[j] = ((1 - p) * feromona.get(i)[j]);
+                }
+            }
+        }
+    }
+
+    public static void limpiar(List<int[]> hormigas, int tHormigas, int ciudades, List<boolean[]> marcados) {
+        hormigas.clear();
+        for (int i = 0; i < tHormigas; i++) {
+            for (int j = 0; j < ciudades; j++) {
+                marcados.get(i)[j] = false;
+            }
+        }
     }
 }

@@ -116,6 +116,7 @@ public class Proceso {
 //                            resultadoEvDif.add(executor.submit(ed));
 //                        }
                         case "hormigas" -> {
+                            // TODO leer 3 archivos y ejecutar la función greedy(funcionesAuxiliares) para cada archivo
                             // TODO dist tiene que ser igual a la matriz de distancias que dan en los ficheros(hay que leer los ficheros)
                             double[][] dist = new double[10][10];
                             Hormigas sch =
@@ -123,7 +124,7 @@ public class Proceso {
                                             ciudades, tHormigas, alfah, betah, q0, p, fi, 1.1, tiempo);
                             resultadoHormigas.add(executor.submit(sch));
                         } //TODO appenders
-                        //TODO configs
+                        // FIXME comprobar configSCH, si se necesita cambiar algo se cambia
                     }
                 }
             }
