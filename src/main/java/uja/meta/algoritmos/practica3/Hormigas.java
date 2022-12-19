@@ -16,8 +16,6 @@ import static uja.meta.utils.FuncionesAuxiliares.*;
 public class Hormigas implements Callable<Solucion> {
     private final String className;
     private final double[][] dist;
-    private final List<int[]> hormigas;
-    private final List<boolean[]> marcados;
     private final long iteraciones;
     private final long semilla;
     private final int ciudades;
@@ -36,6 +34,9 @@ public class Hormigas implements Callable<Solucion> {
         Random random = new Random();
         double tiempoInicial = System.nanoTime();
 
+        List<boolean[]> marcados = new ArrayList<>();
+        List<int[]> hormigas;
+
         List<double[]> feromona = new ArrayList<>();
         List<double[]> heuristica = new ArrayList<>();
 
@@ -44,13 +45,15 @@ public class Hormigas implements Callable<Solucion> {
         int[] mejorHormigaActual = new int[ciudades];
         double argMax = 0;
 
-        double fInicial = (float) 1 / (tHormigas * greedy);
-        cargaInicial(fInicial, tHormigas, greedy, ciudades, feromona, heuristica, dist);
+        double ferInicial = (float) 1 / (tHormigas * greedy);
+        cargaInicial(ferInicial, ciudades, feromona, heuristica, dist);
         int cont = 0;
         Timer t = null;
         int tiempo = 0;
         while (cont < iteraciones && tiempo < tiempoTotal) {
             t.start();
+
+            hormigas = generadorH(semilla, ciudades, tHormigas, marcados);
             //GENERAMOS las n-1 componentes pdtes. de las hormigas
             for (int comp = 1; comp < ciudades; comp++) {
                 //Para cada hormiga
@@ -70,7 +73,7 @@ public class Hormigas implements Callable<Solucion> {
                     marcados.get(h)[elegido] = true;
 
                     //actualizacion local del arco seleccionado por la hormiga
-                    actualizacionLocal(feromona, hormigas, h, comp, fInicial, fi);
+                    actualizacionLocal(feromona, hormigas, h, comp, ferInicial, fi);
                 } //fin agregado una componente a cada hormiga
             } //fin cuando las hormigas estan completas
 

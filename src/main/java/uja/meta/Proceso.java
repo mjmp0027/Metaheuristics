@@ -68,8 +68,7 @@ public class Proceso {
                 for (long semilla : semillas) {
                     List<double[]> cromosoma = generador(rangoInf, rangoSup, semilla, D, tp);
                     double[] vSolucion = new double[D];
-                    List<boolean[]> marcados = new ArrayList<>();
-                    List<int[]> hormigas = generadorH(semilla, ciudades, tHormigas, marcados);
+
                     switch (algoritmo) {
 //                        case "bl3" -> {
 //                            AlgBL3_Clase01_Grupo10 bl3 =
@@ -120,7 +119,7 @@ public class Proceso {
                             // TODO dist tiene que ser igual a la matriz de distancias que dan en los ficheros(hay que leer los ficheros)
                             double[][] dist = new double[10][10];
                             Hormigas sch =
-                                    new Hormigas(funcion + ".hormigas." + semilla, dist, hormigas, marcados, iteraciones, semilla,
+                                    new Hormigas(funcion + ".hormigas." + semilla, dist, iteraciones, semilla,
                                             ciudades, tHormigas, alfah, betah, q0, p, fi, 1.1, tiempo);
                             resultadoHormigas.add(executor.submit(sch));
                         } //TODO appenders
