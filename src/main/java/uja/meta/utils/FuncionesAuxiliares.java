@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.annotation.Documented;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -29,8 +30,7 @@ import static uja.meta.utils.LectorDaido.daidos;
 
 public class FuncionesAuxiliares {
 
-    public static void torneo(int tp, int[] posicion, double[] costes, List<double[]> cromosomas,
-                              List<double[]> nuevaAg, double[] costesNuevaAg, Random random) {
+    public static void torneo(int tp, int[] posicion, double[] costes, List<double[]> cromosomas, List<double[]> nuevaAg, double[] costesNuevaAg, Random random) {
         for (int i = 0; i < tp; i++) {
             int j, k;
             j = random.nextInt(tp);
@@ -43,8 +43,7 @@ public class FuncionesAuxiliares {
         }
     }
 
-    public static void mutar(int tp, int D, double kProbMuta, double rangoMin, double rangoMax,
-                             List<double[]> nuevaAg, boolean[] marcados, Random random) {
+    public static void mutar(int tp, int D, double kProbMuta, double rangoMin, double rangoMax, List<double[]> nuevaAg, boolean[] marcados, Random random) {
         for (int i = 0; i < tp; i++) {
             boolean m = false;
             for (int j = 0; j < D; j++) {
@@ -55,36 +54,29 @@ public class FuncionesAuxiliares {
                     nuevaAg.get(i)[j] = valor;
                 }
             }
-            if (m)
-                marcados[i] = true;
+            if (m) marcados[i] = true;
         }
     }
 
-    public static void reemplazamiento(int tp, List<double[]> nuevaAg, double[] mejorCr,
-                                       double[] costesNuevaAg, double mejorCoste, Random random) {
+    public static void reemplazamiento(int tp, List<double[]> nuevaAg, double[] mejorCr, double[] costesNuevaAg, double mejorCoste, Random random) {
 
         int p1, p2, p3, p4, peor;
         p1 = random.nextInt(tp);
         while (p1 == (p2 = random.nextInt(tp))) ;
         while (p1 == (p3 = random.nextInt(tp))) ;
         while (p1 == (p4 = random.nextInt(tp))) ;
-        if (costesNuevaAg[p1] > costesNuevaAg[p2] && costesNuevaAg[p1] > costesNuevaAg[p3]
-                && costesNuevaAg[p1] > costesNuevaAg[p4])
+        if (costesNuevaAg[p1] > costesNuevaAg[p2] && costesNuevaAg[p1] > costesNuevaAg[p3] && costesNuevaAg[p1] > costesNuevaAg[p4])
             peor = p1;
-        else if (costesNuevaAg[p2] > costesNuevaAg[p1] && costesNuevaAg[p2] > costesNuevaAg[p3]
-                && costesNuevaAg[p2] > costesNuevaAg[p4])
+        else if (costesNuevaAg[p2] > costesNuevaAg[p1] && costesNuevaAg[p2] > costesNuevaAg[p3] && costesNuevaAg[p2] > costesNuevaAg[p4])
             peor = p2;
-        else if (costesNuevaAg[p3] > costesNuevaAg[p1] && costesNuevaAg[p3] > costesNuevaAg[p2]
-                && costesNuevaAg[p3] > costesNuevaAg[p4])
+        else if (costesNuevaAg[p3] > costesNuevaAg[p1] && costesNuevaAg[p3] > costesNuevaAg[p2] && costesNuevaAg[p3] > costesNuevaAg[p4])
             peor = p3;
-        else
-            peor = p4;
+        else peor = p4;
         nuevaAg.add(peor, mejorCr);
         costesNuevaAg[peor] = mejorCoste;
     }
 
-    public static void eleccion2aleatorios(int tp, List<double[]> cromosomas, int i,
-                                           double[] ale1, double[] ale2, Random random, int a1, int a2) {
+    public static void eleccion2aleatorios(int tp, List<double[]> cromosomas, int i, double[] ale1, double[] ale2, Random random, int a1, int a2) {
         do {
             a1 = random.nextInt(tp);
             while (a1 == (a2 = random.nextInt(tp))) ;
@@ -99,37 +91,27 @@ public class FuncionesAuxiliares {
             k1 = random.nextInt(tp);
             while (k1 == (k2 = random.nextInt(tp))) ;
             while (k1 == (k3 = random.nextInt(tp))) ;
-        } while (k1 != i && k1 != a1 && k1 != a2 &&
-                k2 != i && k2 != a1 && k2 != a2 &&
-                k3 != i && k3 != a1 && k3 != a2);
+        } while (k1 != i && k1 != a1 && k1 != a2 && k2 != i && k2 != a1 && k2 != a2 && k3 != i && k3 != a1 && k3 != a2);
 
-        if (costes[k1] < costes[k2] && costes[k1] < costes[k3])
-            obj = cromosomas.get(k1);
-        else if (costes[k2] < costes[k1] && costes[k2] < costes[k3])
-            obj = cromosomas.get(k2);
-        else
-            obj = cromosomas.get(k3);
+        if (costes[k1] < costes[k2] && costes[k1] < costes[k3]) obj = cromosomas.get(k1);
+        else if (costes[k2] < costes[k1] && costes[k2] < costes[k3]) obj = cromosomas.get(k2);
+        else obj = cromosomas.get(k3);
     }
 
-    public static void eleccionNuevoCr(int D, double probRecomb, double[] padre, double[] nuevo,
-                                       double[] ale1, double[] ale2, double rangoMin, double rangoMax, double[] obj, Random random) {
+    public static void eleccionNuevoCr(int D, double probRecomb, double[] padre, double[] nuevo, double[] ale1, double[] ale2, double rangoMin, double rangoMax, double[] obj, Random random) {
         double factor = random.nextDouble();
         for (int j = 0; j < D; j++) {
             double porc = random.nextDouble();
-            if (porc > probRecomb)
-                nuevo[j] = obj[j];
+            if (porc > probRecomb) nuevo[j] = obj[j];
             else {
                 nuevo[j] = padre[j] + (factor * (ale1[j] - ale2[j]));
-                if (nuevo[j] > rangoMax)
-                    nuevo[j] = rangoMax;
-                else if (nuevo[j] < rangoMin)
-                    nuevo[j] = rangoMin;
+                if (nuevo[j] > rangoMax) nuevo[j] = rangoMax;
+                else if (nuevo[j] < rangoMin) nuevo[j] = rangoMin;
             }
         }
     }
 
-    public static void reemplazamiento(double nuevoCoste, int i, double[] costes, List<double[]> cromosomas,
-                                       double[] nuevo, double mejorCoste, double[] mejorCr) {
+    public static void reemplazamiento(double nuevoCoste, int i, double[] costes, List<double[]> cromosomas, double[] nuevo, double mejorCoste, double[] mejorCr) {
         if (nuevoCoste < costes[i]) {
             cromosomas.add(i, nuevo);
             costes[i] = nuevoCoste;
@@ -169,21 +151,6 @@ public class FuncionesAuxiliares {
         return vector;
     }
 
-    public static List<int[]> generadorH(long semilla, int ciudades, int tHormigas, List<boolean[]> marcados) {
-        Random random = new Random();
-        random.setSeed(semilla);
-        List<int[]> vector = new ArrayList<>();
-        for (int i = 0; i < tHormigas; i++) {
-            int[] vectorAux = new int[ciudades];
-            boolean[] vectorMarcados = new boolean[ciudades];
-            vectorAux[0] = random.nextInt(ciudades);
-            vectorMarcados[0] = true;
-            vector.add(i, vectorAux);
-            marcados.add(i, vectorMarcados);
-        }
-        return vector;
-    }
-
     public static double calculaCoste(int[] hormiga, double[][] dist, int ciudades) {
         double coste = 0;
         for (int i = 0; i < ciudades - 1; i++) {
@@ -193,8 +160,7 @@ public class FuncionesAuxiliares {
         return coste;
     }
 
-    public static void mejorHormiga(double mejorCosteActual, int tHormigas, List<int[]> hormigas,
-                                    double[][] dist, int ciudades, int[] mejorHormigaActual) {
+    public static void mejorHormiga(double mejorCosteActual, int tHormigas, List<int[]> hormigas, double[][] dist, int ciudades, int[] mejorHormigaActual) {
         for (int i = 0; i < tHormigas; i++) {
             double coste = calculaCoste(hormigas.get(i), dist, ciudades);
             if (coste < mejorCosteActual) {
@@ -218,10 +184,8 @@ public class FuncionesAuxiliares {
         double inf, sup;
         inf = vSolucion[j] * 0.9;
         sup = vSolucion[j] * 1.1;
-        if (inf < rangoInf)
-            inf = rangoInf;
-        if (sup > rangoSup)
-            sup = rangoSup;
+        if (inf < rangoInf) inf = rangoInf;
+        if (sup > rangoSup) sup = rangoSup;
         vecino[j] = (Math.random() * (sup - inf)) + inf;
     }
 
@@ -278,8 +242,7 @@ public class FuncionesAuxiliares {
         return String.format("%.2f", variable);
     }
 
-    public static void cruceBLX(int tam, double[] mejor1, double[] mejor2, double alfaBLX, double[] h1,
-                                double rangoMin, double rangoMax) {
+    public static void cruceBLX(int tam, double[] mejor1, double[] mejor2, double alfaBLX, double[] h1, double rangoMin, double rangoMax) {
         Random random = new Random();
         double Cmax, Cmin, I;
         for (int i = 0; i < tam; i++) {
@@ -287,11 +250,9 @@ public class FuncionesAuxiliares {
             Cmin = min(mejor1[i], mejor2[i]);
             I = Cmax - Cmin;
             double r1 = Cmin - (I * alfaBLX);
-            if (r1 > rangoMin)
-                r1 = rangoMin;
+            if (r1 > rangoMin) r1 = rangoMin;
             double r2 = Cmax + (I * alfaBLX);
-            if (r2 < rangoMax)
-                r2 = rangoMax;
+            if (r2 < rangoMax) r2 = rangoMax;
             h1[i] = random.nextDouble(r2 - r1) + r1;
         }
     }
@@ -301,8 +262,7 @@ public class FuncionesAuxiliares {
             h[i] = (mejorCr1[i] + mejorCr2[i]) / 2;
     }
 
-    public static void exportCSV(List<Future<Solucion>> soluciones, String name)
-            throws IOException, ExecutionException, InterruptedException, TimeoutException {
+    public static void exportCSV(List<Future<Solucion>> soluciones, String name) throws IOException, ExecutionException, InterruptedException, TimeoutException {
 
         List<Solucion> resultado1 = new ArrayList<>();
         List<Solucion> resultado2 = new ArrayList<>();
@@ -327,33 +287,23 @@ public class FuncionesAuxiliares {
 
         FileOutputStream csvFile = new FileOutputStream("csv/" + name + ".csv");
         try (PrintWriter pw = new PrintWriter(csvFile)) {
-            resultado1.stream()
-                    .map(FuncionesAuxiliares::convertToCSV)
-                    .forEach(pw::print);
+            resultado1.stream().map(FuncionesAuxiliares::convertToCSV).forEach(pw::print);
 
             pw.println();
 
-            resultado2.stream()
-                    .map(FuncionesAuxiliares::convertToCSV)
-                    .forEach(pw::print);
+            resultado2.stream().map(FuncionesAuxiliares::convertToCSV).forEach(pw::print);
 
             pw.println();
 
-            resultado3.stream()
-                    .map(FuncionesAuxiliares::convertToCSV)
-                    .forEach(pw::print);
+            resultado3.stream().map(FuncionesAuxiliares::convertToCSV).forEach(pw::print);
 
             pw.println();
 
-            resultado4.stream()
-                    .map(FuncionesAuxiliares::convertToCSV)
-                    .forEach(pw::print);
+            resultado4.stream().map(FuncionesAuxiliares::convertToCSV).forEach(pw::print);
 
             pw.println();
 
-            resultado5.stream()
-                    .map(FuncionesAuxiliares::convertToCSV)
-                    .forEach(pw::write);
+            resultado5.stream().map(FuncionesAuxiliares::convertToCSV).forEach(pw::write);
         }
     }
 
@@ -362,18 +312,7 @@ public class FuncionesAuxiliares {
     }
 
     private static String convertToLogAppender(String algoritmo, String funcion, String semilla) {
-        return "log4j.appender." + funcion + "." + algoritmo + "." + semilla +
-                " = org.apache.log4j.FileAppender\n" +
-                "log4j.appender." + funcion + "." + algoritmo + "." + semilla +
-                ".file = src/main/resources/logs/" + funcion + "/" + algoritmo + "/" + semilla + ".log\n" +
-                "log4j.appender." + funcion + "." + algoritmo + "." + semilla +
-                ".append = false\n" +
-                "log4j.appender." + funcion + "." + algoritmo + "." + semilla +
-                ".layout = org.apache.log4j.PatternLayout\n" +
-                "log4j.appender." + funcion + "." + algoritmo + "." + semilla +
-                ".layout.ConversionPattern = %d %c{3} - %m%n\n\n" +
-                "log4j.logger." + funcion + "." + algoritmo + "." + semilla +
-                " = INFO, " + funcion + "." + algoritmo + "." + semilla + "\n\n";
+        return "log4j.appender." + funcion + "." + algoritmo + "." + semilla + " = org.apache.log4j.FileAppender\n" + "log4j.appender." + funcion + "." + algoritmo + "." + semilla + ".file = src/main/resources/logs/" + funcion + "/" + algoritmo + "/" + semilla + ".log\n" + "log4j.appender." + funcion + "." + algoritmo + "." + semilla + ".append = false\n" + "log4j.appender." + funcion + "." + algoritmo + "." + semilla + ".layout = org.apache.log4j.PatternLayout\n" + "log4j.appender." + funcion + "." + algoritmo + "." + semilla + ".layout.ConversionPattern = %d %c{3} - %m%n\n\n" + "log4j.logger." + funcion + "." + algoritmo + "." + semilla + " = INFO, " + funcion + "." + algoritmo + "." + semilla + "\n\n";
     }
 
     /**
@@ -392,9 +331,7 @@ public class FuncionesAuxiliares {
                 List<Long> semillasList = Arrays.stream(semillas).boxed().collect(Collectors.toList());
 
                 for (String algoritmo : algoritmos) {
-                    semillasList.stream()
-                            .map(s -> convertToLogAppender(algoritmo, lector.getFuncion(), String.valueOf(s)))
-                            .forEach(pw::print);
+                    semillasList.stream().map(s -> convertToLogAppender(algoritmo, lector.getFuncion(), String.valueOf(s))).forEach(pw::print);
 
                     pw.println();
                 }
@@ -409,9 +346,7 @@ public class FuncionesAuxiliares {
         double[] real = new double[filas], estimado = new double[filas];
 
         for (int i = 0; i < filas; i++) {
-            pm = observaciones.get(i).getDni() * (a[0] + (a[1] * observaciones.get(i).getDni()) + (a[2]
-                    * observaciones.get(i).getTemp_amb()) + (a[3] * observaciones.get(i).getVel_viento()) +
-                    (a[4] * observaciones.get(i).getSmr()));
+            pm = observaciones.get(i).getDni() * (a[0] + (a[1] * observaciones.get(i).getDni()) + (a[2] * observaciones.get(i).getTemp_amb()) + (a[3] * observaciones.get(i).getVel_viento()) + (a[4] * observaciones.get(i).getSmr()));
             estimado[i] = pm;
             real[i] = observaciones.get(i).getPotencia();
 
@@ -426,9 +361,7 @@ public class FuncionesAuxiliares {
         double[] real = new double[filas], estimado = new double[filas];
 
         for (int i = 0; i < filas; i++) {
-            pm = observaciones.get(i).getDni() * (a[0] + (a[1] * observaciones.get(i).getDni()) + (a[2]
-                    * observaciones.get(i).getTemp_amb()) + (a[3] * observaciones.get(i).getVel_viento()) +
-                    (a[4] * observaciones.get(i).getSmr()));
+            pm = observaciones.get(i).getDni() * (a[0] + (a[1] * observaciones.get(i).getDni()) + (a[2] * observaciones.get(i).getTemp_amb()) + (a[3] * observaciones.get(i).getVel_viento()) + (a[4] * observaciones.get(i).getSmr()));
             estimado[i] = pm;
             real[i] = observaciones.get(i).getPotencia();
 
@@ -436,32 +369,40 @@ public class FuncionesAuxiliares {
         return RMSE(real, estimado);
     }
 
-    public static void cargaInicial(double fInicial, int tHormigas, double greedy, int ciudades,
-                                    List<double[]> feromona, List<double[]> heuristica, double[][] dist) {
-        for (int i = 0; i < ciudades - 1; i++) {
-            for (int j = i + 1; j < ciudades; j++) {
+    public static List<int[]> generadorH(long semilla, int ciudades, int tHormigas, List<boolean[]> marcados) {
+        Random random = new Random();
+        random.setSeed(semilla);
+        List<int[]> vector = new ArrayList<>();
+        int[] vectorAux = new int[ciudades];
+        boolean[] vectorMarcados = new boolean[ciudades];
+        for (int i = 0; i < tHormigas; i++) {
+            vectorAux[0] = random.nextInt(ciudades);
+            vectorMarcados[vectorAux[0]] = true;
+            vector.add(i, vectorAux);
+            marcados.add(i, vectorMarcados);
+        }
+        return vector;
+    }
+
+    public static void cargaInicial(double fInicial, int ciudades, List<double[]> feromona, List<double[]> heuristica, double[][] dist) {
+        for (int i = 0; i < ciudades - 1; i++)
+            for (int j = i + 1; j < ciudades; j++)
                 if (i != j) {
                     feromona.get(j)[i] = feromona.get(i)[j] = fInicial;
                     heuristica.get(j)[i] = heuristica.get(i)[j] = 1 / dist[i][j];
                 }
-            }
-        }
     }
 
-    public static double[] calculaFerxHeu(int ciudades, List<boolean[]> marcados,
-                                          List<double[]> heuristica, List<double[]> feromona, List<int[]> hormigas,
-                                          int alfah, int betah, int h, int comp) {
+    public static double[] calculaFerxHeu(int ciudades, List<boolean[]> marcados, List<double[]> heuristica, List<double[]> feromona, List<int[]> hormigas, int alfah, int betah, int h, int comp) {
         double[] ferxHeu = new double[ciudades];
         for (int i = 0; i < ciudades; i++) {
             if (!marcados.get(h)[i])
-                ferxHeu[i] = pow(heuristica.get(hormigas.get(h)[comp - 1])[i], betah)
-                        * pow(feromona.get(hormigas.get(h)[comp - 1])[i], alfah);
+                ferxHeu[i] = pow(heuristica.get(hormigas.get(h)[comp - 1])[i], betah) * pow(feromona.get(hormigas.get(h)[comp - 1])[i], alfah);
         }
         return ferxHeu;
     }
 
-    public static int calculoArgMax(double denominador, int ciudades, double argMax,
-                                    List<boolean[]> marcados, double[] ferxHeu, int h) {
+    public static int calculoArgMax(double denominador, int ciudades, double argMax, List<boolean[]> marcados, double[] ferxHeu, int h) {
         int posArgMax = 0;
         for (int i = 0; i < ciudades; i++) {
             if (!marcados.get(h)[i]) {
@@ -475,23 +416,20 @@ public class FuncionesAuxiliares {
         return posArgMax;
     }
 
-    public static int transicion(int ciudades, List<boolean[]> marcados, int posArgMax, double q0,
-                                 double[] ferxHeu, double denominador, Random random, int h) {
+    public static int transicion(int ciudades, List<boolean[]> marcados, int posArgMax, double q0, double[] ferxHeu, double denominador, Random random, int h) {
         int elegido = 0;
         double[] prob = new double[ciudades];
-        double q = random.nextDouble();   //aleatorio inicial
-        if (q0 >= q) {  //aplicamos argumento maximo y nos quedamos con el mejor
+        double q = random.nextDouble();
+        if (q0 <= q) {
             elegido = posArgMax;
-        } else {  //aplicamos regla de transicion normal
+        } else {
             for (int i = 0; i < ciudades; i++) {
                 if (!marcados.get(h)[i]) {
                     double numerador = ferxHeu[i];
                     prob[i] = numerador / denominador;
                 }
             }
-
-            //elegimos la componente a añadir buscando en los intervalos de probabilidad
-            double uniforme = random.nextDouble();  //aleatorio para regla de transición
+            double uniforme = random.nextDouble();
             double acumulado = 0.0;
             for (int i = 0; i < ciudades; i++) {
                 if (!marcados.get(h)[i]) {
@@ -506,21 +444,16 @@ public class FuncionesAuxiliares {
         return elegido;
     }
 
-    public static void actualizacionLocal(List<double[]> feromona, List<int[]> hormigas, int h,
-                                          int comp, double fInicial, double fi) {
-        feromona.get(hormigas.get(h)[comp - 1])[hormigas.get(h)[comp]] =
-                ((1 - fi) * feromona.get(hormigas.get(h)[comp - 1])[hormigas.get(h)[comp]]) + (fi * fInicial);
-        feromona.get(hormigas.get(h)[comp])[hormigas.get(h)[comp - 1]] =
-                feromona.get(hormigas.get(h)[comp - 1])[hormigas.get(h)[comp]];
+    public static void actualizacionLocal(List<double[]> feromona, List<int[]> hormigas, int h, int comp, double fInicial, double fi) {
+        feromona.get(hormigas.get(h)[comp - 1])[hormigas.get(h)[comp]] = ((1 - fi) * feromona.get(hormigas.get(h)[comp - 1])[hormigas.get(h)[comp]]) + (fi * fInicial);
+        feromona.get(hormigas.get(h)[comp])[hormigas.get(h)[comp - 1]] = feromona.get(hormigas.get(h)[comp - 1])[hormigas.get(h)[comp]];
     }
 
-    public static void actualizarFeromona(double mejorCosteActual, int ciudades, List<double[]> feromona,
-                                          int[] mejorHormigaActual, double p) {
+    public static void actualizarFeromona(double mejorCosteActual, int ciudades, List<double[]> feromona, int[] mejorHormigaActual, double p) {
         double deltaMejor = 1 / mejorCosteActual;  //al ser minimizacion
         for (int i = 0; i < ciudades - 1; i++) {
             feromona.get(mejorHormigaActual[i])[mejorHormigaActual[i + 1]] += (p * deltaMejor);
-            feromona.get(mejorHormigaActual[i + 1])[mejorHormigaActual[i]] =
-                    feromona.get(mejorHormigaActual[i])[mejorHormigaActual[i + 1]];  //simetrica
+            feromona.get(mejorHormigaActual[i + 1])[mejorHormigaActual[i]] = feromona.get(mejorHormigaActual[i])[mejorHormigaActual[i + 1]];  //simetrica
         }
 
         // y se evapora en todos los arcos de la matriz de feromona (cristobal), solo se evapora en los arcos
@@ -541,5 +474,32 @@ public class FuncionesAuxiliares {
                 marcados.get(i)[j] = false;
             }
         }
+    }
+
+    /**
+     * @param matriz   matriz de distancias cogida de cada archivo
+     * @param ciudades número de ciudades cogida de cada archivo
+     * @return el valor de greedy usado como parámetro al llamar al algoritmo
+     * @brief se ejecuta una vez para cada archivo
+     **/
+    public static double greedy(double[][] matriz, int ciudades) {
+        Random random = new Random();
+        int[] solucion = new int[ciudades];
+        boolean[] marcado = new boolean[ciudades];
+        solucion[0] = random.nextInt(ciudades);
+        marcado[solucion[0]] = true;
+        for (int i = 0; i < ciudades - 1; i++) {
+            double menosDist = Double.MAX_VALUE;
+            int posMenor = 0;
+            for (int j = 0; j < ciudades; j++) {
+                if (!marcado[j] && solucion[i] != j && matriz[solucion[i]][j] < menosDist) {
+                    menosDist = matriz[solucion[i]][j];
+                    posMenor = j;
+                }
+            }
+            solucion[i + 1] = posMenor;
+            marcado[posMenor] = true;
+        }
+        return calculaCoste(solucion, matriz, ciudades);
     }
 }
