@@ -1,16 +1,10 @@
 package uja.meta;
 
 import org.apache.log4j.BasicConfigurator;
-import uja.meta.algoritmos.practica1.AlgBL3_Clase01_Grupo10;
-import uja.meta.algoritmos.practica1.AlgBLk_Clase01_Grupo10;
-import uja.meta.algoritmos.practica1.AlgTabuVNS_Clase01_Grupo10;
-import uja.meta.algoritmos.practica1.AlgTabu_Clase01_Grupo10;
-import uja.meta.algoritmos.practica2.AlgEDif_Clase01_Grupo10;
-import uja.meta.algoritmos.practica2.AlgEvBLX_Clase01_Grupo10;
-import uja.meta.algoritmos.practica2.AlgEvMedia_Clase01_Grupo10;
 import uja.meta.algoritmos.practica3.Hormigas;
 import uja.meta.utils.Lector;
 import uja.meta.utils.Solucion;
+import uja.meta.utils.TSP;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,6 +15,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import static uja.meta.utils.FuncionesAuxiliares.*;
+import static uja.meta.utils.LectorTSP.tspLector;
 
 public class Proceso {
 
@@ -29,17 +24,9 @@ public class Proceso {
         BasicConfigurator.configure();
         String ruta = "src/main/resources/configFiles/";
         ExecutorService executor = Executors.newCachedThreadPool();
-        List<Future<Solucion>> resultadoBL3 = new ArrayList<>();
-        List<Future<Solucion>> resultadoBLk = new ArrayList<>();
-        List<Future<Solucion>> resultadoTabu = new ArrayList<>();
-        List<Future<Solucion>> resultadoTabuVNS = new ArrayList<>();
-        List<Future<Solucion>> resultadoEvMedia = new ArrayList<>();
-        List<Future<Solucion>> resultadoEvBlX = new ArrayList<>();
-        List<Future<Solucion>> resultadoEvDif = new ArrayList<>();
         List<Future<Solucion>> resultadoHormigas = new ArrayList<>();
         final File folder = new File(ruta);
         List<String> archivosConfig = getFiles(folder);
-
         for (String archivo : archivosConfig) {
             Lector lector = new Lector(ruta + archivo);
             List<String> algoritmos = lector.getAlgoritmos();
@@ -49,13 +36,7 @@ public class Proceso {
             int tp = lector.getTp();
             double rangoInf = lector.getRangoInf();
             double rangoSup = lector.getRangoSup();
-            double oscilacion = lector.getOscilacion();
             long iteraciones = lector.getIteraciones();
-            double kProbMuta = lector.getKProbMuta();
-            double kProCruce = lector.getKProbCruce();
-            double alfa = lector.getAlfa();
-            double probRecomb = lector.getProbRecomb();
-            double prob = lector.getProb();
             int tHormigas = lector.getTHormigas();
             int ciudades = lector.getCiudades();
             int alfah = lector.getAlfah();
@@ -64,68 +45,19 @@ public class Proceso {
             double p = lector.getP();
             double fi = lector.getFi();
             int tiempo = lector.getTiempo();
-            for (String algoritmo : algoritmos) {
-                for (long semilla : semillas) {
-                    List<double[]> cromosoma = generador(rangoInf, rangoSup, semilla, D, tp);
-                    double[] vSolucion = new double[D];
+            TSP tsp = tspLector("ch130.tsp"); // FIXME prueba de 1 solo (el mas liviano) -- hacer for
+            for (long semilla : semillas) {
+                greedy(tsp.getMatriz(), tsp.getDimension());
 
-                    switch (algoritmo) {
-//                        case "bl3" -> {
-//                            AlgBL3_Clase01_Grupo10 bl3 =
-//                                    new AlgBL3_Clase01_Grupo10(D, 3, semilla, iteraciones, oscilacion, rangoInf, rangoSup,
-//                                            funcion, funcion + ".bl3" + "." + semilla, vSolucion);
-//                            resultadoBL3.add(executor.submit(bl3));
-//                        }
-//                        case "blk" -> {
-//                            AlgBLk_Clase01_Grupo10 blk =
-//                                    new AlgBLk_Clase01_Grupo10(D, semilla, iteraciones, oscilacion, rangoInf, rangoSup, funcion,
-//                                            funcion + ".blk" + "." + semilla, vSolucion);
-//                            resultadoBLk.add(executor.submit(blk));
-//                        }
-//                        case "tabu" -> {
-//                            AlgTabu_Clase01_Grupo10 tabu =
-//                                    new AlgTabu_Clase01_Grupo10(funcion + ".tabu" + "." + semilla, semilla, D,
-//                                            iteraciones, vSolucion, rangoInf, rangoSup, funcion, 1,
-//                                            oscilacion);
-//                            resultadoTabu.add(executor.submit(tabu));
-//                        }
-//
-//                        case "tabuVNS" -> {
-//                            AlgTabuVNS_Clase01_Grupo10 tabuVNS =
-//                                    new AlgTabuVNS_Clase01_Grupo10(funcion + ".tabuVNS" + "." + semilla, semilla, D,
-//                                            iteraciones, vSolucion, rangoInf, rangoSup, funcion, 1, oscilacion);
-//                            resultadoTabuVNS.add(executor.submit(tabuVNS));
-//                        }
-//                        case "evm" -> {
-//                            AlgEvMedia_Clase01_Grupo10 EvM =
-//                                    new AlgEvMedia_Clase01_Grupo10(funcion + ".evm." + semilla, tp, D, iteraciones,
-//                                            rangoInf, rangoSup, kProbMuta, kProCruce, funcion, semilla, prob);
-//                            resultadoEvMedia.add(executor.submit(EvM));
-//                        }
-//                        case "evblx" -> {
-//                            AlgEvBLX_Clase01_Grupo10 EvBlk =
-//                                    new AlgEvBLX_Clase01_Grupo10(funcion + ".evblx." + semilla, tp, D, iteraciones,
-//                                            rangoInf, rangoSup, kProbMuta, kProCruce, alfa, funcion, semilla, prob);
-//                            resultadoEvBlX.add(executor.submit(EvBlk));
-//                        }
-//                        case "ed" -> {
-//                            AlgEDif_Clase01_Grupo10 ed =
-//                                    new AlgEDif_Clase01_Grupo10(funcion + ".ed." + semilla, tp, D, iteraciones,
-//                                            cromosoma, vSolucion, rangoInf, rangoSup, funcion, probRecomb, semilla);
-//                            resultadoEvDif.add(executor.submit(ed));
-//                        }
-                        case "hormigas" -> {
-                            // TODO leer 3 archivos y ejecutar la función greedy(funcionesAuxiliares) para cada archivo
-                            // TODO dist tiene que ser igual a la matriz de distancias que dan en los ficheros(hay que leer los ficheros)
-                            double[][] dist = new double[10][10];
-                            Hormigas sch =
-                                    new Hormigas(funcion + ".hormigas." + semilla, dist, iteraciones, semilla,
-                                            ciudades, tHormigas, alfah, betah, q0, p, fi, 1.1, tiempo);
-                            resultadoHormigas.add(executor.submit(sch));
-                        } //TODO appenders
-                        // FIXME comprobar configSCH, si se necesita cambiar algo se cambia
-                    }
-                }
+                // TODO leer 3 archivos y ejecutar la función greedy(funcionesAuxiliares) para cada archivo
+                // TODO dist tiene que ser igual a la matriz de distancias que dan en los ficheros(hay que leer los ficheros)
+                double[][] dist = new double[10][10];
+                Hormigas sch =
+                        new Hormigas(funcion + ".hormigas." + semilla, dist, iteraciones, semilla,
+                                ciudades, tHormigas, alfah, betah, q0, p, fi, 1.1, tiempo);
+                resultadoHormigas.add(executor.submit(sch));
+                //TODO appenders
+                // FIXME comprobar configSCH, si se necesita cambiar algo se cambia
             }
         }
 

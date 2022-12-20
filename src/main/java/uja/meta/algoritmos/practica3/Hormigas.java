@@ -28,89 +28,66 @@ public class Hormigas implements Callable<Solucion> {
     private final double greedy;
     private final double tiempoTotal;
     private int[] solucion;
+    private Random random = new Random();
+    private double tiempoInicial = System.nanoTime();
+    private List<boolean[]> marcados = new ArrayList<>();
+    private List<int[]> hormigas;
+    private List<double[]> feromona = new ArrayList<>();
+    private List<double[]> heuristica = new ArrayList<>();
+    private double mejorCosteActual = Double.MAX_VALUE;
+    private double mejorCosteGlobal = Double.MAX_VALUE;
+    private double argMax = 0;
 
     public Solucion call() {
         Logger log = Logger.getLogger(className);
-        Random random = new Random();
-        double tiempoInicial = System.nanoTime();
-
-        List<boolean[]> marcados = new ArrayList<>();
-        List<int[]> hormigas;
-
-        List<double[]> feromona = new ArrayList<>();
-        List<double[]> heuristica = new ArrayList<>();
-
-        double mejorCosteActual = Double.MAX_VALUE;
-        double mejorCosteGlobal = Double.MAX_VALUE;
-        int[] mejorHormigaActual = new int[ciudades];
-        double argMax = 0;
-
-        double ferInicial = (float) 1 / (tHormigas * greedy);
-        cargaInicial(ferInicial, ciudades, feromona, heuristica, dist);
         int cont = 0;
-        Timer t = null;
-        int tiempo = 0;
-        while (cont < iteraciones && tiempo < tiempoTotal) {
-            t.start();
-
-            hormigas = generadorH(semilla, ciudades, tHormigas, marcados);
-            //GENERAMOS las n-1 componentes pdtes. de las hormigas
-            for (int comp = 1; comp < ciudades; comp++) {
-                //Para cada hormiga
-                for (int h = 0; h < tHormigas; h++) {
-                    //ELECCION del ELEMENTO de los no elegidos aun, a incluir en la solucion
-                    double[] ferxHeu = calculaFerxHeu(ciudades, marcados, heuristica, feromona, hormigas, alfah, betah, h, comp);
-                    //calculo la cantidad total de feromonaxheuristica desde la ciudad actual al resto
-                    //de ciudades no visitadas aun
-                    //calculo del argMax y sumatoria del total de feromonaxHeuristica
-                    //(denominador)
-                    double denominador = 0.0;
-
-                    int posArgMax = calculoArgMax(denominador, ciudades, argMax, marcados, ferxHeu, h);
-                    int elegido = transicion(ciudades, marcados, posArgMax, q0, ferxHeu, denominador, random, h);
-
-                    hormigas.get(h)[comp] = elegido;
-                    marcados.get(h)[elegido] = true;
-
-                    //actualizacion local del arco seleccionado por la hormiga
-                    actualizacionLocal(feromona, hormigas, h, comp, ferInicial, fi);
-                } //fin agregado una componente a cada hormiga
-            } //fin cuando las hormigas estan completas
-
-            mejorHormiga(mejorCosteActual, tHormigas, hormigas, dist, ciudades, mejorHormigaActual);
-
-            //ACTUALIZAMOS si la mejor actual mejora al mejor global
-            if (mejorCosteActual < mejorCosteGlobal) {
-                mejorCosteGlobal = mejorCosteActual;
-                solucion = mejorHormigaActual;
-            }
-            //APLICAMOS el DEMONIO !!
-            //(actualizacion de feromona (aporta la mejor Actual y solo a los arcos de dicha solucion
-            actualizarFeromona(mejorCosteActual, ciudades, feromona, mejorHormigaActual, p);
-
-            limpiar(hormigas, tHormigas, ciudades, marcados);
-
-            cont++;
-            if (cont % 100 == 0) {
-                log.info("Iteracion: " + cont + " Coste: " + mejorCosteGlobal);
-            }
-
-            t.stop(); //FIXME comprobar si está bien
-            tiempo += t.getDelay();
-
-//            registraLogDatos("SCH12.log", s, mejorCosteGlobal, cont);
-            // TODO lo implementamos??? +info
-        }
-
+        proceso(cont, log);
         double tiempoFinal = System.nanoTime();
         String tiempoTotal = calcularTiempo(tiempoInicial, tiempoFinal);
         log.info("Tiempo transcurrido: " + tiempoTotal + " ms");
-//        log.info("Mejor cromosoma: " + visualizaVectorLog());
+        //        log.info("Mejor cromosoma: " + visualizaVectorLog());
         String costeFormat = formato(mejorCosteGlobal);
         log.info("Mejor coste: " + costeFormat);
 //        log.info("Total evaluaciones: " + contEv);
         log.info("Total iteraciones: " + cont);
-
         return new Solucion(costeFormat, tiempoTotal, semilla);
+    }
+
+    private void proceso(int cont, Logger log) {
+        int[] mejorHormigaActual = new int[ciudades];
+        double ferInicial = (float) 1 / (tHormigas * greedy);
+        cargaInicial(ferInicial, ciudades, feromona, heuristica, dist);
+        Timer t = null;
+        int tiempo = 0;
+        while (cont < iteraciones && tiempo < tiempoTotal) {
+            t.start();
+            hormigas = generadorH(semilla, ciudades, tHormigas, marcados);
+            for (int comp = 1; comp < ciudades; comp++) {
+                for (int h = 0; h < tHormigas; h++) {
+                    double[] ferxHeu =
+                            calculaFerxHeu(ciudades, marcados, heuristica, feromona, hormigas, alfah, betah, h, comp);
+                    double denominador = 0.0;
+                    int posArgMax = calculoArgMax(denominador, ciudades, argMax, marcados, ferxHeu, h);
+                    int elegido = transicion(ciudades, marcados, posArgMax, q0, ferxHeu, denominador, random, h);
+                    hormigas.get(h)[comp] = elegido;
+                    marcados.get(h)[elegido] = true;
+                    actualizacionLocal(feromona, hormigas, h, comp, ferInicial, fi);
+                }
+            }
+            mejorHormiga(mejorCosteActual, tHormigas, hormigas, dist, ciudades, mejorHormigaActual);
+            if (mejorCosteActual < mejorCosteGlobal) {
+                mejorCosteGlobal = mejorCosteActual;
+                solucion = mejorHormigaActual;
+            }
+            actualizarFeromona(mejorCosteActual, ciudades, feromona, mejorHormigaActual, p);
+            limpiar(hormigas, tHormigas, ciudades, marcados);
+            cont++;
+            if (cont % 100 == 0) {
+                log.info("Iteracion: " + cont + " Coste: " + mejorCosteGlobal);
+            }
+            t.stop();
+            tiempo += t.getDelay();
+//            registraLogDatos("SCH12.log", s, mejorCosteGlobal, cont);
+        }
     }
 }
