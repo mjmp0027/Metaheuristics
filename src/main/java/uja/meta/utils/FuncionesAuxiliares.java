@@ -38,10 +38,11 @@ public class FuncionesAuxiliares {
         return coste;
     }
 
+
     public static void mejorHormiga(double mejorCosteActual, int tHormigas, List<List<Integer>> hormigas,
                                     double[][] dist, int ciudades, Integer[] mejorHormigaActual) {
         for (int i = 0; i < tHormigas; i++) {
-            Integer[] array  = new Integer[hormigas.get(i).size()];
+            Integer[] array = new Integer[hormigas.get(i).size()];
             double coste = calculaCoste(hormigas.get(i).toArray(array), dist, ciudades);
             if (coste < mejorCosteActual) {
                 mejorCosteActual = coste;
@@ -149,14 +150,19 @@ public class FuncionesAuxiliares {
         }
     }
 
-    public static List<List<Integer>> generadorH(long semilla, int ciudades, int tHormigas, List<List<Boolean>> marcados) {
+    public static List<List<Integer>> generarPrimeraCiudad(long semilla, int ciudades, int tHormigas, List<List<Boolean>> marcados) {
         Random random = new Random();
         random.setSeed(semilla);
         List<List<Integer>> vector = new ArrayList<>();
         List<Integer> vectorAux = new ArrayList<>();
         List<Boolean> vectorMarcados = new ArrayList<>();
+        for (int i = 0; i < ciudades; i++) {
+            vectorMarcados.add(i, false);
+            vectorAux.add(i, 0);
+        }
         for (int i = 0; i < tHormigas; i++) {
-            vectorAux.set(i, random.nextInt(ciudades));
+            int valor = random.nextInt(ciudades);
+            vectorAux.set(0, valor);
             vectorMarcados.set(vectorAux.get(0), true);
             vector.add(i, vectorAux);
             marcados.add(i, vectorMarcados);
@@ -164,14 +170,14 @@ public class FuncionesAuxiliares {
         return vector;
     }
 
-    public static void cargaInicial(double fInicial, int ciudades, List<List<Double>> feromona,
+    public static void cargaInicial(double ferInicial, int ciudades, List<List<Double>> feromona,
                                     List<List<Double>> heuristica, double[][] dist) {
 
         for (int i = 0; i < ciudades - 1; i++)
             for (int j = i + 1; j < ciudades; j++)
                 if (i != j) {
-                    feromona.get(j).set(i, fInicial);
-                    feromona.get(i).set(j, fInicial);
+                    feromona.get(j).set(i, ferInicial);
+                    feromona.get(i).set(j, ferInicial);
                     heuristica.get(j).set(i, 1 / dist[i][j]);
                     heuristica.get(i).set(j, 1 / dist[i][j]);
                 }
@@ -189,7 +195,7 @@ public class FuncionesAuxiliares {
         return ferxHeu;
     }
 
-    public static int calculoArgMax(double denominador, int ciudades, double argMax,
+    public static void calculoArgMax(double denominador, int ciudades, double argMax,
                                     List<List<Boolean>> marcados, double[] ferxHeu, int h) {
         int posArgMax = 0;
         for (int i = 0; i < ciudades; i++) {
@@ -201,7 +207,6 @@ public class FuncionesAuxiliares {
                 }
             }
         }
-        return posArgMax;
     }
 
     public static int transicion(int ciudades, List<List<Boolean>> marcados, int posArgMax,
@@ -246,15 +251,12 @@ public class FuncionesAuxiliares {
                                           Integer[] mejorHormigaActual, double p) {
         double deltaMejor = 1 / mejorCosteActual;  //al ser minimizacion
         for (int i = 0; i < ciudades - 1; i++) {
-            double feromonaNueva =
-                    feromona.get(mejorHormigaActual[i]).get(mejorHormigaActual[i + 1]) + (p * deltaMejor);
+            double feromonaNueva = feromona.get(mejorHormigaActual[i]).get(mejorHormigaActual[i + 1]) + (p * deltaMejor);
             feromona.get(mejorHormigaActual[i]).set(mejorHormigaActual[i + 1], feromonaNueva);
             feromona.get(mejorHormigaActual[i + 1]).set(mejorHormigaActual[i],
                     feromona.get(mejorHormigaActual[i]).get(mejorHormigaActual[i + 1]));  //simetrica
         }
 
-        // y se evapora en todos los arcos de la matriz de feromona (cristobal), solo se evapora en los arcos
-        //de la mejor solución global (UGR)
         for (int i = 0; i < ciudades; i++) {
             for (int j = 0; j < ciudades; j++) {
                 if (i != j) {
@@ -275,10 +277,10 @@ public class FuncionesAuxiliares {
     }
 
     /**
-     * @brief se ejecuta una vez para cada archivo
      * @param matriz   matriz de distancias cogida de cada archivo
      * @param ciudades número de ciudades cogida de cada archivo
      * @return el valor de greedy usado como parámetro al llamar al algoritmo
+     * @brief se ejecuta una vez para cada archivo
      **/
     public static double greedy(double[][] matriz, int ciudades) {
         Random random = new Random();
@@ -287,11 +289,11 @@ public class FuncionesAuxiliares {
         solucion[0] = random.nextInt(ciudades);
         marcado[solucion[0]] = true;
         for (int i = 0; i < ciudades - 1; i++) {
-            double menosDist = Double.MAX_VALUE;
+            double menorDist = Double.MAX_VALUE;
             int posMenor = 0;
             for (int j = 0; j < ciudades; j++) {
-                if (!marcado[j] && solucion[i] != j && matriz[solucion[i]][j] < menosDist) {
-                    menosDist = matriz[solucion[i]][j];
+                if (!marcado[j] && solucion[i] != j && matriz[solucion[i]][j] < menorDist) {
+                    menorDist = matriz[solucion[i]][j];
                     posMenor = j;
                 }
             }

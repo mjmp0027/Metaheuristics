@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
 import uja.meta.utils.Solucion;
 
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
@@ -59,31 +60,49 @@ public class Hormigas implements Callable<Solucion> { //FIXME cambiar nombre
         List<List<Boolean>> marcados = range(0, tHormigas).mapToObj(i -> range(0, ciudades)
                 .mapToObj(j -> false).collect(Collectors.toList())).collect(Collectors.toList());
         List<List<Integer>> hormigas;
-
         double mejorCosteActual = Double.MAX_VALUE;
         double argMax = 0;
         Integer[] mejorHormigaActual = new Integer[ciudades];
-        double ferInicial = (float) 1 / (tHormigas * greedy);
+        double ferInicial = (float) 1 / (ciudades * greedy);
         cargaInicial(ferInicial, ciudades, feromona, heuristica, dist);
         double tiempo = 0.0;
         while (cont < iteraciones && tiempo < tiempoTotal) {
             double tiempoInicial = System.nanoTime();
-            hormigas = generadorH(semilla, ciudades, tHormigas, marcados);
+            hormigas = generarPrimeraCiudad(semilla, ciudades, tHormigas, marcados);
             for (int comp = 1; comp < ciudades; comp++) {
                 for (int h = 0; h < tHormigas; h++) {
-                    double[] ferxHeu = //FIXME aqui peta, fallará en alguno más seguro...
-                            calculaFerxHeu(ciudades, marcados, heuristica, feromona, hormigas, alfah, betah, h, comp);
-                    log.info("peta3");
-                    double denominador = 0.0;
-                    int posArgMax = calculoArgMax(denominador, ciudades, argMax, marcados, ferxHeu, h);
+                    double[] ferxHeu = calculaFerxHeu(ciudades, marcados, heuristica, feromona, hormigas, alfah, betah, h, comp);
+                    double denominador = 0;
+                    // FIXME calculoArgMax
+                    int posArgMax = 0;
+                    for (int i = 0; i < ciudades; i++) {
+                        if (!marcados.get(h).get(i)) {
+                            denominador += ferxHeu[i];
+                            if (ferxHeu[i] > argMax) {
+                                argMax = ferxHeu[i];
+                                posArgMax = i;
+                            }
+                        }
+                    }
                     int elegido = transicion(ciudades, marcados, posArgMax, q0, ferxHeu, denominador, random, h);
                     hormigas.get(h).set(comp, elegido);
                     marcados.get(h).set(elegido, true);
                     actualizacionLocal(feromona, hormigas, h, comp, ferInicial, fi);
-                    log.info("peta4");
                 }
             }
-            mejorHormiga(mejorCosteActual, tHormigas, hormigas, dist, ciudades, mejorHormigaActual);
+            // FIXME mejorHormiga
+            for (int i = 0; i < tHormigas; i++) {
+                Integer[] array = new Integer[hormigas.get(i).size()];
+                double coste = calculaCoste(hormigas.get(i).toArray(array), dist, ciudades);
+                if (coste < mejorCosteActual) {
+                    mejorCosteActual = coste;
+                    mejorHormigaActual = hormigas.get(i).toArray(array);
+                }
+            }
+
+            // FIXME
+            //mejorHormiga(mejorCosteActual, tHormigas, hormigas, dist, ciudades, mejorHormigaActual);
+
             if (mejorCosteActual < mejorCosteGlobal) {
                 mejorCosteGlobal = mejorCosteActual;
                 solucion = mejorHormigaActual;
