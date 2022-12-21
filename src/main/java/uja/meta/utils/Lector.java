@@ -14,7 +14,6 @@ public class Lector {
     private final List<String> algoritmos = new ArrayList<>();
     private int tamSem;
     private long[] semillas;
-    private int ciudades;
     private long iteraciones;
     private int tHormigas;
     private int alfah;
@@ -49,9 +48,8 @@ public class Lector {
                     String[] paramArch = separador[1].split(" ");
                     ficheros.addAll(Arrays.asList(paramArch));
                 }
-                case "ciudades" -> ciudades = Integer.parseInt(separador[1]);
                 case "iteraciones" -> iteraciones = Long.parseLong(separador[1]);
-                case "hormigas" -> tHormigas = Integer.parseInt(separador[1]);
+                case "thormigas" -> tHormigas = Integer.parseInt(separador[1]);
                 case "alfah" -> alfah = Integer.parseInt(separador[1]);
                 case "betah" -> betah = Integer.parseInt(separador[1]);
                 case "q0" -> q0 = Double.parseDouble(separador[1]);

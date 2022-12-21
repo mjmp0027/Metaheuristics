@@ -9,6 +9,7 @@ public class LectorTSP {
         FileReader f;
         f = new FileReader(rutaArchConfig);
         BufferedReader b = new BufferedReader(f);
+
         String linea = b.readLine();
         TSP tsp = new TSP();
 
@@ -29,17 +30,24 @@ public class LectorTSP {
         separador = linea.split(": ");
         tsp.setEdgeWeightType(separador[1]);
         linea = b.readLine();
+
         // Leemos segunda parte
+        double[][] distanciasXY = new double[dimension][2];
         double[][] matriz = new double[dimension][dimension];
-        boolean cambio = false;
-        while ((linea = b.readLine()) != null && !linea.equalsIgnoreCase("EOF")) {
-            for (int i = 0; i < dimension; i++) { //FIXME hacer esto bien ... (no tengo ni idea)
-                for (int j = 0; j < i; j++) {
-                    matriz[i][j] = !cambio ? Double.parseDouble(linea.split(" ")[1]) :
-                            Double.parseDouble(linea.split(" ")[2]);
-                    cambio = true;
-                    matriz[j][i] = matriz[i][j];
-                }
+        int contador = 0;
+
+        while(contador < dimension) {
+            linea = b.readLine();
+            String[] separador1 = linea.split(" ");
+            distanciasXY[contador][0] = Double.parseDouble(separador1[1]);
+            distanciasXY[contador][1] = Double.parseDouble(separador1[2]);
+            contador++;
+        }
+
+        for(int i = 0; i <= dimension; i++) {
+            for(int j = i + 1; j < dimension; j++) {
+                matriz[i][j] = Math.sqrt(Math.pow(distanciasXY[i][0] - distanciasXY[j][0], 2) + Math.pow(distanciasXY[i][1] - distanciasXY[j][1], 2));
+                matriz[j][i] = matriz[i][j];
             }
         }
         tsp.setMatriz(matriz);

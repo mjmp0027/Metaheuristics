@@ -35,10 +35,9 @@ public class Proceso {
             for (String fichero : ficheros) {
                 TSP tsp = tspLector("src/main/resources/tspFiles/" + fichero);
                 for (long semilla : semillas) {
-                    double greedy =
-                            greedy(tsp.getMatriz(), tsp.getDimension());
+                    double greedy = greedy(tsp.getMatriz(), tsp.getDimension());
                     Hormigas sch = new Hormigas(fichero + "." + semilla, tsp.getMatriz(), lector.getIteraciones(),
-                            semilla, lector.getCiudades(), lector.getTHormigas(), lector.getAlfah(), lector.getBetah(),
+                            semilla, tsp.getDimension(), lector.getTHormigas(), lector.getAlfah(), lector.getBetah(),
                             lector.getQ0(), lector.getP(), lector.getFi(), greedy, lector.getTiempo());
                     resultadoHormigas.add(executor.submit(sch));
                 }
