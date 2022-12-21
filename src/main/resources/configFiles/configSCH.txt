@@ -1,14 +1,12 @@
 tamSem=5
 semillas=53916079 95391607 79539160 07953916 60795391
-ciudades=5
 iteraciones=1000
 thormigas=10
 alfah=1
-betah=1
+betah=2
 q0=0.95
 p=0.1
 fi=0.1
 tiempo=600000
-ficheros=ch130.tsp
-pr144.tsp
+ficheros=ch130.tsp pr144.tsp
 d15112.tsp
