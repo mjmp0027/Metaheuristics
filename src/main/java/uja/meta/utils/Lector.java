@@ -14,19 +14,8 @@ public class Lector {
     private final List<String> algoritmos = new ArrayList<>();
     private int tamSem;
     private long[] semillas;
-    private int D;
-    private int tp;
-    private String funcion;
-    private double rangoInf;
-    private double rangoSup;
-    private long iteraciones;
-    private double oscilacion;
-    private double kProbMuta;
-    private double kProbCruce;
-    private double alfa;
-    private double probRecomb;
-    private double prob;
     private int ciudades;
+    private long iteraciones;
     private int tHormigas;
     private int alfah;
     private int betah;
@@ -34,7 +23,7 @@ public class Lector {
     private double p;
     private double fi;
     private int tiempo;
-
+    private List<String> ficheros = new ArrayList<>();
 
     public Lector(String rutaArchConfig) throws IOException {
         String linea;
@@ -52,29 +41,16 @@ public class Lector {
                         semillas[i] = Long.parseLong(paramArch[i]);
                     }
                 }
-                case "D" -> D = Integer.parseInt(separador[1]);
-                case "iteraciones" -> iteraciones = Long.parseLong(separador[1]);
-                case "oscilacion" -> oscilacion = Double.parseDouble(separador[1]);
                 case "algoritmos" -> {
                     String[] paramArch = separador[1].split(" ");
                     algoritmos.addAll(Arrays.asList(paramArch));
                 }
-                case "tp" -> tp = Integer.parseInt(separador[1]);
-                case "funcion" -> funcion = separador[1];
-                case "rangoInf" -> rangoInf = Double.parseDouble(separador[1]);
-                case "rangoSup" -> {
-                    if (separador[1].equals("2PI")) {
-                        rangoSup = 2 * Math.PI;
-                    } else {
-                        rangoSup = Double.parseDouble(separador[1]);
-                    }
+                case "ficheros" -> {
+                    String[] paramArch = separador[1].split(" ");
+                    ficheros.addAll(Arrays.asList(paramArch));
                 }
-                case "kprobmuta" -> kProbMuta = Double.parseDouble(separador[1]);
-                case "kprobcruce" -> kProbCruce = Double.parseDouble(separador[1]);
-                case "alfa" -> alfa = Double.parseDouble(separador[1]);
-                case "probrecomb" -> probRecomb = Double.parseDouble(separador[1]);
-                case "prob" -> prob = Double.parseDouble(separador[1]);
                 case "ciudades" -> ciudades = Integer.parseInt(separador[1]);
+                case "iteraciones" -> iteraciones = Long.parseLong(separador[1]);
                 case "hormigas" -> tHormigas = Integer.parseInt(separador[1]);
                 case "alfah" -> alfah = Integer.parseInt(separador[1]);
                 case "betah" -> betah = Integer.parseInt(separador[1]);

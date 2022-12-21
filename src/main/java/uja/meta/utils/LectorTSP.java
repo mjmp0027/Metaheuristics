@@ -33,7 +33,7 @@ public class LectorTSP {
         double[][] matriz = new double[dimension][dimension];
         boolean cambio = false;
         while ((linea = b.readLine()) != null && !linea.equalsIgnoreCase("EOF")) {
-            for (int i = 0; i < dimension; i++) { //FIXME hacer esto bien
+            for (int i = 0; i < dimension; i++) { //FIXME hacer esto bien ... (no tengo ni idea)
                 for (int j = 0; j < i; j++) {
                     matriz[i][j] = !cambio ? Double.parseDouble(linea.split(" ")[1]) :
                             Double.parseDouble(linea.split(" ")[2]);
