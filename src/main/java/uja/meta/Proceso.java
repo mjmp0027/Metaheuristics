@@ -50,6 +50,6 @@ public class Proceso {
         exportCSV(resultadoHormigas, "SCH");
 
         double tiempoFinal = System.nanoTime();
-        System.out.println("Tiempo total PRÁCTICA 2: " + calcularTiempo(tiempoInicial, tiempoFinal) + " ms");
+        System.out.println("Tiempo total PRÁCTICA 3: " + calcularTiempo(tiempoInicial, tiempoFinal) + " ms");
     }
 }
