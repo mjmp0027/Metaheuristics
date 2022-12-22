@@ -1,11 +1,11 @@
-# PRÁCTICA 2
+# PRÁCTICA 3
 
 ## Introducción
 
 En este proyecto realizamos la lectura de unos archivos .tsp para, ayudándonos de un algoritmo SHC, 
 podamos resolver este problema con los datos previos de estos archivos.
 
-*Implementación lectura TSP en: _'src/main/java/uja/meta/utils/LectorTSP.java'_
+*Implementación lectura TSP en: _'src/main/java/uja/meta/utils/LectorTSP.java'_  
 *Implementación algoritmo SHC en: _'src/main/java/uja/meta/algoritmos/SCH_TSP_Clase01_Grupo10.java'_
 
 A continuación trataremos los elementos del desarrollo más destacados del proyecto:
