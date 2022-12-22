@@ -36,7 +36,7 @@ public class LectorTSP {
         double[][] matriz = new double[dimension][dimension];
         int contador = 0;
 
-        while(contador < dimension) {
+        while (contador < dimension) {
             linea = b.readLine();
             String[] separador1 = linea.split(" ");
             distanciasXY[contador][0] = Double.parseDouble(separador1[1]);
@@ -44,9 +44,10 @@ public class LectorTSP {
             contador++;
         }
 
-        for(int i = 0; i <= dimension; i++) {
-            for(int j = i + 1; j < dimension; j++) {
-                matriz[i][j] = Math.sqrt(Math.pow(distanciasXY[i][0] - distanciasXY[j][0], 2) + Math.pow(distanciasXY[i][1] - distanciasXY[j][1], 2));
+        for (int i = 0; i <= dimension; i++) {
+            for (int j = i + 1; j < dimension; j++) {
+                matriz[i][j] = Math.sqrt(Math.pow(distanciasXY[i][0] - distanciasXY[j][0], 2)
+                        + Math.pow(distanciasXY[i][1] - distanciasXY[j][1], 2));
                 matriz[j][i] = matriz[i][j];
             }
         }

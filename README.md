@@ -2,68 +2,24 @@
 
 ## Introducción
 
-En este proyecto realizamos la implementación de funciones de regresión lineal:
+En este proyecto realizamos la lectura de unos archivos .tsp para, ayudándonos de un algoritmo SHC, 
+podamos resolver este problema con los datos previos de estos archivos.
 
-### Ackley
-
-![img.png](img/img.png)
-
-### Griewank
-
-![img_1.png](img/img_1.png)
-
-### Rastringin
-
-![img_2.png](img/img_2.png)
-
-### Schewefel
-
-![img_3.png](img/img_3.png)
-
-### Perm
-
-![img_4.png](img/img_4.png)
-
-### Rotated Hype-Ellipsoid
-
-![img_5.png](img/img_5.png)
-
-### Rosenbrock
-
-![img_7.png](img/img_7.png)
-
-### Michalewicz
-
-![img_6.png](img/img_6.png)
-
-### Trid
-
-![img_8.png](img/img_8.png)
-
-### Dixon-price
-
-![img_9.png](img/img_9.png)
-
-### MAPE & RMSE
-![image](https://user-images.githubusercontent.com/49394226/206679173-78a9103a-41c8-4eae-af6c-89524c58ef73.png)
-
-*Implementación disponible en: _'src/main/java/uja/meta/funciones'_
-
-Además son implementados los algoritmos de Búsqueda local del mejor, búsqueda con conceptos tabú, evolutivos y diferencial.   
-
-*Implementación disponible en: _'src/main/java/uja/meta/algoritmos'_
+*Implementación lectura TSP en: _'src/main/java/uja/meta/utils/LectorTSP.java'_
+*Implementación algoritmo SHC en: _'src/main/java/uja/meta/algoritmos/SCH_TSP_Clase01_Grupo10.java'_
 
 A continuación trataremos los elementos del desarrollo más destacados del proyecto:
 
 ## Config Files
 
-En la ruta _'src/main/resources/configFiles'_ tendremos la configuración para cada función
-anteriormente mencionada. Se leerá desde la clase _'Lector.java'_ y servirá para crear nuestros entornos.
+En la ruta _'src/main/resources/configFiles'_ tendremos el fichero de configuración.
+Se leerá desde la clase _'Lector.java'_ y servirá para crear nuestros entornos.
 
 ## Logs
 
-Los logs generados se encuentran en _'src/main/resources/logs'_ existiendo un directorio para cada función 
-y dentro los logs para cada algoritmo. La configuración se encuentra en _'src/main/resources/log4j.properties'_.
+Los logs generados se encuentran en _'src/main/resources/logs'_ existiendo un directorio para cada archivo 
+y dentro los logs para cada semilla. La configuración se encuentra en _'src/main/resources/log4j.properties'_.
+Para generar estos appenders usamos la función createAppendersLog() en _'src/main/java/uja/meta/utils/FuncionesAuxiliares.java'_.
 
 ## Concurrencia
 

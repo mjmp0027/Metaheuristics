@@ -1,7 +1,7 @@
 package uja.meta;
 
 import org.apache.log4j.BasicConfigurator;
-import uja.meta.algoritmos.Hormigas;
+import uja.meta.algoritmos.SCH_TSP_Clase01_Grupo10;
 import uja.meta.utils.Lector;
 import uja.meta.utils.Solucion;
 import uja.meta.utils.TSP;
@@ -18,8 +18,6 @@ import static uja.meta.utils.FuncionesAuxiliares.*;
 import static uja.meta.utils.LectorTSP.tspLector;
 
 public class Proceso {
-    //TODO actualizar readme
-    //TODO actualizar Manual
     public static void main(String[] args) throws Exception {
         double tiempoInicial = System.nanoTime();
         BasicConfigurator.configure();
@@ -36,19 +34,20 @@ public class Proceso {
                 TSP tsp = tspLector("src/main/resources/tspFiles/" + fichero);
                 for (long semilla : semillas) {
                     double greedy = greedy(tsp.getMatriz(), tsp.getDimension());
-                    Hormigas sch = new Hormigas(fichero + "." + semilla, tsp.getMatriz(), lector.getIteraciones(),
-                            semilla, tsp.getDimension(), lector.getTHormigas(), lector.getAlfah(), lector.getBetah(),
-                            lector.getQ0(), lector.getP(), lector.getFi(), greedy, lector.getTiempo());
+                    SCH_TSP_Clase01_Grupo10 sch = new SCH_TSP_Clase01_Grupo10(fichero + "." + semilla,
+                            tsp.getMatriz(), lector.getIteraciones(), semilla, tsp.getDimension(),
+                            lector.getTHormigas(), lector.getAlfah(), lector.getBetah(), lector.getQ0(),
+                            lector.getP(), lector.getFi(), greedy, lector.getTiempo());
                     resultadoHormigas.add(executor.submit(sch));
                 }
             }
         }
         executor.shutdown();
-        if (!executor.awaitTermination(3, TimeUnit.MINUTES))
+        if (!executor.awaitTermination(10, TimeUnit.MINUTES))
             executor.shutdownNow();
 
         //Conversion de resultados a CSV);
-//        exportCSV(resultadoHormigas, "SCH");
+        exportCSV(resultadoHormigas, "SCH");
 
         double tiempoFinal = System.nanoTime();
         System.out.println("Tiempo total PRÁCTICA 2: " + calcularTiempo(tiempoInicial, tiempoFinal) + " ms");

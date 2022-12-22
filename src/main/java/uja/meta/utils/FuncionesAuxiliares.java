@@ -29,29 +29,16 @@ public class FuncionesAuxiliares {
         return fileName.stream().sorted().collect(Collectors.toList());
     }
 
-    public static double calculaCoste(Integer[] hormiga, double[][] dist, int ciudades) {
+    public static double calculaCoste(List<Integer> hormiga, double[][] dist, int ciudades) {
         double coste = 0;
         for (int i = 0; i < ciudades - 1; i++) {
-            coste += dist[hormiga[i]][hormiga[i + 1]];
+            coste += dist[hormiga.get(i)][hormiga.get(i + 1)];
         }
-        coste += dist[hormiga[0]][hormiga[ciudades - 1]];
+        coste += dist[hormiga.get(0)][hormiga.get(ciudades - 1)];
         return coste;
     }
 
-
-    public static void mejorHormiga(double mejorCosteActual, int tHormigas, List<List<Integer>> hormigas,
-                                    double[][] dist, int ciudades, Integer[] mejorHormigaActual) {
-        for (int i = 0; i < tHormigas; i++) {
-            Integer[] array = new Integer[hormigas.get(i).size()];
-            double coste = calculaCoste(hormigas.get(i).toArray(array), dist, ciudades);
-            if (coste < mejorCosteActual) {
-                mejorCosteActual = coste;
-                mejorHormigaActual = hormigas.get(i).toArray(array);
-            }
-        }
-    }
-
-    public static String visualizaVectorLog(double[] vSolucion) { //FIXME revisar si es necesaria, sino borrar
+    public static String visualizaVectorLog(Integer[] vSolucion) {
         StringBuilder vector = new StringBuilder();
         vector.append("[");
         for (int i = 0; i < vSolucion.length - 1; i++) {
@@ -150,17 +137,17 @@ public class FuncionesAuxiliares {
         }
     }
 
-    public static List<List<Integer>> generarPrimeraCiudad(long semilla, int ciudades, int tHormigas, List<List<Boolean>> marcados) {
-        Random random = new Random();
+    public static List<List<Integer>> generarPrimeraCiudad(long semilla, int ciudades, int tHormigas,
+                                                           List<List<Boolean>> marcados, Random random) {
         random.setSeed(semilla);
         List<List<Integer>> vector = new ArrayList<>();
-        List<Integer> vectorAux = new ArrayList<>();
-        List<Boolean> vectorMarcados = new ArrayList<>();
-        for (int i = 0; i < ciudades; i++) {
-            vectorMarcados.add(i, false);
-            vectorAux.add(i, 0);
-        }
         for (int i = 0; i < tHormigas; i++) {
+            List<Integer> vectorAux = new ArrayList<>();
+            List<Boolean> vectorMarcados = new ArrayList<>();
+            for (int j = 0; j < ciudades; j++) {
+                vectorMarcados.add(j, false);
+                vectorAux.add(j, 0);
+            }
             int valor = random.nextInt(ciudades);
             vectorAux.set(0, valor);
             vectorMarcados.set(vectorAux.get(0), true);
@@ -193,20 +180,6 @@ public class FuncionesAuxiliares {
                         * pow(feromona.get(hormigas.get(h).get(comp - 1)).get(i), alfah);
         }
         return ferxHeu;
-    }
-
-    public static void calculoArgMax(double denominador, int ciudades, double argMax,
-                                    List<List<Boolean>> marcados, double[] ferxHeu, int h) {
-        int posArgMax = 0;
-        for (int i = 0; i < ciudades; i++) {
-            if (!marcados.get(h).get(i)) {
-                denominador += ferxHeu[i];
-                if (ferxHeu[i] > argMax) {
-                    argMax = ferxHeu[i];
-                    posArgMax = i;
-                }
-            }
-        }
     }
 
     public static int transicion(int ciudades, List<List<Boolean>> marcados, int posArgMax,
@@ -284,20 +257,23 @@ public class FuncionesAuxiliares {
      **/
     public static double greedy(double[][] matriz, int ciudades) {
         Random random = new Random();
-        Integer[] solucion = new Integer[ciudades];
+        List<Integer> solucion = new ArrayList<>();
+        for (int i = 0; i < ciudades; i++) {
+            solucion.add(0);
+        }
         boolean[] marcado = new boolean[ciudades];
-        solucion[0] = random.nextInt(ciudades);
-        marcado[solucion[0]] = true;
+        solucion.set(0, random.nextInt(ciudades));
+        marcado[solucion.get(0)] = true;
         for (int i = 0; i < ciudades - 1; i++) {
             double menorDist = Double.MAX_VALUE;
             int posMenor = 0;
             for (int j = 0; j < ciudades; j++) {
-                if (!marcado[j] && solucion[i] != j && matriz[solucion[i]][j] < menorDist) {
-                    menorDist = matriz[solucion[i]][j];
+                if (!marcado[j] && solucion.get(i) != j && matriz[solucion.get(i)][j] < menorDist) {
+                    menorDist = matriz[solucion.get(i)][j];
                     posMenor = j;
                 }
             }
-            solucion[i + 1] = posMenor;
+            solucion.set(i + 1, posMenor);
             marcado[posMenor] = true;
         }
         return calculaCoste(solucion, matriz, ciudades);
